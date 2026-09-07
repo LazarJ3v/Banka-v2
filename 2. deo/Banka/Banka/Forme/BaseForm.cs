@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Prodavnica.Forme
+namespace Banka.Forme
 {
     public class BaseForm : Form
     {
