@@ -68,5 +68,51 @@ namespace Banka.Forme
             gbFizickoLicePodaci.Visible = rbFizickoLice.Checked;
             gbPravnoLicePodaci.Visible = rbPravnoLice.Checked;
         }
+
+        private void btnSacuvaj_Click(object sender, EventArgs e)
+        {
+            if (rbFizickoLice.Checked)
+            {
+                FizickoLiceBasic fl = new FizickoLiceBasic
+                {
+                    Ime = tbImeFL.Text.Trim(),
+                    Prezime = tbPrezimeFL.Text.Trim(),
+                    Jmbg = tbJmbgFL.Text.Trim(),
+                    BrojLicneKarte = tbBrojLicneKarteFL.Text.Trim(),
+                    DatumRodjenja = dtpDatumRodjenjaFL.Value,
+                    Adresa = tbAdresaFL.Text.Trim(),
+                    Grad = tbGradFL.Text.Trim(),
+                    Telefon = tbTelefonFL.Text.Trim(),
+                    Email = tbEmailFL.Text.Trim(),
+                    Status = "Aktivan",
+                    Komentar = rtbKomentarFL.Text.Trim()
+                };
+
+                // Čuvanje u bazu
+                DTOManager.DodajFizickoLice(fl);
+            }
+            else if(rbPravnoLice.Checked)
+            {
+                PravnoLiceBasic pl = new PravnoLiceBasic
+                {
+                    NazivFirme = tbNazivFirmePL.Text.Trim(),
+                    Pib = tbPibPL.Text.Trim(),
+                    Adresa = tbAdresaPL.Text.Trim(),
+                    Grad = tbGradPL.Text.Trim(),
+                    Telefon = tbTelefonPL.Text.Trim(),
+                    Email = tbEmailPL.Text.Trim(),
+                    Status = "Aktivan",
+                    Komentar = rtbKomentarPL.Text.Trim()
+                };
+
+                //DTOManager.DodajPravnoLice(pl);
+            }
+            
+            MessageBox.Show("Klijent uspešno dodat!", "Uspeh",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
     }
 }

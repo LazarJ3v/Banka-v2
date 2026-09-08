@@ -12,39 +12,42 @@ namespace Banka
 {
     internal class DTOManager
     {
+
+        // TODO: Uvesti transakcije u funkcijama koje menjaju podatke u bazi
         #region FizickaLica
 
-        public static void DodajFizickoLice(FizickoLice fl)
+        public static void DodajFizickoLice(FizickoLiceBasic fl)
         {
-            ISession s = DataLayer.GetSession();
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                FizickoLice f = new FizickoLice();
-
-                f.Ime = fl.Ime;
-                f.Prezime = fl.Prezime;
-                f.Jmbg = fl.Jmbg;
-                f.BrojLicneKarte = fl.BrojLicneKarte;
-                f.DatumRodjenja = fl.DatumRodjenja;
-                f.Adresa = fl.Adresa;
-                f.Grad = fl.Grad;
-                f.Telefon = fl.Telefon;
-                f.Email = fl.Email;
-                f.Status = fl.Status;
-                f.Komentar = fl.Komentar;
-
-                s.Save(f);
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-            finally
-            {
-                if (s.IsOpen)
+                try
                 {
-                    s.Flush();
-                    s.Close();
+                    FizickoLice f = new FizickoLice
+                    {
+                        Ime = fl.Ime?.Trim(),
+                        Prezime = fl.Prezime?.Trim(),
+                        Jmbg = fl.Jmbg?.Trim(),
+                        BrojLicneKarte = fl.BrojLicneKarte?.Trim(),
+                        DatumRodjenja = fl.DatumRodjenja,
+                        Adresa = fl.Adresa?.Trim(),
+                        Grad = fl.Grad?.Trim(),
+                        Telefon = fl.Telefon?.Trim(),
+                        Email = fl.Email?.Trim(),
+                        Status = fl.Status,
+                        Komentar = fl.Komentar?.Trim()
+                    };
+
+                    session.Save(f);
+                    transaction.Commit();
+
+                    // Vrati generisani ID
+                    fl.Id = f.Id;
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri dodavanju fizičkog lica", ex);
                 }
             }
         }
@@ -110,7 +113,7 @@ namespace Banka
                 f.Status = fl.Status;
                 f.Komentar = fl.Komentar;
 
-                s.Update(fl);
+                s.Update(f);
             }
             catch(Exception ec)
             {
@@ -151,6 +154,68 @@ namespace Banka
                 }
             }
         }
+
+        public static List<FizickoLiceBasic> VratiFizickaLica(int brojPoStrani, int strana = 1)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                List<FizickoLice> entiteti = session.Query<FizickoLice>()
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                return entiteti.Select(x => new FizickoLiceBasic
+                {
+                    Id = x.Id,
+                    Ime = x.Ime,
+                    Prezime = x.Prezime,
+                    Jmbg = x.Jmbg,
+                    BrojLicneKarte = x.BrojLicneKarte,
+                    DatumRodjenja = x.DatumRodjenja,
+                    Adresa = x.Adresa,
+                    Grad = x.Grad,
+                    Telefon = x.Telefon,
+                    Email = x.Email,
+                    Status = x.Status,
+                    Komentar = x.Komentar
+                }).ToList();
+            }
+        }
+
+        #endregion
+
+        #region PravnaLica
+
+        public static List<PravnoLiceBasic> VratiPravnaLica(int brojPoStrani, int strana = 1)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                List<PravnoLice> entiteti = session.Query<PravnoLice>()
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                return entiteti.Select(x => new PravnoLiceBasic
+                {
+                    Id = x.Id,
+                    NazivFirme = x.NazivFirme,
+                    Pib = x.Pib,
+                    Adresa = x.Adresa,
+                    Grad = x.Grad,
+                    Telefon = x.Telefon,
+                    Email = x.Email,
+                    Status = x.Status,
+                    Komentar = x.Komentar
+                }).ToList();
+            }
+        }
+
+        // TODO: Implementirati sledece funkcije:
+        // * DodajPravnoLice(PravnoLiceBasic pl)
+        // * VratiPravnoLice(int id)
+        // * IzmeniPravnoLice(PravnoLiceBasic pl)
+        // * ObrisiPravnoLice(int id)
+
         #endregion
     }
 }

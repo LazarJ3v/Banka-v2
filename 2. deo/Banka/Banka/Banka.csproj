@@ -110,6 +110,7 @@
     <Compile Include="DataLayer.cs" />
     <Compile Include="DTOManager.cs" />
     <Compile Include="DTOs.cs" />
+    <Compile Include="Entiteti\PravnoLice.cs" />
     <Compile Include="Enumi\KorisnikStatus.cs" />
     <Compile Include="Forme\BaseForm.cs">
       <SubType>Form</SubType>
@@ -140,6 +141,7 @@
       <DependentUpon>KlijentiPregled.cs</DependentUpon>
     </Compile>
     <Compile Include="Mapiranja\FizickoLiceMapiranja.cs" />
+    <Compile Include="Mapiranja\PravnoLiceMapiranja.cs" />
     <Compile Include="PocetnaStrana.cs">
       <SubType>Form</SubType>
     </Compile>
