@@ -89,6 +89,68 @@ namespace Banka
             return fl;
         }
 
+        public static FizickoLiceBasic IzmeniFizickoLice(FizickoLiceBasic fl)
+        {
+            FizickoLice f = new FizickoLice();
+            ISession s = DataLayer.GetSession();
+
+            try
+            {
+                f = s.Load<FizickoLice>(fl.Id);
+
+                f.Ime = fl.Ime;
+                f.Prezime = fl.Prezime;
+                f.Jmbg = fl.Jmbg;
+                f.BrojLicneKarte = fl.BrojLicneKarte;
+                f.DatumRodjenja = fl.DatumRodjenja;
+                f.Adresa = fl.Adresa;
+                f.Grad = fl.Grad;
+                f.Telefon = fl.Telefon;
+                f.Email = fl.Email;
+                f.Status = fl.Status;
+                f.Komentar = fl.Komentar;
+
+                s.Update(fl);
+            }
+            catch(Exception ec)
+            {
+                MessageBox.Show(ec.ToString());
+            }
+            finally
+            {
+                if (s.IsOpen)
+                {
+                    s.Flush();
+                    s.Close();
+                }
+            }
+
+            return fl;
+        }
+
+        public static void Obrisi(int id)
+        {
+            ISession s = DataLayer.GetSession();
+
+            try
+            {
+                FizickoLice f = s.Load<FizickoLice>(id);
+
+                s.Delete(id);
+            }
+            catch(Exception ec)
+            {
+                MessageBox.Show(ec.ToString());
+            }
+            finally
+            {
+                if (s.IsOpen)
+                {
+                    s.Flush();
+                    s.Close();
+                }
+            }
+        }
         #endregion
     }
 }
