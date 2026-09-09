@@ -131,7 +131,7 @@ namespace Banka
             return fl;
         }
 
-        public static void Obrisi(int id)
+        public static void ObrisiFizickoLice(int id)
         {
             ISession s = DataLayer.GetSession();
 
@@ -139,7 +139,7 @@ namespace Banka
             {
                 FizickoLice f = s.Load<FizickoLice>(id);
 
-                s.Delete(id);
+                s.Delete(f);
             }
             catch(Exception ec)
             {
@@ -186,6 +186,136 @@ namespace Banka
 
         #region PravnaLica
 
+        public static void DodajPravnoLice(PravnoLiceBasic pl)
+        {
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
+            {
+                try
+                {
+                    PravnoLice p = new PravnoLice
+                    {
+                        NazivFirme = pl.NazivFirme?.Trim(),
+                        Pib = pl.Pib?.Trim(),
+                        Adresa = pl.Adresa?.Trim(),
+                        Grad = pl.Grad?.Trim(),
+                        Telefon = pl.Telefon?.Trim(),
+                        Email = pl.Email?.Trim(),
+                        Status = pl.Status?.Trim(),
+                        Komentar = pl.Komentar?.Trim()
+                    };
+
+                    session.Save(p);
+                    transaction.Commit();
+
+                    // Vrati generisani ID
+                    pl.Id = p.Id;
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri dodavanju fizičkog lica", ex);
+                }
+            }
+        }
+
+        public static PravnoLiceBasic VratiPravnoLice(int id)
+        {
+            PravnoLiceBasic pl = new PravnoLiceBasic();
+            ISession s = DataLayer.GetSession();
+
+            try
+            {
+                PravnoLice p = s.Load<PravnoLice>(id);
+                pl = new PravnoLiceBasic
+                {
+                    Id = p.Id,
+                    NazivFirme = p.NazivFirme,
+                    Pib = p.Pib,
+                    Adresa = p.Adresa,
+                    Grad = p.Grad,
+                    Telefon = p.Telefon,
+                    Email = p.Email,
+                    Status = p.Status,
+                    Komentar = p.Komentar
+                };
+            }
+            catch (Exception ec)
+            {
+                MessageBox.Show(ec.ToString());
+            }
+            finally
+            {
+                if (s.IsOpen)
+                {
+                    s.Flush();
+                    s.Close();
+                }
+            }
+
+            return pl;
+        }
+
+        public static PravnoLiceBasic IzmeniPravnoLice(PravnoLiceBasic pl)
+        {
+            PravnoLice p = new PravnoLice();
+            ISession s = DataLayer.GetSession();
+
+            try
+            {
+                p = s.Load<PravnoLice>(pl.Id);
+
+                p.NazivFirme = pl.NazivFirme;
+                p.Pib = pl.Pib;
+                p.Adresa = pl.Adresa;
+                p.Grad = pl.Grad;
+                p.Telefon = pl.Telefon;
+                p.Email = pl.Email;
+                p.Status = pl.Status;
+                p.Komentar = pl.Komentar;
+
+                s.Update(p);
+            }
+            catch (Exception ec)
+            {
+                MessageBox.Show(ec.ToString());
+            }
+            finally
+            {
+                if (s.IsOpen)
+                {
+                    s.Flush();
+                    s.Close();
+                }
+            }
+
+            return pl;
+        }
+
+        public static void ObrisiPravnoLice(int id)
+        {
+            ISession s = DataLayer.GetSession();
+
+            try
+            {
+                PravnoLice p = s.Load<PravnoLice>(id);
+
+                s.Delete(p);
+            }
+            catch (Exception ec)
+            {
+                MessageBox.Show(ec.ToString());
+            }
+            finally
+            {
+                if (s.IsOpen)
+                {
+                    s.Flush();
+                    s.Close();
+                }
+            }
+        }
+
         public static List<PravnoLiceBasic> VratiPravnaLica(int brojPoStrani, int strana = 1)
         {
             using (ISession session = DataLayer.GetSession())
@@ -209,12 +339,6 @@ namespace Banka
                 }).ToList();
             }
         }
-
-        // TODO: Implementirati sledece funkcije:
-        // * DodajPravnoLice(PravnoLiceBasic pl)
-        // * VratiPravnoLice(int id)
-        // * IzmeniPravnoLice(PravnoLiceBasic pl)
-        // * ObrisiPravnoLice(int id)
 
         #endregion
     }

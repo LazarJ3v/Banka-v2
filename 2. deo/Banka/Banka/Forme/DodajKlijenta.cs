@@ -105,7 +105,7 @@ namespace Banka.Forme
                     Komentar = rtbKomentarPL.Text.Trim()
                 };
 
-                //DTOManager.DodajPravnoLice(pl);
+                DTOManager.DodajPravnoLice(pl);
             }
             
             MessageBox.Show("Klijent uspešno dodat!", "Uspeh",

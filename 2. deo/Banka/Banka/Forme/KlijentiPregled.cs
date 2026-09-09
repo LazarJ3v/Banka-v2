@@ -178,9 +178,38 @@ namespace Banka.Forme
                 int index = dgvPravnaLica.SelectedRows[0].Index;
                 PravnoLiceBasic dto = svaPravnaLica[index];
 
-                // new IzmeniPravnoLice(dto).ShowDialog();
+                new IzmeniPravnoLice(dto).ShowDialog();
                 KlijentiPregled_Load(null, null);
             }
+        }
+
+        private void btnObrisi_Click(object sender, EventArgs e)
+        {
+             if (dgvFizickaLica.SelectedRows.Count == 0 && dgvPravnaLica.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selektujte zapis!");
+                return;
+            }
+
+            if (dgvFizickaLica.SelectedRows.Count > 0)
+            {
+                int index = dgvFizickaLica.SelectedRows[0].Index;
+                int id = svaFizickaLica[index].Id;
+                DTOManager.ObrisiFizickoLice(id);
+
+                KlijentiPregled_Load(null, null);
+            }
+            else if (dgvPravnaLica.SelectedRows.Count > 0)
+            {
+                int index = dgvPravnaLica.SelectedRows[0].Index;
+                int id = svaPravnaLica[index].Id;
+                DTOManager.ObrisiPravnoLice(id);
+     
+                KlijentiPregled_Load(null, null);
+            }
+
+            MessageBox.Show("Klijent uspešno obrisan!", "Uspeh",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
