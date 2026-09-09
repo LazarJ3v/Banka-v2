@@ -26,6 +26,8 @@ namespace Banka.Mapiranja
             Map(x => x.Email).Column("EMAIL");
             Map(x => x.Status).Column("STATUS");
             Map(x => x.Komentar).Column("KOMENTAR");
+
+            HasMany(x => x.Racuni).KeyColumn("FIZICKOLICEID").Cascade.All().Inverse();
         }
     }
 }

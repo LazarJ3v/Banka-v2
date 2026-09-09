@@ -23,9 +23,10 @@ namespace Banka.Entiteti
         public virtual string Status { get; set; }
         public virtual string Komentar { get; set; }
 
+        public virtual IList<Racun> Racuni { get; set; }
         public FizickoLice()
         {
-
+            Racuni = new List<Racun>();
         }
     }
 }

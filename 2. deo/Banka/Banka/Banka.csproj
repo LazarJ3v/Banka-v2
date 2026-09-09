@@ -147,6 +147,12 @@
     <Compile Include="Forme\KlijentiPregled.Designer.cs">
       <DependentUpon>KlijentiPregled.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forme\RacuniPregled.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forme\RacuniPregled.Designer.cs">
+      <DependentUpon>RacuniPregled.cs</DependentUpon>
+    </Compile>
     <Compile Include="Mapiranja\FizickoLiceMapiranja.cs" />
     <Compile Include="Mapiranja\PravnoLiceMapiranja.cs" />
     <Compile Include="Mapiranja\RacunMapiranja.cs" />
@@ -172,6 +178,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forme\KlijentiPregled.resx">
       <DependentUpon>KlijentiPregled.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forme\RacuniPregled.resx">
+      <DependentUpon>RacuniPregled.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PocetnaStrana.resx">
       <DependentUpon>PocetnaStrana.cs</DependentUpon>
