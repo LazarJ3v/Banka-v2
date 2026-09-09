@@ -29,23 +29,35 @@
         private void InitializeComponent()
         {
             this.btnKlijenti = new System.Windows.Forms.Button();
+            this.btnRacuni = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnKlijenti
             // 
-            this.btnKlijenti.Location = new System.Drawing.Point(12, 378);
+            this.btnKlijenti.Location = new System.Drawing.Point(13, 348);
             this.btnKlijenti.Name = "btnKlijenti";
-            this.btnKlijenti.Size = new System.Drawing.Size(200, 40);
+            this.btnKlijenti.Size = new System.Drawing.Size(220, 37);
             this.btnKlijenti.TabIndex = 0;
             this.btnKlijenti.Text = "Klijenti";
             this.btnKlijenti.UseVisualStyleBackColor = true;
             this.btnKlijenti.Click += new System.EventHandler(this.btnKlijenti_Click);
             // 
+            // btnRacuni
+            // 
+            this.btnRacuni.Location = new System.Drawing.Point(239, 348);
+            this.btnRacuni.Name = "btnRacuni";
+            this.btnRacuni.Size = new System.Drawing.Size(221, 37);
+            this.btnRacuni.TabIndex = 1;
+            this.btnRacuni.Text = "Računi";
+            this.btnRacuni.UseVisualStyleBackColor = true;
+            this.btnRacuni.Click += new System.EventHandler(this.btnRacuni_Click);
+            // 
             // PocetnaStrana
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(880, 414);
+            this.Controls.Add(this.btnRacuni);
             this.Controls.Add(this.btnKlijenti);
             this.Name = "PocetnaStrana";
             this.Text = "PocetnaStrana";
@@ -56,5 +68,6 @@
         #endregion
 
         private System.Windows.Forms.Button btnKlijenti;
+        private System.Windows.Forms.Button btnRacuni;
     }
 }
