@@ -415,30 +415,34 @@ END;
 
 
 /* ==========================================================================
-   TEST PODACI
+   TEST PODACI - Svi INSERT-i su prilagođeni da NE KORISTE ID (osim za
+   tabele čiji se ID ne generiše automatski - TEKUCI, STEDNI, DEVIZNI, ZIRO)
    ========================================================================== */
 
-INSERT INTO FIZICKO_LICE (Id, Ime, Prezime, Jmbg, BrojLicneKarte, DatumRodjenja, Adresa, Grad, Telefon, Email, Status, Komentar)
-VALUES (1, N'Marko', N'Marković', '0101990710236', '123456789', TO_DATE('01.01.1990','DD.MM.YYYY'), N'Bulevar oslobođenja 10', N'Novi Sad', '060123456', 'marko.markovic@example.com', N'Aktivan', NULL);
+-- Tabele sa auto-generisanim ID (bez Id kolone u INSERT-u)
+INSERT INTO FIZICKO_LICE (Ime, Prezime, Jmbg, BrojLicneKarte, DatumRodjenja, Adresa, Grad, Telefon, Email, Status, Komentar)
+VALUES (N'Marko', N'Marković', '0101990710236', '123456789', TO_DATE('01.01.1990','DD.MM.YYYY'), N'Bulevar oslobođenja 10', N'Novi Sad', '060123456', 'marko.markovic@example.com', N'Aktivan', NULL);
 
-INSERT INTO FIZICKO_LICE (Id, Ime, Prezime, Jmbg, BrojLicneKarte, DatumRodjenja, Adresa, Grad, Telefon, Email, Status, Komentar)
-VALUES (2, N'Ana', N'Anić', '1503985715123', '987654321', TO_DATE('15.03.1985','DD.MM.YYYY'), N'Kneza Miloša 5', N'Beograd', '0641234567', 'ana.anic@example.com', N'Aktivan', NULL);
+INSERT INTO FIZICKO_LICE (Ime, Prezime, Jmbg, BrojLicneKarte, DatumRodjenja, Adresa, Grad, Telefon, Email, Status, Komentar)
+VALUES (N'Ana', N'Anić', '1503985715123', '987654321', TO_DATE('15.03.1985','DD.MM.YYYY'), N'Kneza Miloša 5', N'Beograd', '0641234567', 'ana.anic@example.com', N'Aktivan', NULL);
 
-INSERT INTO PRAVNO_LICE (Id, NazivFirme, Pib, Adresa, Grad, Telefon, Email, Status, Komentar)
-VALUES (1, N'ABC Doo', '123456789', N'Industrijska 1', N'Niš', '0113456789', 'office@abcdoo.rs', N'Aktivan', N'Klijent od 2018. godine');
+INSERT INTO PRAVNO_LICE (NazivFirme, Pib, Adresa, Grad, Telefon, Email, Status, Komentar)
+VALUES (N'ABC Doo', '123456789', N'Industrijska 1', N'Niš', '0113456789', 'office@abcdoo.rs', N'Aktivan', N'Klijent od 2018. godine');
 
-INSERT INTO RACUN (Id, BrojRacuna, Valuta, TrenutnoStanje, DatumOtvaranja, Status, DozvoljeniMinus, Komentar, TipRacuna, KamatnaStopa, FizickoLiceId, PravnoLiceId)
-VALUES (1, '160-0000000001-11', 'RSD', 50000, TO_DATE('10.01.2023','DD.MM.YYYY'), N'Aktivan', 10000, NULL, 'TEKUCI', 0.50, 1, NULL);
+-- RACUN - bez Id kolone (generiše se iz sekvence)
+INSERT INTO RACUN (BrojRacuna, Valuta, TrenutnoStanje, DatumOtvaranja, Status, DozvoljeniMinus, Komentar, TipRacuna, KamatnaStopa, FizickoLiceId, PravnoLiceId)
+VALUES ('160-0000000001-11', 'RSD', 50000, TO_DATE('10.01.2023','DD.MM.YYYY'), N'Aktivan', 10000, NULL, 'TEKUCI', 0.50, 1, NULL);
 
-INSERT INTO RACUN (Id, BrojRacuna, Valuta, TrenutnoStanje, DatumOtvaranja, Status, DozvoljeniMinus, Komentar, TipRacuna, KamatnaStopa, FizickoLiceId, PravnoLiceId)
-VALUES (2, '160-0000000002-22', 'RSD', 200000, TO_DATE('20.05.2022','DD.MM.YYYY'), N'Aktivan', 0, NULL, 'STEDNI', 3.20, 2, NULL);
+INSERT INTO RACUN (BrojRacuna, Valuta, TrenutnoStanje, DatumOtvaranja, Status, DozvoljeniMinus, Komentar, TipRacuna, KamatnaStopa, FizickoLiceId, PravnoLiceId)
+VALUES ('160-0000000002-22', 'RSD', 200000, TO_DATE('20.05.2022','DD.MM.YYYY'), N'Aktivan', 0, NULL, 'STEDNI', 3.20, 2, NULL);
 
-INSERT INTO RACUN (Id, BrojRacuna, Valuta, TrenutnoStanje, DatumOtvaranja, Status, DozvoljeniMinus, Komentar, TipRacuna, KamatnaStopa, FizickoLiceId, PravnoLiceId)
-VALUES (3, '160-0000000003-33', 'EUR', 5000, TO_DATE('01.07.2023','DD.MM.YYYY'), N'Aktivan', 0, NULL, 'DEVIZNI', 1.00, 1, NULL);
+INSERT INTO RACUN (BrojRacuna, Valuta, TrenutnoStanje, DatumOtvaranja, Status, DozvoljeniMinus, Komentar, TipRacuna, KamatnaStopa, FizickoLiceId, PravnoLiceId)
+VALUES ('160-0000000003-33', 'EUR', 5000, TO_DATE('01.07.2023','DD.MM.YYYY'), N'Aktivan', 0, NULL, 'DEVIZNI', 1.00, 1, NULL);
 
-INSERT INTO RACUN (Id, BrojRacuna, Valuta, TrenutnoStanje, DatumOtvaranja, Status, DozvoljeniMinus, Komentar, TipRacuna, KamatnaStopa, FizickoLiceId, PravnoLiceId)
-VALUES (4, '160-0000000004-44', 'RSD', 1000000, TO_DATE('15.11.2021','DD.MM.YYYY'), N'Aktivan', 0, NULL, 'ZIRO', 0.00, NULL, 1);
+INSERT INTO RACUN (BrojRacuna, Valuta, TrenutnoStanje, DatumOtvaranja, Status, DozvoljeniMinus, Komentar, TipRacuna, KamatnaStopa, FizickoLiceId, PravnoLiceId)
+VALUES ('160-0000000004-44', 'RSD', 1000000, TO_DATE('15.11.2021','DD.MM.YYYY'), N'Aktivan', 0, NULL, 'ZIRO', 0.00, NULL, 1);
 
+-- TEKUCI - NEMA auto-generisani ID, koristi RacunId (mora da se navede)
 INSERT INTO TEKUCI (RacunId, PlatnaKartica, MesecniLimit)
 VALUES (1, 1, 100000);
 
@@ -451,6 +455,7 @@ VALUES (3, N'ŠTEDNJA', 0.0050);
 INSERT INTO ZIRO (RacunId, Namena, ElektronskoBankarstvo, LimitZaMasovnaPlacanja, IntegracijaSaSistemima)
 VALUES (4, N'Poslovni transferi', 1, 500000, N'Integracija sa SAP sistemom firme');
 
+-- Tabele sa auto-generisanim ID (bez Id kolone u INSERT-u)
 INSERT INTO TEKUCI_PAKET (Paket, RacunId)
 VALUES (N'Standard paket', 1);
 
@@ -469,12 +474,15 @@ VALUES ('EUR', 3);
 INSERT INTO DEVIZNI_VALUTA (DozvoljenaValuta, RacunId)
 VALUES ('USD', 3);
 
+-- DEPOZIT - bez Id kolone (generiše se iz sekvence)
 INSERT INTO DEPOZIT (DatumPocetka, PeriodOrocenja, DatumIsteka, StatusDepozita, Valuta, Iznos, KamatnaStopa, Komentar, FizickoLiceId, PravnoLiceId, RacunId)
 VALUES (TO_DATE('01.06.2023','DD.MM.YYYY'), 12, TO_DATE('01.06.2024','DD.MM.YYYY'), N'Aktivan', 'EUR', 2000, 2.50, NULL, 1, NULL, 3);
 
+-- KREDIT - bez Id kolone (generiše se iz sekvence)
 INSERT INTO KREDIT (DatumDospeca, DatumOdobrenja, Iznos, Valuta, StatusKredita, MesecnaRata, RokOtplate, Namena, KamatnaStopa, Komentar, FizickoLiceId, PravnoLiceId, RacunId)
 VALUES (TO_DATE('15.01.2028','DD.MM.YYYY'), TO_DATE('15.01.2023','DD.MM.YYYY'), 500000, 'RSD', N'Aktivan', 12000, 60, N'Kupovina automobila', 6.50, NULL, 1, NULL, 1);
 
+-- TRANSAKCIJA - bez Id kolone (generiše se iz sekvence)
 INSERT INTO TRANSAKCIJA (DatumIVreme, TipTransakcije, StatusTransakcije, PodaciPrimaoca, Referenca, Valuta, Iznos, Opis, Komentar, RacunId)
 VALUES (TO_DATE('05.08.2026 09:15:00','DD.MM.YYYY HH24:MI:SS'), 'UPLATA', N'Izvršena', NULL, 'REF-001', 'RSD', 15000, N'Uplata plate', NULL, 1);
 
@@ -484,12 +492,14 @@ VALUES (TO_DATE('10.08.2026 14:30:00','DD.MM.YYYY HH24:MI:SS'), 'ISPLATA', N'Izv
 INSERT INTO TRANSAKCIJA (DatumIVreme, TipTransakcije, StatusTransakcije, PodaciPrimaoca, Referenca, Valuta, Iznos, Opis, Komentar, RacunId)
 VALUES (TO_DATE('12.08.2026 11:00:00','DD.MM.YYYY HH24:MI:SS'), 'TRANSFER', N'Izvršena', N'Dobavljač XY doo, račun 265-1234567-89', 'REF-003', 'RSD', 45000, N'Plaćanje fakture', NULL, 4);
 
+-- KAMATA - bez Id kolone (generiše se iz sekvence)
 INSERT INTO KAMATA (DatumObracuna, PeriodObracuna, TipKamate, StatusKamate, Iznos, KreditId, DepozitId, RacunId)
 VALUES (TO_DATE('01.07.2023','DD.MM.YYYY'), N'Mesečna', N'Redovna', N'OBRAČUNATO', 4.17, NULL, 1, NULL);
 
 INSERT INTO KAMATA (DatumObracuna, PeriodObracuna, TipKamate, StatusKamate, Iznos, KreditId, DepozitId, RacunId)
 VALUES (TO_DATE('15.02.2023','DD.MM.YYYY'), N'Mesečna', N'Redovna', N'ISPLAĆENO', 2708.33, 1, NULL, NULL);
 
+-- SIGURNOSNA_KONTROLA - bez Id kolone (generiše se iz sekvence)
 INSERT INTO SIGURNOSNA_KONTROLA (IpAdresa, DatumIVreme, TipDogadjaja, StatusDogadjaja, PodaciUredjaja, Opis, RacunId)
 VALUES ('192.168.1.10', TO_DATE('20.08.2026 08:45:00','DD.MM.YYYY HH24:MI:SS'), 'LOGIN', N'Uspešno', N'Chrome 128 / Windows 11', NULL, 1);
 
