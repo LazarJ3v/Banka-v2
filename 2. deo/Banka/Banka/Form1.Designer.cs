@@ -32,6 +32,8 @@
             this.btnDodaj = new System.Windows.Forms.Button();
             this.btnIzmeni = new System.Windows.Forms.Button();
             this.btnObrisi = new System.Windows.Forms.Button();
+            this.btnTekuci = new System.Windows.Forms.Button();
+            this.btnZiro = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnUcitaj
@@ -74,11 +76,32 @@
             this.btnObrisi.UseVisualStyleBackColor = true;
             this.btnObrisi.Click += new System.EventHandler(this.btnObrisi_Click);
             // 
+            // btnTekuci
+            // 
+            this.btnTekuci.Location = new System.Drawing.Point(337, 13);
+            this.btnTekuci.Name = "btnTekuci";
+            this.btnTekuci.Size = new System.Drawing.Size(75, 30);
+            this.btnTekuci.TabIndex = 4;
+            this.btnTekuci.Text = "Tekuci";
+            this.btnTekuci.UseVisualStyleBackColor = true;
+            this.btnTekuci.Click += new System.EventHandler(this.btnTekuci_Click);
+            // 
+            // btnZiro
+            // 
+            this.btnZiro.Location = new System.Drawing.Point(418, 13);
+            this.btnZiro.Name = "btnZiro";
+            this.btnZiro.Size = new System.Drawing.Size(75, 30);
+            this.btnZiro.TabIndex = 5;
+            this.btnZiro.Text = "Ziro";
+            this.btnZiro.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnZiro);
+            this.Controls.Add(this.btnTekuci);
             this.Controls.Add(this.btnObrisi);
             this.Controls.Add(this.btnIzmeni);
             this.Controls.Add(this.btnDodaj);
@@ -95,6 +118,8 @@
         private System.Windows.Forms.Button btnDodaj;
         private System.Windows.Forms.Button btnIzmeni;
         private System.Windows.Forms.Button btnObrisi;
+        private System.Windows.Forms.Button btnTekuci;
+        private System.Windows.Forms.Button btnZiro;
     }
 }
 

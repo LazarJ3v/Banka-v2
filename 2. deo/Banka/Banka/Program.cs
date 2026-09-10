@@ -16,7 +16,7 @@ namespace Banka
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new PocetnaStrana());
+            Application.Run(new Form1());
         }
     }
 }

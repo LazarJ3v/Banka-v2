@@ -143,5 +143,51 @@ namespace Banka
                 }
             }
         }
+
+        private void btnTekuci_Click(object sender, EventArgs e)
+        {
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction tx = session.BeginTransaction())
+            {
+                try
+                {
+                    FizickoLice fl = session.Load<FizickoLice>(1);
+
+                    Tekuci t = new Tekuci
+                    {
+                        BrojRacuna = "160-0000000006-66",
+                        Valuta = "EUR",
+                        TrenutnoStanje = 1200,
+                        DatumOtvaranja = DateTime.Now,
+                        Status = "Aktivan",
+                        DozvoljeniMinus = 500,
+                        TipRacuna = "TEKUCI",
+                        KamatnaStopa = (decimal)0.2,
+
+                        PlatnaKartica = true,
+                        MesecniLimit = 1000,
+
+                        PripadaFizickomLicu = fl
+                    };
+
+                    TekuciPaket tp = new TekuciPaket
+                    {
+                        Paket = "Paket1",
+                        PripadaTekucem = t   // OBAVEZNO zbog .Inverse()
+                    };
+
+                    t.Paketi.Add(tp);
+
+                    session.Save(t);
+
+                    tx.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tx.Rollback();
+                    MessageBox.Show("Greška: " + ex.Message);
+                }
+            }
+        }
     }
 }
