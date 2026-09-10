@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NHibernate;
 using System.Windows.Forms;
+using Banka.Enumi;
 
 namespace Banka
 {
@@ -336,6 +337,46 @@ namespace Banka
                     Status = x.Status,
                     Komentar = x.Komentar
                 }).ToList();
+            }
+        }
+
+        #endregion
+
+        #region Racun
+
+        public static void DodajRacun(RacunBasic r)
+        {
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
+            {
+                try
+                {
+                    if(r.TipRacuna == TipRacuna.Tekuci.ToString())
+                    {
+
+                    }
+                    else if(r.TipRacuna == TipRacuna.Devizni.ToString())
+                    {
+
+                    }
+                    else if(r.TipRacuna == TipRacuna.Stedni.ToString())
+                    {
+
+                    }
+                    else if(r.TipRacuna == TipRacuna.Ziro.ToString())
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+                catch(Exception ec)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri dodavanju računa", ec);
+                }
             }
         }
 

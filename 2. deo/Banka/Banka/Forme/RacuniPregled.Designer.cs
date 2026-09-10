@@ -31,13 +31,15 @@
             this.dgvRacuni = new System.Windows.Forms.DataGridView();
             this.gbRacuni = new System.Windows.Forms.GroupBox();
             this.gbPretraga = new System.Windows.Forms.GroupBox();
-            this.cbTipRacuna = new System.Windows.Forms.ComboBox();
-            this.lblTipRacuna = new System.Windows.Forms.Label();
-            this.tbBrojRacuna = new System.Windows.Forms.TextBox();
-            this.lblBrojRacuna = new System.Windows.Forms.Label();
             this.btnPretrazi = new System.Windows.Forms.Button();
+            this.lblBrojRacuna = new System.Windows.Forms.Label();
+            this.tbBrojRacuna = new System.Windows.Forms.TextBox();
+            this.lblTipRacuna = new System.Windows.Forms.Label();
+            this.cbTipRacuna = new System.Windows.Forms.ComboBox();
             this.btnDetalji = new System.Windows.Forms.Button();
             this.btnDodaj = new System.Windows.Forms.Button();
+            this.btnIzmeni = new System.Windows.Forms.Button();
+            this.btnObrisi = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRacuni)).BeginInit();
             this.gbRacuni.SuspendLayout();
             this.gbPretraga.SuspendLayout();
@@ -77,29 +79,14 @@
             this.gbPretraga.TabStop = false;
             this.gbPretraga.Text = "Pretraga";
             // 
-            // cbTipRacuna
+            // btnPretrazi
             // 
-            this.cbTipRacuna.FormattingEnabled = true;
-            this.cbTipRacuna.Location = new System.Drawing.Point(116, 30);
-            this.cbTipRacuna.Name = "cbTipRacuna";
-            this.cbTipRacuna.Size = new System.Drawing.Size(180, 33);
-            this.cbTipRacuna.TabIndex = 0;
-            // 
-            // lblTipRacuna
-            // 
-            this.lblTipRacuna.AutoSize = true;
-            this.lblTipRacuna.Location = new System.Drawing.Point(13, 33);
-            this.lblTipRacuna.Name = "lblTipRacuna";
-            this.lblTipRacuna.Size = new System.Drawing.Size(97, 25);
-            this.lblTipRacuna.TabIndex = 1;
-            this.lblTipRacuna.Text = "Tip računa:";
-            // 
-            // tbBrojRacuna
-            // 
-            this.tbBrojRacuna.Location = new System.Drawing.Point(116, 69);
-            this.tbBrojRacuna.Name = "tbBrojRacuna";
-            this.tbBrojRacuna.Size = new System.Drawing.Size(180, 31);
-            this.tbBrojRacuna.TabIndex = 2;
+            this.btnPretrazi.Location = new System.Drawing.Point(6, 197);
+            this.btnPretrazi.Name = "btnPretrazi";
+            this.btnPretrazi.Size = new System.Drawing.Size(290, 31);
+            this.btnPretrazi.TabIndex = 4;
+            this.btnPretrazi.Text = "Pretraži";
+            this.btnPretrazi.UseVisualStyleBackColor = true;
             // 
             // lblBrojRacuna
             // 
@@ -110,20 +97,35 @@
             this.lblBrojRacuna.TabIndex = 3;
             this.lblBrojRacuna.Text = "Broj računa:";
             // 
-            // btnPretrazi
+            // tbBrojRacuna
             // 
-            this.btnPretrazi.Location = new System.Drawing.Point(6, 197);
-            this.btnPretrazi.Name = "btnPretrazi";
-            this.btnPretrazi.Size = new System.Drawing.Size(180, 31);
-            this.btnPretrazi.TabIndex = 4;
-            this.btnPretrazi.Text = "Pretraži";
-            this.btnPretrazi.UseVisualStyleBackColor = true;
+            this.tbBrojRacuna.Location = new System.Drawing.Point(116, 69);
+            this.tbBrojRacuna.Name = "tbBrojRacuna";
+            this.tbBrojRacuna.Size = new System.Drawing.Size(180, 31);
+            this.tbBrojRacuna.TabIndex = 2;
+            // 
+            // lblTipRacuna
+            // 
+            this.lblTipRacuna.AutoSize = true;
+            this.lblTipRacuna.Location = new System.Drawing.Point(13, 33);
+            this.lblTipRacuna.Name = "lblTipRacuna";
+            this.lblTipRacuna.Size = new System.Drawing.Size(97, 25);
+            this.lblTipRacuna.TabIndex = 1;
+            this.lblTipRacuna.Text = "Tip računa:";
+            // 
+            // cbTipRacuna
+            // 
+            this.cbTipRacuna.FormattingEnabled = true;
+            this.cbTipRacuna.Location = new System.Drawing.Point(116, 30);
+            this.cbTipRacuna.Name = "cbTipRacuna";
+            this.cbTipRacuna.Size = new System.Drawing.Size(180, 33);
+            this.cbTipRacuna.TabIndex = 0;
             // 
             // btnDetalji
             // 
             this.btnDetalji.Location = new System.Drawing.Point(720, 263);
             this.btnDetalji.Name = "btnDetalji";
-            this.btnDetalji.Size = new System.Drawing.Size(180, 31);
+            this.btnDetalji.Size = new System.Drawing.Size(290, 31);
             this.btnDetalji.TabIndex = 3;
             this.btnDetalji.Text = "Detalji";
             this.btnDetalji.UseVisualStyleBackColor = true;
@@ -132,16 +134,37 @@
             // 
             this.btnDodaj.Location = new System.Drawing.Point(720, 300);
             this.btnDodaj.Name = "btnDodaj";
-            this.btnDodaj.Size = new System.Drawing.Size(180, 31);
+            this.btnDodaj.Size = new System.Drawing.Size(290, 31);
             this.btnDodaj.TabIndex = 4;
             this.btnDodaj.Text = "Dodaj";
             this.btnDodaj.UseVisualStyleBackColor = true;
+            this.btnDodaj.Click += new System.EventHandler(this.btnDodaj_Click);
+            // 
+            // btnIzmeni
+            // 
+            this.btnIzmeni.Location = new System.Drawing.Point(720, 337);
+            this.btnIzmeni.Name = "btnIzmeni";
+            this.btnIzmeni.Size = new System.Drawing.Size(290, 31);
+            this.btnIzmeni.TabIndex = 5;
+            this.btnIzmeni.Text = "Izmeni";
+            this.btnIzmeni.UseVisualStyleBackColor = true;
+            // 
+            // btnObrisi
+            // 
+            this.btnObrisi.Location = new System.Drawing.Point(720, 374);
+            this.btnObrisi.Name = "btnObrisi";
+            this.btnObrisi.Size = new System.Drawing.Size(290, 31);
+            this.btnObrisi.TabIndex = 6;
+            this.btnObrisi.Text = "Obriši";
+            this.btnObrisi.UseVisualStyleBackColor = true;
             // 
             // RacuniPregled
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1040, 562);
+            this.Controls.Add(this.btnObrisi);
+            this.Controls.Add(this.btnIzmeni);
             this.Controls.Add(this.btnDodaj);
             this.Controls.Add(this.btnDetalji);
             this.Controls.Add(this.gbPretraga);
@@ -150,6 +173,7 @@
             this.Name = "RacuniPregled";
             this.Padding = new System.Windows.Forms.Padding(20);
             this.Text = "RacuniPregled";
+            this.Load += new System.EventHandler(this.RacuniPregled_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvRacuni)).EndInit();
             this.gbRacuni.ResumeLayout(false);
             this.gbPretraga.ResumeLayout(false);
@@ -170,5 +194,7 @@
         private System.Windows.Forms.Label lblBrojRacuna;
         private System.Windows.Forms.Button btnDetalji;
         private System.Windows.Forms.Button btnDodaj;
+        private System.Windows.Forms.Button btnIzmeni;
+        private System.Windows.Forms.Button btnObrisi;
     }
 }

@@ -17,7 +17,7 @@ namespace Banka.Entiteti
         public virtual decimal DozvoljeniMinus { get; set; }
         public virtual string Komentar { get; set; }
         public virtual string TipRacuna { get; set; }
-        public virtual decimal KamatnaStopa { get; set; }
+        public virtual decimal? KamatnaStopa { get; set; }
 
         public virtual FizickoLice PripadaFizickomLicu { get; set; }
         public virtual PravnoLice PripadaPravnomLicu { get; set; }

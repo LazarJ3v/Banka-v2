@@ -112,6 +112,9 @@
     <Compile Include="DTOs.cs" />
     <Compile Include="Entiteti\PravnoLice.cs" />
     <Compile Include="Entiteti\Racun.cs" />
+    <Compile Include="Enumi\DevizniValuta.cs" />
+    <Compile Include="Enumi\StatusRacuna.cs" />
+    <Compile Include="Enumi\TipRacuna.cs" />
     <Compile Include="Enumi\KorisnikStatus.cs" />
     <Compile Include="Forme\BaseForm.cs">
       <SubType>Form</SubType>
@@ -128,6 +131,12 @@
     </Compile>
     <Compile Include="Forme\DodajKlijenta.Designer.cs">
       <DependentUpon>DodajKlijenta.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forme\DodajRacun.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forme\DodajRacun.Designer.cs">
+      <DependentUpon>DodajRacun.cs</DependentUpon>
     </Compile>
     <Compile Include="Forme\IzmeniFizickoLice.cs">
       <SubType>Form</SubType>
@@ -169,6 +178,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forme\DodajKlijenta.resx">
       <DependentUpon>DodajKlijenta.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forme\DodajRacun.resx">
+      <DependentUpon>DodajRacun.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forme\IzmeniFizickoLice.resx">
       <DependentUpon>IzmeniFizickoLice.cs</DependentUpon>
