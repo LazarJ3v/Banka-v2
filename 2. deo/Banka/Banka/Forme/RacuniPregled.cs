@@ -13,6 +13,7 @@ namespace Banka.Forme
 {
     public partial class RacuniPregled : BaseForm
     {
+        private List<RacunBasic> sviRacuni;
         public RacuniPregled() : base()
         {
             InitializeComponent();
@@ -49,6 +50,29 @@ namespace Banka.Forme
             };
             cbTipRacuna.Items.AddRange(tipovi);
             cbTipRacuna.SelectedIndex = 0;
+
+            sviRacuni = DTOManager.VratiRacune(50);
+
+            var prikazRacuna = sviRacuni.Select(x => new
+            {
+                BrojRacuna = x.BrojRacuna,
+                Valuta = x.Valuta,
+                TrenutnoStanje = x.TrenutnoStanje,
+                DatumOtvaranja = x.DatumOtvaranja,
+                Status = x.Status,
+                TipRacuna = x.TipRacuna,
+                Vlasnik = x.FizickoLice != null
+                    ? x.FizickoLice.Ime + " " + x.FizickoLice.Prezime
+                    : x.PravnoLice.NazivFirme
+            }).ToList();
+
+            dgvRacuni.DataSource = prikazRacuna;
+
+            dgvRacuni.Columns["BrojRacuna"].HeaderText = "Broj Racuna";
+            dgvRacuni.Columns["TrenutnoStanje"].HeaderText = "Trenutno Stanje";
+            dgvRacuni.Columns["DatumOtvaranja"].HeaderText = "Datum Otvaranja";
+            dgvRacuni.Columns["TipRacuna"].HeaderText = "Tip Racuna";
+            dgvRacuni.Columns["Vlasnik"].HeaderText = "Vlasnik";
         }
 
         private void btnDodaj_Click(object sender, EventArgs e)

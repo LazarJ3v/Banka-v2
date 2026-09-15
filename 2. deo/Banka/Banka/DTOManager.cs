@@ -380,6 +380,47 @@ namespace Banka
             }
         }
 
+        public static List<RacunBasic> VratiRacune(int brojPoStrani, int strana = 1)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                List<Racun> entiteti = session.Query<Racun>()
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                return entiteti.Select(x => new RacunBasic
+                {
+                    Id = x.Id,
+                    BrojRacuna = x.BrojRacuna,
+                    Valuta = x.Valuta,
+                    TrenutnoStanje = x.TrenutnoStanje,
+                    DatumOtvaranja = x.DatumOtvaranja,
+                    Status = x.Status,
+                    DozvoljeniMinus = x.DozvoljeniMinus,
+                    Komentar = x.Komentar,
+                    KamatnaStopa = x.KamatnaStopa,
+                    TipRacuna = x.TipRacuna,
+                    FizickoLice = x.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic
+                        {
+                            Id = x.PripadaFizickomLicu.Id,
+                            Ime = x.PripadaFizickomLicu.Ime,
+                            Prezime = x.PripadaFizickomLicu.Prezime
+                        }
+                        : null,
+
+                    PravnoLice = x.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic
+                        {
+                            Id = x.PripadaPravnomLicu.Id,
+                            NazivFirme = x.PripadaPravnomLicu.NazivFirme
+                        }
+                        : null
+                }).ToList();
+            }
+        }
+
         #endregion
     }
 }

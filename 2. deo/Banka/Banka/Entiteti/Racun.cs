@@ -21,5 +21,10 @@ namespace Banka.Entiteti
 
         public virtual FizickoLice PripadaFizickomLicu { get; set; }
         public virtual PravnoLice PripadaPravnomLicu { get; set; }
+
+        public Racun()
+        {
+
+        }
     }
 }
