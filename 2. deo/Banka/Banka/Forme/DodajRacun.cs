@@ -19,7 +19,9 @@ namespace Banka.Forme
                 gbKlijent,
                 gbRacun,
                 gbTekuci,
-                gbZiro);
+                gbZiro,
+                gbDevizni,
+                gbStedni);
             StilizujRadioButton(
                 rbFizickoLice,
                 rbPravnoLice,
@@ -41,7 +43,15 @@ namespace Banka.Forme
                 lblPaket,
                 lblPib,
                 lblTrenutnoStanje,
-                lblValuta);
+                lblValuta,
+                lblOgranicenje,
+                lblDodajValutu,
+                lblNamenaDevizni,
+                lblKursnaRazlika,
+                lblBonus,
+                lblUslovPodizanja,
+                lblFrekvKapKamate,
+                lblMinimalniIznosOtvaranja);
             StilizujTextBox(
                 tbBrojRacuna,
                 tbDozvoljeniMinus,
@@ -51,16 +61,43 @@ namespace Banka.Forme
                 tbNamena,
                 tbPaket,
                 tbPib,
-                tbTrenutnoStanje);
+                tbTrenutnoStanje,
+                tbNamenaDevizni,
+                tbOgranicenje,
+                tbBonus,
+                tbUslovPodizanja,
+                tbFrekvKapKamate,
+                tbMinimalniIznosOtvaranja);
             StilizujRichTextBox(
                 rtbIntegracijaSaSistemima,
                 rtbKomentar);
             StilizujButton(
                 btnDodajPaket,
                 btnObrisiPaket,
-                btnSacuvaj);
+                btnSacuvaj,
+                btnDodajOgranicenje,
+                btnDodajValutu,
+                btnObrisiOgranicenje,
+                btnObrisiValutu,
+                btnDodajBonus,
+                btnObrisiBonus,
+                btnDodajUslovPodizanja,
+                btnObrisiUslovPodizanja);
             StilizujDataGridView(
-                dgvPaketi);
+                dgvPaketi,
+                dgvValute,
+                dgvOgranicenja,
+                dgvBonusi,
+                dgvUsloviPodizanja);
+            StilizujComboBox(
+                cbDodajValutu,
+                cbValuta);
+        }
+
+        private void DodajRacun_Load(object sender, EventArgs e)
+        {
+            rbFizickoLice.Checked = true;
+            rbTekuci.Checked = true;
         }
 
         private void rbFizickoLice_CheckedChanged(object sender, EventArgs e)
@@ -75,9 +112,8 @@ namespace Banka.Forme
             {
                 gbTekuci.Visible = true;
                 gbZiro.Visible = false;
-                //TODO: napraviti group boxove pa odkomentarisati
-                //gbDevizni.Visible = false;
-                //gbStedni.Visible = false;
+                gbDevizni.Visible = false;
+                gbStedni.Visible = false;
             }
         }
 
@@ -87,12 +123,44 @@ namespace Banka.Forme
             {
                 gbZiro.Visible = true;
                 gbTekuci.Visible = false;
-                //TODO: napraviti group boxove pa odkomentarisati
-                //gbDevizni.Visible = false;
-                //gbStedni.Visible = false;
+                gbDevizni.Visible = false;
+                gbStedni.Visible = false;
             }
         }
 
-        //TODO: implementirati event handlere za rbDevizni_CheckedChanged i rbStedniChackedChanged
+        private void rbDevizni_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbDevizni.Checked)
+            {
+                gbDevizni.Visible = true;
+                gbTekuci.Visible = false;
+                gbZiro.Visible = false;
+                gbStedni.Visible = false;
+            }
+        }
+
+        private void rbDrugi_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbDrugi.Checked)
+            {
+                gbDevizni.Visible = false;
+                gbTekuci.Visible = false;
+                gbZiro.Visible = false;
+                gbStedni.Visible = false;
+            }
+        }
+
+        private void rbStedni_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbStedni.Checked)
+            {
+                gbStedni.Visible = true;
+                gbDevizni.Visible = false;
+                gbTekuci.Visible = false;
+                gbZiro.Visible = false;
+            }
+        }
+
+        
     }
 }

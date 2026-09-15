@@ -115,6 +115,7 @@
     <Compile Include="Entiteti\Tekuci.cs" />
     <Compile Include="Entiteti\TekuciPaket.cs" />
     <Compile Include="Entiteti\Ziro.cs" />
+    <Compile Include="Enumi\DevizniNamena.cs" />
     <Compile Include="Enumi\DevizniValuta.cs" />
     <Compile Include="Enumi\StatusRacuna.cs" />
     <Compile Include="Enumi\TipRacuna.cs" />
