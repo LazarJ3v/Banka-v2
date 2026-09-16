@@ -8,12 +8,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Banka.Forme
 {
     public partial class DodajRacun : BaseForm
     {
         private IList<TekuciPaketBasic> tekuciPaketi;
+
+        private IList<DevizniOgranicenjeBasic> devizniOgranicenja;
+        private IList<DevizniValutaBasic> devizniValute;
         public DodajRacun() : base()
         {
             InitializeComponent();
@@ -140,6 +144,11 @@ namespace Banka.Forme
 
             #endregion
 
+            foreach (DevizniValuta valuta in Enum.GetValues(typeof(DevizniValuta)))
+            {
+                cbValuta.Items.Add(valuta);
+            }
+
             dgvPaketi.ClearSelection();
 
             rbFizickoLice.Checked = true;
@@ -236,7 +245,28 @@ namespace Banka.Forme
             }
             else if (rbDevizni.Checked)
             {
+                DevizniBasic dto = new DevizniBasic
+                {
+                    BrojRacuna = tbBrojRacuna.Text,
+                    Valuta = cbValuta.Text,
+                    TrenutnoStanje = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    DatumOtvaranja = DateTime.Now,
+                    Status = StatusRacuna.Aktivan.ToString(),
+                    DozvoljeniMinus = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    Komentar = rtbKomentar.Text,
+                    TipRacuna = TipRacuna.Tekuci.ToString(),
+                    KamatnaStopa = 0, // TODO: izmeniti formu iz tb u numeric up down
 
+                    Namena = tbNamena.Text,
+                    KursnaRazlika = nudKursnaRazlika.Value,
+                    DevizniOgranicenja = devizniOgranicenja,
+                    DevizniValute = devizniValute
+                };
+
+                DTOManager.DodajDevizni(dto, tbJmbg.Text, tbPib.Text);
+                MessageBox.Show("Devizni račun uspešno dodat!", "Uspeh",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Close();
             }
             else if (rbStedni.Checked)
             {
@@ -286,6 +316,76 @@ namespace Banka.Forme
 
             var prikaz = tekuciPaketi.Select(tp => new { Paket = tp.Paket }).ToList();
             dgvPaketi.DataSource = prikaz;
+        }
+
+        private void btnDodajOgranicenje_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbOgranicenje.Text))
+            {
+                MessageBox.Show("Unesite naziv ogranicenja!");
+                return;
+            }
+
+            DevizniOgranicenjeBasic dob = new DevizniOgranicenjeBasic
+            {
+                Ogranicenje = tbOgranicenje.Text
+            };
+            devizniOgranicenja.Add(dob);
+
+            var prikaz = devizniOgranicenja.Select(o => new { Ogranicenje = o.Ogranicenje }).ToList();
+            dgvOgranicenja.DataSource = prikaz;
+
+            tbOgranicenje.Clear();
+        }
+
+        private void btnObrisiOgranicenje_Click(object sender, EventArgs e)
+        {
+            if (dgvOgranicenja.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selektujte zapis!");
+                return;
+            }
+
+            int index = dgvOgranicenja.SelectedRows[0].Index;
+            DevizniOgranicenjeBasic dto = devizniOgranicenja[index];
+            devizniOgranicenja.Remove(dto);
+
+            var prikaz = devizniOgranicenja.Select(o => new { Ogranicenje = o.Ogranicenje }).ToList();
+            dgvOgranicenja.DataSource = prikaz;
+        }
+
+        private void btnDodajValutu_Click(object sender, EventArgs e)
+        {
+            DevizniValutaBasic dvb = new DevizniValutaBasic
+            {
+                DozvoljenaValuta = cbDodajValutu.Text
+            };
+            //TODO: ispitati da selektovana valuta (dvb) vec ne postoji u devizniValuta
+            devizniValute.Add(dvb);
+
+            var prikaz = devizniValute.Select(v => new { Valuta = v.DozvoljenaValuta }).ToList();
+            dgvValute.DataSource = prikaz;
+        }
+
+        private void btnObrisiValutu_Click(object sender, EventArgs e)
+        {
+            if (dgvValute.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selektujte zapis!");
+                return;
+            }
+
+            int index = dgvValute.SelectedRows[0].Index;
+            DevizniValutaBasic dto = devizniValute[index];
+            devizniValute.Remove(dto);
+
+            var prikaz = devizniValute.Select(v => new { Valuta = v.DozvoljenaValuta }).ToList();
+            dgvValute.DataSource = prikaz;
+        }
+
+        private void cbValuta_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //TODO: implementirati da se selektovana valuta iz cbValuta ne prikazuje u cbDodajValutu
         }
     }
 }

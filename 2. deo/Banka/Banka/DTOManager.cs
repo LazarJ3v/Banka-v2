@@ -481,6 +481,73 @@ namespace Banka
             }
         }
 
+        public static void DodajDevizni(DevizniBasic db, string jmbg, string pib)
+        {
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
+            {
+                try
+                {
+                    FizickoLice fl = new FizickoLice();
+                    PravnoLice pl = new PravnoLice();
+
+                    fl = session.Query<FizickoLice>()
+                        .Where(x => x.Jmbg == jmbg)
+                        .FirstOrDefault();
+                    pl = session.Query<PravnoLice>()
+                        .Where(x => x.Pib == pib)
+                        .FirstOrDefault();
+
+                    Devizni d = new Devizni
+                    {
+                        BrojRacuna = db.BrojRacuna?.Trim(),
+                        Valuta = db.Valuta?.Trim(),
+                        TrenutnoStanje = db.TrenutnoStanje,
+                        DatumOtvaranja = db.DatumOtvaranja,
+                        Status = db.Status?.Trim(),
+                        DozvoljeniMinus = db.DozvoljeniMinus,
+                        Komentar = db.Komentar?.Trim(),
+                        TipRacuna = db.TipRacuna?.Trim(),
+                        KamatnaStopa = db.KamatnaStopa,
+
+                        Namena = db.Namena.Trim(),
+                        KursnaRazlika = db.KursnaRazlika ?? 0
+                    };
+
+                    foreach (DevizniOgranicenjeBasic ogranicenje in db.DevizniOgranicenja)
+                    {
+                        DevizniOgranicenje o = new DevizniOgranicenje
+                        {
+                            Ogranicenje = ogranicenje.Ogranicenje,
+                            PripadaDeviznom = d
+                        };
+                        d.Ogranicanja.Add(o);
+                    }
+
+                    foreach (DevizniValutaBasic valuta in db.DevizniValute)
+                    {
+                        Entiteti.DevizniValuta v = new Entiteti.DevizniValuta
+                        {
+                            DozvoljenaValuta = valuta.DozvoljenaValuta,
+                            PripadaDeviznom = d
+                        };
+                        d.Valute.Add(v);
+                    }
+
+                    session.Save(d);
+                    transaction.Commit();
+
+                    // Vrati generisani ID
+                    db.Id = d.Id;
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri dodavanju fizičkog lica", ex);
+                }
+            }
+        }
+
         #endregion
     }
 }
