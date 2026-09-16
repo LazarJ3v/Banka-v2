@@ -21,6 +21,8 @@ namespace Banka.Forme
 
         private IList<StedniUsloviPodizanjaBasic> stedniUsloviPodizanja;
         private IList<StedniBonusBasic> stedniBonusi;
+
+        private List<DevizniValuta> sveValute = Enum.GetValues(typeof(DevizniValuta)).Cast<DevizniValuta>().ToList();
         public DodajRacun() : base()
         {
             InitializeComponent();
@@ -63,20 +65,13 @@ namespace Banka.Forme
                 lblMinimalniIznosOtvaranja);
             StilizujTextBox(
                 tbBrojRacuna,
-                tbDozvoljeniMinus,
                 tbJmbg,
-                tbLimitZaMasovnaPlacanja,
-                tbMesecniLimit,
                 tbNamena,
                 tbPaket,
                 tbPib,
-                tbTrenutnoStanje,
-                tbNamenaDevizni,
                 tbOgranicenje,
                 tbBonus,
-                tbUslovPodizanja,
-                tbFrekvKapKamate,
-                tbMinimalniIznosOtvaranja);
+                tbUslovPodizanja);
             StilizujRichTextBox(
                 rtbIntegracijaSaSistemima,
                 rtbKomentar);
@@ -100,7 +95,17 @@ namespace Banka.Forme
                 dgvUsloviPodizanja);
             StilizujComboBox(
                 cbDodajValutu,
-                cbValuta);
+                cbValuta,
+                cbFrekvKapitalizKamate,
+                cbNamenaDevizni);
+            StilizujNumericUpDown(
+                nudTrenutnoStanje,
+                nudDozvoljeniMinus,
+                nudKamatnaStopa,
+                nudMesecniLimit,
+                nudMinIznosOtvaranja,
+                nudLimitZaMasPlacanja,
+                nudKursnaRazlika);
         }
 
         private void DodajRacun_Load(object sender, EventArgs e)
@@ -110,6 +115,10 @@ namespace Banka.Forme
             devizniValute = new BindingList<DevizniValutaBasic>();
             stedniUsloviPodizanja = new BindingList<StedniUsloviPodizanjaBasic>();
             stedniBonusi = new BindingList<StedniBonusBasic>();
+
+            cbValuta.DataSource = new List<DevizniValuta>(sveValute);
+
+            OsveziDodajValutu();
 
             #region Dinamicki select
 
@@ -151,10 +160,69 @@ namespace Banka.Forme
 
             #endregion
 
-            foreach (DevizniValuta valuta in Enum.GetValues(typeof(DevizniValuta)))
+            #region NumericUpDown podesavanje
+
+            // TrenutnoStanje
+            nudTrenutnoStanje.DecimalPlaces = 2;
+            nudTrenutnoStanje.Minimum = 0;
+            nudTrenutnoStanje.Maximum = 1000000000;
+            nudTrenutnoStanje.Increment = 100;
+
+            // DozvoljeniMinus
+            nudDozvoljeniMinus.DecimalPlaces = 2;
+            nudDozvoljeniMinus.Minimum = 0;
+            nudDozvoljeniMinus.Maximum = 500000;
+            nudDozvoljeniMinus.Increment = 1000;
+
+            // KamatnaStopa
+            nudKamatnaStopa.DecimalPlaces = 2;
+            nudKamatnaStopa.Minimum = 0;
+            nudKamatnaStopa.Maximum = 100;
+            nudKamatnaStopa.Increment = 0.1m;
+
+            // MesecniLimit
+            nudMesecniLimit.DecimalPlaces = 2;
+            nudMesecniLimit.Minimum = 0;
+            nudMesecniLimit.Maximum = 1000000;
+            nudMesecniLimit.Increment = 500;
+
+            // MinIznosOtvaranja
+            nudMinIznosOtvaranja.DecimalPlaces = 2;
+            nudMinIznosOtvaranja.Minimum = 0;
+            nudMinIznosOtvaranja.Maximum = 1000000;
+            nudMinIznosOtvaranja.Increment = 100;
+
+            // LimitZaMasPlacanja
+            nudLimitZaMasPlacanja.DecimalPlaces = 2;
+            nudLimitZaMasPlacanja.Minimum = 0;
+            nudLimitZaMasPlacanja.Maximum = 5000000;
+            nudLimitZaMasPlacanja.Increment = 1000;
+
+            nudKursnaRazlika.DecimalPlaces = 2;
+            nudKursnaRazlika.Minimum = 0;
+            nudKursnaRazlika.Maximum = 100;
+            nudKursnaRazlika.Increment = 0.01m;
+
+            #endregion
+
+            foreach (DevizniNamena namena in Enum.GetValues(typeof(DevizniNamena)))
             {
-                cbValuta.Items.Add(valuta);
+                cbNamenaDevizni.Items.Add(namena.GetDescription());
             }
+            cbNamenaDevizni.SelectedItem = cbNamenaDevizni.Items[0];
+
+            var frekvencijeIzbor = new Dictionary<string, int>
+            {
+                { "Dnevno", (int)FrekvencijaKapitalizacijeKamate.Dnevno },
+                { "Mesečno", (int)FrekvencijaKapitalizacijeKamate.Mesecno },
+                { "Kvartalno", (int)FrekvencijaKapitalizacijeKamate.Kvartalno },
+                { "Polugodišnje", (int)FrekvencijaKapitalizacijeKamate.Polugodisnje },
+                { "Godišnje", (int)FrekvencijaKapitalizacijeKamate.Godisnje }
+            };
+
+            cbFrekvKapitalizKamate.DataSource = new BindingSource(frekvencijeIzbor, null);
+            cbFrekvKapitalizKamate.DisplayMember = "Key";
+            cbFrekvKapitalizKamate.ValueMember = "Value";
 
             dgvPaketi.ClearSelection();
 
@@ -231,17 +299,17 @@ namespace Banka.Forme
                 {
                     BrojRacuna = tbBrojRacuna.Text,
                     Valuta = cbValuta.Text,
-                    TrenutnoStanje = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    TrenutnoStanje = nudTrenutnoStanje.Value,
                     DatumOtvaranja = DateTime.Now,
                     Status = StatusRacuna.Aktivan.GetDescription(),
-                    DozvoljeniMinus = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    DozvoljeniMinus = nudDozvoljeniMinus.Value,
                     Komentar = rtbKomentar.Text,
                     TipRacuna = TipRacuna.Tekuci.GetDescription(),
-                    KamatnaStopa = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    KamatnaStopa = nudKamatnaStopa.Value,
                     
 
                     PlatnaKartica = cbPlatnaKartica.Checked,
-                    MesecniLimit = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    MesecniLimit = nudMesecniLimit.Value,
                     TekuciPaketi = tekuciPaketi
                 };
 
@@ -256,15 +324,15 @@ namespace Banka.Forme
                 {
                     BrojRacuna = tbBrojRacuna.Text,
                     Valuta = cbValuta.Text,
-                    TrenutnoStanje = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    TrenutnoStanje = nudTrenutnoStanje.Value,
                     DatumOtvaranja = DateTime.Now,
                     Status = StatusRacuna.Aktivan.GetDescription(),
-                    DozvoljeniMinus = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    DozvoljeniMinus = nudMesecniLimit.Value,
                     Komentar = rtbKomentar.Text,
                     TipRacuna = TipRacuna.Devizni.GetDescription(),
-                    KamatnaStopa = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    KamatnaStopa = nudKamatnaStopa.Value,
 
-                    Namena = tbNamena.Text,
+                    Namena = cbNamenaDevizni.Text,
                     KursnaRazlika = nudKursnaRazlika.Value,
                     DevizniOgranicenja = devizniOgranicenja,
                     DevizniValute = devizniValute
@@ -281,16 +349,16 @@ namespace Banka.Forme
                 {
                     BrojRacuna = tbBrojRacuna.Text,
                     Valuta = cbValuta.Text,
-                    TrenutnoStanje = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    TrenutnoStanje = nudTrenutnoStanje.Value,
                     DatumOtvaranja = DateTime.Now,
                     Status = StatusRacuna.Aktivan.GetDescription(),
-                    DozvoljeniMinus = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    DozvoljeniMinus = nudDozvoljeniMinus.Value,
                     Komentar = rtbKomentar.Text,
                     TipRacuna = TipRacuna.Devizni.GetDescription(),
-                    KamatnaStopa = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    KamatnaStopa = nudKamatnaStopa.Value,
 
-                    MinimalniIznosOtvaranja = 0, // TODO: izmeniti formu iz tb u numeric up down
-                    FrekvKapitalizKamate = 12, // TODO: izmeniti formu iz tb combo box
+                    MinimalniIznosOtvaranja = nudMinIznosOtvaranja.Value,
+                    FrekvKapitalizKamate = (int)cbFrekvKapitalizKamate.SelectedValue,
                     StedniBonusi = stedniBonusi,
                     StedniUsloviPodizanja = stedniUsloviPodizanja
                 };
@@ -306,17 +374,17 @@ namespace Banka.Forme
                 {
                     BrojRacuna = tbBrojRacuna.Text,
                     Valuta = cbValuta.Text,
-                    TrenutnoStanje = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    TrenutnoStanje = nudTrenutnoStanje.Value,
                     DatumOtvaranja = DateTime.Now,
                     Status = StatusRacuna.Aktivan.GetDescription(),
-                    DozvoljeniMinus = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    DozvoljeniMinus = nudDozvoljeniMinus.Value,
                     Komentar = rtbKomentar.Text,
                     TipRacuna = TipRacuna.Ziro.GetDescription(),
-                    KamatnaStopa = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    KamatnaStopa = nudKamatnaStopa.Value,
 
                     Namena = tbNamena.Text,
                     ElektronskoBankarstvo = cbElektronskoBankarstvo.Checked,
-                    LimitZaMasovnaPlacanja = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    LimitZaMasovnaPlacanja = nudLimitZaMasPlacanja.Value,
                     IntegracijaSaSistemima = rtbIntegracijaSaSistemima.Text
                 };
 
@@ -434,7 +502,21 @@ namespace Banka.Forme
 
         private void cbValuta_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //TODO: implementirati da se selektovana valuta iz cbValuta ne prikazuje u cbDodajValutu
+            OsveziDodajValutu();
+        }
+
+        private void OsveziDodajValutu()
+        {
+            if (cbValuta.SelectedItem == null)
+                return;
+
+            DevizniValuta izabranaValuta = (DevizniValuta)cbValuta.SelectedItem;
+
+            var preostaleValute = sveValute
+                .Where(v => v != izabranaValuta)
+                .ToList();
+
+            cbDodajValutu.DataSource = preostaleValute;
         }
     }
 }

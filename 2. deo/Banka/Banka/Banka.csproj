@@ -124,6 +124,7 @@
     <Compile Include="Enumi\DevizniNamena.cs" />
     <Compile Include="Enumi\DevizniValuta.cs" />
     <Compile Include="Enumi\EnumExtensions.cs" />
+    <Compile Include="Enumi\FrekvencijaKapitalizacijeKamate.cs" />
     <Compile Include="Enumi\StatusRacuna.cs" />
     <Compile Include="Enumi\TipRacuna.cs" />
     <Compile Include="Enumi\KorisnikStatus.cs" />

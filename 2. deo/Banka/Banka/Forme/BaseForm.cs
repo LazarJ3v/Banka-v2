@@ -262,6 +262,21 @@ namespace Banka.Forme
             rtb.SelectionColor = TekstBoja;
         }
 
+        // ==========================================
+        // NUMERIC UP DOWN
+        // ==========================================
+        protected void StilizujNumericUpDown(NumericUpDown nud)
+        {
+            nud.BorderStyle = BorderStyle.FixedSingle;
+            nud.BackColor = BojaSrednja;
+            nud.ForeColor = TekstBoja;
+            nud.Font = new Font("Segoe UI", 9);
+
+            // Da i strelice/dugmići prate temu (delimično - WinForms ograničeno
+            // dozvoljava potpunu stilizaciju spinnera na NumericUpDown-u)
+            nud.Controls[0].BackColor = BojaSrednja;
+        }
+
         protected void StilizujButton(params Button[] prms)
         {
             foreach (Button btn in prms)
@@ -365,6 +380,13 @@ namespace Banka.Forme
                 StilizujRichTextBox(rtb);
             }
         }
-    }
 
+        protected void StilizujNumericUpDown(params NumericUpDown[] prms)
+        {
+            foreach (NumericUpDown nud in prms)
+            {
+                StilizujNumericUpDown(nud);
+            }
+        }
+    }
 }
