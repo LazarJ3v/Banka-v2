@@ -79,6 +79,7 @@ namespace Banka.Forme
         {
             DodajRacun dodajRacun = new DodajRacun();
             dodajRacun.ShowDialog();
+            RacuniPregled_Load(null, null);
         }
     }
 }

@@ -421,6 +421,66 @@ namespace Banka
             }
         }
 
+        public static void DodajTekuci(TekuciBasic tb, string jmbg, string pib)
+        {
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
+            {
+                try
+                {
+                    FizickoLice fl = new FizickoLice();
+                    PravnoLice pl = new PravnoLice();
+
+                    fl = session.Query<FizickoLice>()
+                        .Where(x => x.Jmbg == jmbg)
+                        .FirstOrDefault();
+                    pl = session.Query<PravnoLice>()
+                        .Where(x => x.Pib == pib)
+                        .FirstOrDefault();
+
+                    Tekuci t = new Tekuci
+                    {
+                        BrojRacuna = tb.BrojRacuna?.Trim(),
+                        Valuta = tb.Valuta?.Trim(),
+                        TrenutnoStanje = tb.TrenutnoStanje,
+                        DatumOtvaranja = tb.DatumOtvaranja,
+                        Status = tb.Status?.Trim(),
+                        DozvoljeniMinus = tb.DozvoljeniMinus,
+                        Komentar = tb.Komentar?.Trim(),
+                        TipRacuna = tb.TipRacuna?.Trim(),
+                        KamatnaStopa = tb.KamatnaStopa,
+
+                        PlatnaKartica = tb.PlatnaKartica,
+                        MesecniLimit = tb.MesecniLimit ?? 0,
+
+                        PripadaFizickomLicu = fl,
+                        PripadaPravnomLicu = pl
+                    };
+
+                    foreach(TekuciPaketBasic paket in tb.TekuciPaketi)
+                    {
+                        TekuciPaket tp = new TekuciPaket
+                        {
+                            Paket = paket.Paket,
+                            PripadaTekucem = t
+                        };
+                        t.Paketi.Add(tp);
+                    }
+
+                    session.Save(t);
+                    transaction.Commit();
+
+                    // Vrati generisani ID
+                    tb.Id = t.Id;
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri dodavanju fizičkog lica", ex);
+                }
+            }
+        }
+
         #endregion
     }
 }

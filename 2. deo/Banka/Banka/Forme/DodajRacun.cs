@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Banka.Enumi;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +13,7 @@ namespace Banka.Forme
 {
     public partial class DodajRacun : BaseForm
     {
+        private IList<TekuciPaketBasic> tekuciPaketi;
         public DodajRacun() : base()
         {
             InitializeComponent();
@@ -96,6 +98,50 @@ namespace Banka.Forme
 
         private void DodajRacun_Load(object sender, EventArgs e)
         {
+            tekuciPaketi = new BindingList<TekuciPaketBasic>();
+
+            #region Dinamicki select
+
+            dgvPaketi.AllowUserToAddRows = false;
+            dgvPaketi.ReadOnly = true;
+            dgvPaketi.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvPaketi.MultiSelect = false;
+
+            // 1. KLIK NA RED - selektuje
+            dgvPaketi.CellClick += (s, ev) =>
+            {
+                if (ev.RowIndex >= 0 && ev.RowIndex < dgvPaketi.Rows.Count)
+                {
+                    dgvPaketi.Rows[ev.RowIndex].Selected = true;
+                }
+            };
+
+            // 2. KLIK NA PRAZAN PROSTOR U DGV - odselektuje
+            dgvPaketi.MouseDown += (s, ev) =>
+            {
+                DataGridView.HitTestInfo hit = dgvPaketi.HitTest(ev.X, ev.Y);
+                if (hit.RowIndex == -1)
+                {
+                    dgvPaketi.ClearSelection();
+                }
+            };
+
+            // 3. KLIK NA FORMU - odselektuje
+            this.MouseClick += (s, ev) =>
+            {
+                dgvPaketi.ClearSelection();
+            };
+
+            // 4. KLIK NA GROUPBOX - odselektuje
+            gbTekuci.MouseClick += (s, ev) =>
+            {
+                dgvPaketi.ClearSelection();
+            };
+
+            #endregion
+
+            dgvPaketi.ClearSelection();
+
             rbFizickoLice.Checked = true;
             rbTekuci.Checked = true;
         }
@@ -161,6 +207,85 @@ namespace Banka.Forme
             }
         }
 
-        
+        private void btnSacuvaj_Click(object sender, EventArgs e)
+        {
+            if (rbTekuci.Checked)
+            {
+                TekuciBasic dto = new TekuciBasic
+                {
+                    BrojRacuna = tbBrojRacuna.Text,
+                    Valuta = cbValuta.Text,
+                    TrenutnoStanje = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    DatumOtvaranja = DateTime.Now,
+                    Status = StatusRacuna.Aktivan.ToString(),
+                    DozvoljeniMinus = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    Komentar = rtbKomentar.Text,
+                    TipRacuna = TipRacuna.Tekuci.ToString(),
+                    KamatnaStopa = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    
+
+                    PlatnaKartica = cbPlatnaKartica.Checked,
+                    MesecniLimit = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    TekuciPaketi = tekuciPaketi
+                };
+
+                DTOManager.DodajTekuci(dto, tbJmbg.Text, tbPib.Text);
+                MessageBox.Show("Tekući račun uspešno dodat!", "Uspeh",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Close();
+            }
+            else if (rbDevizni.Checked)
+            {
+
+            }
+            else if (rbStedni.Checked)
+            {
+
+            }
+            else if (rbZiro.Checked)
+            {
+
+            }
+            else
+            {
+
+            }
+        }
+
+        private void btnDodajPaket_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbPaket.Text))
+            {
+                MessageBox.Show("Unesite naziv paketa!");
+                return;
+            }
+
+            TekuciPaketBasic tpb = new TekuciPaketBasic
+            {
+                Paket = tbPaket.Text
+            };
+            tekuciPaketi.Add(tpb);
+
+            var prikaz = tekuciPaketi.Select(tp => new { Paket = tp.Paket }).ToList();
+            dgvPaketi.DataSource = prikaz;
+
+            tbPaket.Clear();
+        }
+
+        private void btnObrisiPaket_Click(object sender, EventArgs e)
+        {
+            if (dgvPaketi.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selektujte zapis!");
+                return;
+            }
+
+            int index = dgvPaketi.SelectedRows[0].Index;
+            TekuciPaketBasic dto = tekuciPaketi[index];
+            tekuciPaketi.Remove(dto);
+
+            var prikaz = tekuciPaketi.Select(tp => new { Paket = tp.Paket }).ToList();
+            dgvPaketi.DataSource = prikaz;
+        }
     }
 }
