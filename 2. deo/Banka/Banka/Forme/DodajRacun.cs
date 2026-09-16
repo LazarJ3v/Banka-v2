@@ -18,6 +18,9 @@ namespace Banka.Forme
 
         private IList<DevizniOgranicenjeBasic> devizniOgranicenja;
         private IList<DevizniValutaBasic> devizniValute;
+
+        private IList<StedniUsloviPodizanjaBasic> stedniUsloviPodizanja;
+        private IList<StedniBonusBasic> stedniBonusi;
         public DodajRacun() : base()
         {
             InitializeComponent();
@@ -103,6 +106,10 @@ namespace Banka.Forme
         private void DodajRacun_Load(object sender, EventArgs e)
         {
             tekuciPaketi = new BindingList<TekuciPaketBasic>();
+            devizniOgranicenja = new BindingList<DevizniOgranicenjeBasic>();
+            devizniValute = new BindingList<DevizniValutaBasic>();
+            stedniUsloviPodizanja = new BindingList<StedniUsloviPodizanjaBasic>();
+            stedniBonusi = new BindingList<StedniBonusBasic>();
 
             #region Dinamicki select
 
@@ -226,10 +233,10 @@ namespace Banka.Forme
                     Valuta = cbValuta.Text,
                     TrenutnoStanje = 0, // TODO: izmeniti formu iz tb u numeric up down
                     DatumOtvaranja = DateTime.Now,
-                    Status = StatusRacuna.Aktivan.ToString(),
+                    Status = StatusRacuna.Aktivan.GetDescription(),
                     DozvoljeniMinus = 0, // TODO: izmeniti formu iz tb u numeric up down
                     Komentar = rtbKomentar.Text,
-                    TipRacuna = TipRacuna.Tekuci.ToString(),
+                    TipRacuna = TipRacuna.Tekuci.GetDescription(),
                     KamatnaStopa = 0, // TODO: izmeniti formu iz tb u numeric up down
                     
 
@@ -251,10 +258,10 @@ namespace Banka.Forme
                     Valuta = cbValuta.Text,
                     TrenutnoStanje = 0, // TODO: izmeniti formu iz tb u numeric up down
                     DatumOtvaranja = DateTime.Now,
-                    Status = StatusRacuna.Aktivan.ToString(),
+                    Status = StatusRacuna.Aktivan.GetDescription(),
                     DozvoljeniMinus = 0, // TODO: izmeniti formu iz tb u numeric up down
                     Komentar = rtbKomentar.Text,
-                    TipRacuna = TipRacuna.Tekuci.ToString(),
+                    TipRacuna = TipRacuna.Devizni.GetDescription(),
                     KamatnaStopa = 0, // TODO: izmeniti formu iz tb u numeric up down
 
                     Namena = tbNamena.Text,
@@ -270,11 +277,53 @@ namespace Banka.Forme
             }
             else if (rbStedni.Checked)
             {
+                StedniBasic dto = new StedniBasic
+                {
+                    BrojRacuna = tbBrojRacuna.Text,
+                    Valuta = cbValuta.Text,
+                    TrenutnoStanje = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    DatumOtvaranja = DateTime.Now,
+                    Status = StatusRacuna.Aktivan.GetDescription(),
+                    DozvoljeniMinus = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    Komentar = rtbKomentar.Text,
+                    TipRacuna = TipRacuna.Devizni.GetDescription(),
+                    KamatnaStopa = 0, // TODO: izmeniti formu iz tb u numeric up down
 
+                    MinimalniIznosOtvaranja = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    FrekvKapitalizKamate = 12, // TODO: izmeniti formu iz tb combo box
+                    StedniBonusi = stedniBonusi,
+                    StedniUsloviPodizanja = stedniUsloviPodizanja
+                };
+
+                DTOManager.DodajStedni(dto, tbJmbg.Text, tbPib.Text);
+                MessageBox.Show("Štedni račun uspešno dodat!", "Uspeh",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Close();
             }
             else if (rbZiro.Checked)
             {
+                ZiroBasic dto = new ZiroBasic
+                {
+                    BrojRacuna = tbBrojRacuna.Text,
+                    Valuta = cbValuta.Text,
+                    TrenutnoStanje = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    DatumOtvaranja = DateTime.Now,
+                    Status = StatusRacuna.Aktivan.GetDescription(),
+                    DozvoljeniMinus = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    Komentar = rtbKomentar.Text,
+                    TipRacuna = TipRacuna.Ziro.GetDescription(),
+                    KamatnaStopa = 0, // TODO: izmeniti formu iz tb u numeric up down
 
+                    Namena = tbNamena.Text,
+                    ElektronskoBankarstvo = cbElektronskoBankarstvo.Checked,
+                    LimitZaMasovnaPlacanja = 0, // TODO: izmeniti formu iz tb u numeric up down
+                    IntegracijaSaSistemima = rtbIntegracijaSaSistemima.Text
+                };
+
+                DTOManager.DodajZiro(dto, tbJmbg.Text, tbPib.Text);
+                MessageBox.Show("Žiro račun uspešno dodat!", "Uspeh",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Close();
             }
             else
             {

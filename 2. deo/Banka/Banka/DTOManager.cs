@@ -511,7 +511,10 @@ namespace Banka
                         KamatnaStopa = db.KamatnaStopa,
 
                         Namena = db.Namena.Trim(),
-                        KursnaRazlika = db.KursnaRazlika ?? 0
+                        KursnaRazlika = db.KursnaRazlika ?? 0,
+
+                        PripadaFizickomLicu = fl,
+                        PripadaPravnomLicu = pl
                     };
 
                     foreach (DevizniOgranicenjeBasic ogranicenje in db.DevizniOgranicenja)
@@ -539,6 +542,128 @@ namespace Banka
 
                     // Vrati generisani ID
                     db.Id = d.Id;
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri dodavanju fizičkog lica", ex);
+                }
+            }
+        }
+
+        public static void DodajStedni(StedniBasic sb, string jmbg, string pib)
+        {
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
+            {
+                try
+                {
+                    FizickoLice fl = new FizickoLice();
+                    PravnoLice pl = new PravnoLice();
+
+                    fl = session.Query<FizickoLice>()
+                        .Where(x => x.Jmbg == jmbg)
+                        .FirstOrDefault();
+                    pl = session.Query<PravnoLice>()
+                        .Where(x => x.Pib == pib)
+                        .FirstOrDefault();
+
+                    Stedni s = new Stedni
+                    {
+                        BrojRacuna = sb.BrojRacuna?.Trim(),
+                        Valuta = sb.Valuta?.Trim(),
+                        TrenutnoStanje = sb.TrenutnoStanje,
+                        DatumOtvaranja = sb.DatumOtvaranja,
+                        Status = sb.Status?.Trim(),
+                        DozvoljeniMinus = sb.DozvoljeniMinus,
+                        Komentar = sb.Komentar?.Trim(),
+                        TipRacuna = sb.TipRacuna?.Trim(),
+                        KamatnaStopa = sb.KamatnaStopa,
+
+                        MinimalniIznosOtvaranja = sb.MinimalniIznosOtvaranja ?? 0,
+                        FrekvKapitKamate = sb.FrekvKapitalizKamate,
+
+                        PripadaFizickomLicu = fl,
+                        PripadaPravnomLicu = pl
+                    };
+
+                    foreach (StedniBonusBasic bonus in sb.StedniBonusi)
+                    {
+                        StedniBonus sbonus = new StedniBonus
+                        {
+                            Bonus = bonus.Bonus,
+                            PripadaStednom = s
+                        };
+                        s.Bonusi.Add(sbonus);
+                    }
+
+                    foreach (StedniUsloviPodizanjaBasic su in sb.StedniUsloviPodizanja)
+                    {
+                        StedniUslovPodizanja uslov = new StedniUslovPodizanja
+                        {
+                            UslovPodizanja = su.UslovPodizanja,
+                            PripadaStednom = s
+                        };
+                        s.UsloviPodizanja.Add(uslov);
+                    }
+
+                    session.Save(s);
+                    transaction.Commit();
+
+                    // Vrati generisani ID
+                    sb.Id = s.Id;
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri dodavanju fizičkog lica", ex);
+                }
+            }
+        }
+
+        public static void DodajZiro(ZiroBasic zb, string jmbg, string pib)
+        {
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
+            {
+                try
+                {
+                    FizickoLice fl = new FizickoLice();
+                    PravnoLice pl = new PravnoLice();
+
+                    fl = session.Query<FizickoLice>()
+                        .Where(x => x.Jmbg == jmbg)
+                        .FirstOrDefault();
+                    pl = session.Query<PravnoLice>()
+                        .Where(x => x.Pib == pib)
+                        .FirstOrDefault();
+
+                    Ziro z = new Ziro
+                    {
+                        BrojRacuna = zb.BrojRacuna?.Trim(),
+                        Valuta = zb.Valuta?.Trim(),
+                        TrenutnoStanje = zb.TrenutnoStanje,
+                        DatumOtvaranja = zb.DatumOtvaranja,
+                        Status = zb.Status?.Trim(),
+                        DozvoljeniMinus = zb.DozvoljeniMinus,
+                        Komentar = zb.Komentar?.Trim(),
+                        TipRacuna = zb.TipRacuna?.Trim(),
+                        KamatnaStopa = zb.KamatnaStopa,
+
+                        Namena = zb.Namena?.Trim(),
+                        ElektronskoBankarstvo = zb.ElektronskoBankarstvo,
+                        LimitZaMasovnaPlacanja = zb.LimitZaMasovnaPlacanja ?? 0,
+                        IntegracijaSaSistemima = zb.IntegracijaSaSistemima,
+
+                        PripadaFizickomLicu = fl,
+                        PripadaPravnomLicu = pl
+                    };
+
+                    session.Save(z);
+                    transaction.Commit();
+
+                    // Vrati generisani ID
+                    zb.Id = z.Id;
                 }
                 catch (Exception ex)
                 {

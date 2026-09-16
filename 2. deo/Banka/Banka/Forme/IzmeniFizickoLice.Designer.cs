@@ -55,49 +55,49 @@
             // 
             // tbIme
             // 
-            this.tbIme.Location = new System.Drawing.Point(205, 11);
+            this.tbIme.Location = new System.Drawing.Point(229, 11);
             this.tbIme.Name = "tbIme";
             this.tbIme.Size = new System.Drawing.Size(198, 31);
             this.tbIme.TabIndex = 0;
             // 
             // tbPrezime
             // 
-            this.tbPrezime.Location = new System.Drawing.Point(205, 55);
+            this.tbPrezime.Location = new System.Drawing.Point(229, 55);
             this.tbPrezime.Name = "tbPrezime";
             this.tbPrezime.Size = new System.Drawing.Size(198, 31);
             this.tbPrezime.TabIndex = 1;
             // 
             // tbJmbg
             // 
-            this.tbJmbg.Location = new System.Drawing.Point(205, 98);
+            this.tbJmbg.Location = new System.Drawing.Point(229, 98);
             this.tbJmbg.Name = "tbJmbg";
             this.tbJmbg.Size = new System.Drawing.Size(198, 31);
             this.tbJmbg.TabIndex = 2;
             // 
             // tbBrojLicneKarte
             // 
-            this.tbBrojLicneKarte.Location = new System.Drawing.Point(205, 142);
+            this.tbBrojLicneKarte.Location = new System.Drawing.Point(229, 141);
             this.tbBrojLicneKarte.Name = "tbBrojLicneKarte";
             this.tbBrojLicneKarte.Size = new System.Drawing.Size(198, 31);
             this.tbBrojLicneKarte.TabIndex = 3;
             // 
             // dtpDatumRodjenja
             // 
-            this.dtpDatumRodjenja.Location = new System.Drawing.Point(205, 185);
+            this.dtpDatumRodjenja.Location = new System.Drawing.Point(229, 184);
             this.dtpDatumRodjenja.Name = "dtpDatumRodjenja";
             this.dtpDatumRodjenja.Size = new System.Drawing.Size(198, 31);
             this.dtpDatumRodjenja.TabIndex = 4;
             // 
             // tbAdresa
             // 
-            this.tbAdresa.Location = new System.Drawing.Point(205, 228);
+            this.tbAdresa.Location = new System.Drawing.Point(229, 228);
             this.tbAdresa.Name = "tbAdresa";
             this.tbAdresa.Size = new System.Drawing.Size(198, 31);
             this.tbAdresa.TabIndex = 5;
             // 
             // tbGrad
             // 
-            this.tbGrad.Location = new System.Drawing.Point(205, 271);
+            this.tbGrad.Location = new System.Drawing.Point(229, 271);
             this.tbGrad.Name = "tbGrad";
             this.tbGrad.Size = new System.Drawing.Size(198, 31);
             this.tbGrad.TabIndex = 6;
@@ -135,7 +135,7 @@
             // lblIme
             // 
             this.lblIme.AutoSize = true;
-            this.lblIme.Location = new System.Drawing.Point(147, 14);
+            this.lblIme.Location = new System.Drawing.Point(169, 14);
             this.lblIme.Name = "lblIme";
             this.lblIme.Size = new System.Drawing.Size(54, 23);
             this.lblIme.TabIndex = 11;
@@ -144,7 +144,7 @@
             // lblPrezime
             // 
             this.lblPrezime.AutoSize = true;
-            this.lblPrezime.Location = new System.Drawing.Point(112, 58);
+            this.lblPrezime.Location = new System.Drawing.Point(125, 58);
             this.lblPrezime.Name = "lblPrezime";
             this.lblPrezime.Size = new System.Drawing.Size(98, 23);
             this.lblPrezime.TabIndex = 12;
@@ -153,7 +153,7 @@
             // lblJmbg
             // 
             this.lblJmbg.AutoSize = true;
-            this.lblJmbg.Location = new System.Drawing.Point(132, 101);
+            this.lblJmbg.Location = new System.Drawing.Point(158, 101);
             this.lblJmbg.Name = "lblJmbg";
             this.lblJmbg.Size = new System.Drawing.Size(65, 23);
             this.lblJmbg.TabIndex = 13;
@@ -162,16 +162,16 @@
             // lblBrojLicneKarte
             // 
             this.lblBrojLicneKarte.AutoSize = true;
-            this.lblBrojLicneKarte.Location = new System.Drawing.Point(54, 144);
+            this.lblBrojLicneKarte.Location = new System.Drawing.Point(37, 144);
             this.lblBrojLicneKarte.Name = "lblBrojLicneKarte";
-            this.lblBrojLicneKarte.Size = new System.Drawing.Size(197, 23);
+            this.lblBrojLicneKarte.Size = new System.Drawing.Size(186, 23);
             this.lblBrojLicneKarte.TabIndex = 14;
-            this.lblBrojLicneKarte.Text = "Broj lične karte:";
+            this.lblBrojLicneKarte.Text = "Br. lične karte:";
             // 
             // lblDatumRodjenja
             // 
             this.lblDatumRodjenja.AutoSize = true;
-            this.lblDatumRodjenja.Location = new System.Drawing.Point(50, 190);
+            this.lblDatumRodjenja.Location = new System.Drawing.Point(59, 190);
             this.lblDatumRodjenja.Name = "lblDatumRodjenja";
             this.lblDatumRodjenja.Size = new System.Drawing.Size(164, 23);
             this.lblDatumRodjenja.TabIndex = 15;
@@ -180,7 +180,7 @@
             // lblAdresa
             // 
             this.lblAdresa.AutoSize = true;
-            this.lblAdresa.Location = new System.Drawing.Point(120, 231);
+            this.lblAdresa.Location = new System.Drawing.Point(136, 231);
             this.lblAdresa.Name = "lblAdresa";
             this.lblAdresa.Size = new System.Drawing.Size(87, 23);
             this.lblAdresa.TabIndex = 16;
@@ -189,7 +189,7 @@
             // lblGrad
             // 
             this.lblGrad.AutoSize = true;
-            this.lblGrad.Location = new System.Drawing.Point(139, 274);
+            this.lblGrad.Location = new System.Drawing.Point(158, 274);
             this.lblGrad.Name = "lblGrad";
             this.lblGrad.Size = new System.Drawing.Size(65, 23);
             this.lblGrad.TabIndex = 17;
@@ -198,7 +198,7 @@
             // lblTelefon
             // 
             this.lblTelefon.AutoSize = true;
-            this.lblTelefon.Location = new System.Drawing.Point(500, 17);
+            this.lblTelefon.Location = new System.Drawing.Point(482, 17);
             this.lblTelefon.Name = "lblTelefon";
             this.lblTelefon.Size = new System.Drawing.Size(98, 23);
             this.lblTelefon.TabIndex = 18;
@@ -207,7 +207,7 @@
             // lblEmail
             // 
             this.lblEmail.AutoSize = true;
-            this.lblEmail.Location = new System.Drawing.Point(516, 61);
+            this.lblEmail.Location = new System.Drawing.Point(504, 61);
             this.lblEmail.Name = "lblEmail";
             this.lblEmail.Size = new System.Drawing.Size(76, 23);
             this.lblEmail.TabIndex = 19;
@@ -216,7 +216,7 @@
             // lblStatus
             // 
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(509, 105);
+            this.lblStatus.Location = new System.Drawing.Point(493, 105);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(87, 23);
             this.lblStatus.TabIndex = 20;
@@ -225,7 +225,7 @@
             // lblKomentar
             // 
             this.lblKomentar.AutoSize = true;
-            this.lblKomentar.Location = new System.Drawing.Point(477, 148);
+            this.lblKomentar.Location = new System.Drawing.Point(471, 148);
             this.lblKomentar.Name = "lblKomentar";
             this.lblKomentar.Size = new System.Drawing.Size(109, 23);
             this.lblKomentar.TabIndex = 21;
@@ -233,7 +233,7 @@
             // 
             // btnIzmeni
             // 
-            this.btnIzmeni.Location = new System.Drawing.Point(751, 314);
+            this.btnIzmeni.Location = new System.Drawing.Point(586, 317);
             this.btnIzmeni.Name = "btnIzmeni";
             this.btnIzmeni.Size = new System.Drawing.Size(198, 29);
             this.btnIzmeni.TabIndex = 22;
@@ -270,6 +270,7 @@
             this.Controls.Add(this.tbPrezime);
             this.Controls.Add(this.tbIme);
             this.Name = "IzmeniFizickoLice";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "IzmeniFizickoLice";
             this.Load += new System.EventHandler(this.IzmeniFizickoLice_Load);
             this.ResumeLayout(false);

@@ -54,46 +54,59 @@
             // 
             // gbFizickaLica
             // 
+            this.gbFizickaLica.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gbFizickaLica.Controls.Add(this.dgvFizickaLica);
-            this.gbFizickaLica.Location = new System.Drawing.Point(12, 12);
+            this.gbFizickaLica.Location = new System.Drawing.Point(13, 11);
             this.gbFizickaLica.Name = "gbFizickaLica";
-            this.gbFizickaLica.Size = new System.Drawing.Size(739, 250);
+            this.gbFizickaLica.Size = new System.Drawing.Size(896, 230);
             this.gbFizickaLica.TabIndex = 0;
             this.gbFizickaLica.TabStop = false;
             this.gbFizickaLica.Text = "Fizička lica";
             // 
             // dgvFizickaLica
             // 
+            this.dgvFizickaLica.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvFizickaLica.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvFizickaLica.Location = new System.Drawing.Point(6, 30);
+            this.dgvFizickaLica.Location = new System.Drawing.Point(7, 28);
             this.dgvFizickaLica.Name = "dgvFizickaLica";
             this.dgvFizickaLica.RowHeadersWidth = 62;
             this.dgvFizickaLica.RowTemplate.Height = 28;
-            this.dgvFizickaLica.Size = new System.Drawing.Size(727, 214);
+            this.dgvFizickaLica.Size = new System.Drawing.Size(883, 197);
             this.dgvFizickaLica.TabIndex = 0;
             // 
             // gbPravnaLica
             // 
+            this.gbPravnaLica.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gbPravnaLica.Controls.Add(this.dgvPravnaLica);
-            this.gbPravnaLica.Location = new System.Drawing.Point(12, 268);
+            this.gbPravnaLica.Location = new System.Drawing.Point(13, 247);
             this.gbPravnaLica.Name = "gbPravnaLica";
-            this.gbPravnaLica.Size = new System.Drawing.Size(739, 250);
+            this.gbPravnaLica.Size = new System.Drawing.Size(896, 230);
             this.gbPravnaLica.TabIndex = 1;
             this.gbPravnaLica.TabStop = false;
             this.gbPravnaLica.Text = "Pravna lica";
             // 
             // dgvPravnaLica
             // 
+            this.dgvPravnaLica.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvPravnaLica.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvPravnaLica.Location = new System.Drawing.Point(6, 30);
+            this.dgvPravnaLica.Location = new System.Drawing.Point(7, 28);
             this.dgvPravnaLica.Name = "dgvPravnaLica";
             this.dgvPravnaLica.RowHeadersWidth = 62;
             this.dgvPravnaLica.RowTemplate.Height = 28;
-            this.dgvPravnaLica.Size = new System.Drawing.Size(727, 214);
+            this.dgvPravnaLica.Size = new System.Drawing.Size(883, 197);
             this.dgvPravnaLica.TabIndex = 0;
             // 
             // gbPretraga
             // 
+            this.gbPretraga.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.gbPretraga.Controls.Add(this.cbTipKlijenta);
             this.gbPretraga.Controls.Add(this.btnPretrazi);
             this.gbPretraga.Controls.Add(this.lblStatusKlijenta);
@@ -101,10 +114,10 @@
             this.gbPretraga.Controls.Add(this.lblEmail);
             this.gbPretraga.Controls.Add(this.cbStatusKlijenta);
             this.gbPretraga.Controls.Add(this.tbEmail);
-            this.gbPretraga.Location = new System.Drawing.Point(757, 12);
+            this.gbPretraga.Location = new System.Drawing.Point(915, 12);
             this.gbPretraga.Name = "gbPretraga";
-            this.gbPretraga.Padding = new System.Windows.Forms.Padding(10, 10, 10, 10);
-            this.gbPretraga.Size = new System.Drawing.Size(276, 250);
+            this.gbPretraga.Padding = new System.Windows.Forms.Padding(11, 9, 11, 9);
+            this.gbPretraga.Size = new System.Drawing.Size(331, 230);
             this.gbPretraga.TabIndex = 2;
             this.gbPretraga.TabStop = false;
             this.gbPretraga.Text = "Pretraga";
@@ -112,16 +125,16 @@
             // cbTipKlijenta
             // 
             this.cbTipKlijenta.FormattingEnabled = true;
-            this.cbTipKlijenta.Location = new System.Drawing.Point(83, 84);
+            this.cbTipKlijenta.Location = new System.Drawing.Point(119, 77);
             this.cbTipKlijenta.Name = "cbTipKlijenta";
-            this.cbTipKlijenta.Size = new System.Drawing.Size(180, 33);
+            this.cbTipKlijenta.Size = new System.Drawing.Size(198, 31);
             this.cbTipKlijenta.TabIndex = 7;
             // 
             // btnPretrazi
             // 
-            this.btnPretrazi.Location = new System.Drawing.Point(13, 187);
+            this.btnPretrazi.Location = new System.Drawing.Point(14, 172);
             this.btnPretrazi.Name = "btnPretrazi";
-            this.btnPretrazi.Size = new System.Drawing.Size(250, 40);
+            this.btnPretrazi.Size = new System.Drawing.Size(303, 37);
             this.btnPretrazi.TabIndex = 6;
             this.btnPretrazi.Text = "Pretraži";
             this.btnPretrazi.UseVisualStyleBackColor = true;
@@ -129,50 +142,51 @@
             // lblStatusKlijenta
             // 
             this.lblStatusKlijenta.AutoSize = true;
-            this.lblStatusKlijenta.Location = new System.Drawing.Point(13, 136);
+            this.lblStatusKlijenta.Location = new System.Drawing.Point(14, 125);
             this.lblStatusKlijenta.Name = "lblStatusKlijenta";
-            this.lblStatusKlijenta.Size = new System.Drawing.Size(64, 25);
+            this.lblStatusKlijenta.Size = new System.Drawing.Size(87, 23);
             this.lblStatusKlijenta.TabIndex = 5;
             this.lblStatusKlijenta.Text = "Status:";
             // 
             // lblTipKlijenta
             // 
             this.lblTipKlijenta.AutoSize = true;
-            this.lblTipKlijenta.Location = new System.Drawing.Point(37, 87);
+            this.lblTipKlijenta.Location = new System.Drawing.Point(41, 80);
             this.lblTipKlijenta.Name = "lblTipKlijenta";
-            this.lblTipKlijenta.Size = new System.Drawing.Size(40, 25);
+            this.lblTipKlijenta.Size = new System.Drawing.Size(54, 23);
             this.lblTipKlijenta.TabIndex = 4;
             this.lblTipKlijenta.Text = "Tip:";
             // 
             // lblEmail
             // 
             this.lblEmail.AutoSize = true;
-            this.lblEmail.Location = new System.Drawing.Point(19, 40);
+            this.lblEmail.Location = new System.Drawing.Point(21, 37);
             this.lblEmail.Name = "lblEmail";
-            this.lblEmail.Size = new System.Drawing.Size(58, 25);
+            this.lblEmail.Size = new System.Drawing.Size(76, 23);
             this.lblEmail.TabIndex = 3;
             this.lblEmail.Text = "Email:";
             // 
             // cbStatusKlijenta
             // 
             this.cbStatusKlijenta.FormattingEnabled = true;
-            this.cbStatusKlijenta.Location = new System.Drawing.Point(83, 133);
+            this.cbStatusKlijenta.Location = new System.Drawing.Point(119, 122);
             this.cbStatusKlijenta.Name = "cbStatusKlijenta";
-            this.cbStatusKlijenta.Size = new System.Drawing.Size(180, 33);
+            this.cbStatusKlijenta.Size = new System.Drawing.Size(198, 31);
             this.cbStatusKlijenta.TabIndex = 2;
             // 
             // tbEmail
             // 
-            this.tbEmail.Location = new System.Drawing.Point(83, 37);
+            this.tbEmail.Location = new System.Drawing.Point(119, 34);
             this.tbEmail.Name = "tbEmail";
-            this.tbEmail.Size = new System.Drawing.Size(180, 31);
+            this.tbEmail.Size = new System.Drawing.Size(198, 31);
             this.tbEmail.TabIndex = 0;
             // 
             // btnDodaj
             // 
-            this.btnDodaj.Location = new System.Drawing.Point(763, 298);
+            this.btnDodaj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDodaj.Location = new System.Drawing.Point(929, 275);
             this.btnDodaj.Name = "btnDodaj";
-            this.btnDodaj.Size = new System.Drawing.Size(264, 40);
+            this.btnDodaj.Size = new System.Drawing.Size(303, 37);
             this.btnDodaj.TabIndex = 3;
             this.btnDodaj.Text = "Dodaj";
             this.btnDodaj.UseVisualStyleBackColor = true;
@@ -180,9 +194,10 @@
             // 
             // btnIzmeni
             // 
-            this.btnIzmeni.Location = new System.Drawing.Point(763, 357);
+            this.btnIzmeni.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnIzmeni.Location = new System.Drawing.Point(929, 329);
             this.btnIzmeni.Name = "btnIzmeni";
-            this.btnIzmeni.Size = new System.Drawing.Size(264, 40);
+            this.btnIzmeni.Size = new System.Drawing.Size(303, 37);
             this.btnIzmeni.TabIndex = 4;
             this.btnIzmeni.Text = "Izmeni";
             this.btnIzmeni.UseVisualStyleBackColor = true;
@@ -190,9 +205,10 @@
             // 
             // btnObrisi
             // 
-            this.btnObrisi.Location = new System.Drawing.Point(763, 415);
+            this.btnObrisi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnObrisi.Location = new System.Drawing.Point(929, 383);
             this.btnObrisi.Name = "btnObrisi";
-            this.btnObrisi.Size = new System.Drawing.Size(264, 40);
+            this.btnObrisi.Size = new System.Drawing.Size(301, 37);
             this.btnObrisi.TabIndex = 5;
             this.btnObrisi.Text = "Obriši";
             this.btnObrisi.UseVisualStyleBackColor = true;
@@ -200,27 +216,29 @@
             // 
             // lblBrojKlijenata
             // 
+            this.lblBrojKlijenata.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblBrojKlijenata.AutoSize = true;
-            this.lblBrojKlijenata.Location = new System.Drawing.Point(12, 528);
+            this.lblBrojKlijenata.Location = new System.Drawing.Point(13, 486);
             this.lblBrojKlijenata.Name = "lblBrojKlijenata";
-            this.lblBrojKlijenata.Size = new System.Drawing.Size(116, 25);
+            this.lblBrojKlijenata.Size = new System.Drawing.Size(175, 23);
             this.lblBrojKlijenata.TabIndex = 6;
             this.lblBrojKlijenata.Text = "Broj klijenata:";
             // 
             // lblBroj
             // 
+            this.lblBroj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblBroj.AutoSize = true;
-            this.lblBroj.Location = new System.Drawing.Point(134, 528);
+            this.lblBroj.Location = new System.Drawing.Point(194, 486);
             this.lblBroj.Name = "lblBroj";
-            this.lblBroj.Size = new System.Drawing.Size(43, 25);
+            this.lblBroj.Size = new System.Drawing.Size(54, 23);
             this.lblBroj.TabIndex = 7;
             this.lblBroj.Text = "Broj";
             // 
             // KlijentiPregled
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1045, 562);
+            this.ClientSize = new System.Drawing.Size(1258, 519);
             this.Controls.Add(this.lblBroj);
             this.Controls.Add(this.lblBrojKlijenata);
             this.Controls.Add(this.btnObrisi);
@@ -229,7 +247,9 @@
             this.Controls.Add(this.gbPretraga);
             this.Controls.Add(this.gbPravnaLica);
             this.Controls.Add(this.gbFizickaLica);
+            this.MinimumSize = new System.Drawing.Size(1172, 573);
             this.Name = "KlijentiPregled";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "KlijentiPregled";
             this.Load += new System.EventHandler(this.KlijentiPregled_Load);
             this.gbFizickaLica.ResumeLayout(false);
