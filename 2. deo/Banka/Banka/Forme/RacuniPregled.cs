@@ -81,5 +81,27 @@ namespace Banka.Forme
             dodajRacun.ShowDialog();
             RacuniPregled_Load(null, null);
         }
+
+        private void btnDetalji_Click(object sender, EventArgs e)
+        {
+            if (dgvRacuni.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selektujte zapis!");
+                return;
+            }
+
+            if (dgvRacuni.SelectedRows.Count > 0)
+            {
+                int index = dgvRacuni.SelectedRows[0].Index;
+                if (sviRacuni[index].TipRacuna == TipRacuna.Tekuci.ToString())
+                {
+                    //TODO: proveriti da li poredjanje radi kako treba
+                    DetaljiRacun tekuci = new DetaljiRacun();
+                    tekuci.PodesiPrikaz(TipRacuna.Tekuci);
+                    tekuci.ShowDialog(this);
+                }
+                //TODO: Dodati ostale uslove za ostale tipove
+            }
+        }
     }
 }

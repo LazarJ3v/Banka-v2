@@ -51,11 +51,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvRacuni.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvRacuni.Location = new System.Drawing.Point(7, 28);
+            this.dgvRacuni.Location = new System.Drawing.Point(6, 30);
             this.dgvRacuni.Name = "dgvRacuni";
             this.dgvRacuni.RowHeadersWidth = 62;
             this.dgvRacuni.RowTemplate.Height = 28;
-            this.dgvRacuni.Size = new System.Drawing.Size(824, 540);
+            this.dgvRacuni.Size = new System.Drawing.Size(749, 587);
             this.dgvRacuni.TabIndex = 0;
             // 
             // gbRacuni
@@ -64,9 +64,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbRacuni.Controls.Add(this.dgvRacuni);
-            this.gbRacuni.Location = new System.Drawing.Point(25, 21);
+            this.gbRacuni.Location = new System.Drawing.Point(23, 23);
             this.gbRacuni.Name = "gbRacuni";
-            this.gbRacuni.Size = new System.Drawing.Size(837, 574);
+            this.gbRacuni.Size = new System.Drawing.Size(761, 624);
             this.gbRacuni.TabIndex = 1;
             this.gbRacuni.TabStop = false;
             this.gbRacuni.Text = "Računi";
@@ -79,18 +79,18 @@
             this.gbPretraga.Controls.Add(this.tbBrojRacuna);
             this.gbPretraga.Controls.Add(this.lblTipRacuna);
             this.gbPretraga.Controls.Add(this.cbTipRacuna);
-            this.gbPretraga.Location = new System.Drawing.Point(869, 21);
+            this.gbPretraga.Location = new System.Drawing.Point(790, 23);
             this.gbPretraga.Name = "gbPretraga";
-            this.gbPretraga.Size = new System.Drawing.Size(364, 231);
+            this.gbPretraga.Size = new System.Drawing.Size(331, 251);
             this.gbPretraga.TabIndex = 2;
             this.gbPretraga.TabStop = false;
             this.gbPretraga.Text = "Pretraga";
             // 
             // btnPretrazi
             // 
-            this.btnPretrazi.Location = new System.Drawing.Point(6, 181);
+            this.btnPretrazi.Location = new System.Drawing.Point(5, 197);
             this.btnPretrazi.Name = "btnPretrazi";
-            this.btnPretrazi.Size = new System.Drawing.Size(352, 29);
+            this.btnPretrazi.Size = new System.Drawing.Size(320, 32);
             this.btnPretrazi.TabIndex = 4;
             this.btnPretrazi.Text = "Pretraži";
             this.btnPretrazi.UseVisualStyleBackColor = true;
@@ -98,52 +98,53 @@
             // lblBrojRacuna
             // 
             this.lblBrojRacuna.AutoSize = true;
-            this.lblBrojRacuna.Location = new System.Drawing.Point(7, 66);
+            this.lblBrojRacuna.Location = new System.Drawing.Point(6, 72);
             this.lblBrojRacuna.Name = "lblBrojRacuna";
-            this.lblBrojRacuna.Size = new System.Drawing.Size(142, 23);
+            this.lblBrojRacuna.Size = new System.Drawing.Size(104, 25);
             this.lblBrojRacuna.TabIndex = 3;
             this.lblBrojRacuna.Text = "Broj računa:";
             // 
             // tbBrojRacuna
             // 
-            this.tbBrojRacuna.Location = new System.Drawing.Point(151, 63);
+            this.tbBrojRacuna.Location = new System.Drawing.Point(137, 68);
             this.tbBrojRacuna.Name = "tbBrojRacuna";
-            this.tbBrojRacuna.Size = new System.Drawing.Size(198, 31);
+            this.tbBrojRacuna.Size = new System.Drawing.Size(180, 31);
             this.tbBrojRacuna.TabIndex = 2;
             // 
             // lblTipRacuna
             // 
             this.lblTipRacuna.AutoSize = true;
-            this.lblTipRacuna.Location = new System.Drawing.Point(14, 30);
+            this.lblTipRacuna.Location = new System.Drawing.Point(13, 33);
             this.lblTipRacuna.Name = "lblTipRacuna";
-            this.lblTipRacuna.Size = new System.Drawing.Size(131, 23);
+            this.lblTipRacuna.Size = new System.Drawing.Size(97, 25);
             this.lblTipRacuna.TabIndex = 1;
             this.lblTipRacuna.Text = "Tip računa:";
             // 
             // cbTipRacuna
             // 
             this.cbTipRacuna.FormattingEnabled = true;
-            this.cbTipRacuna.Location = new System.Drawing.Point(151, 26);
+            this.cbTipRacuna.Location = new System.Drawing.Point(137, 28);
             this.cbTipRacuna.Name = "cbTipRacuna";
-            this.cbTipRacuna.Size = new System.Drawing.Size(198, 31);
+            this.cbTipRacuna.Size = new System.Drawing.Size(180, 33);
             this.cbTipRacuna.TabIndex = 0;
             // 
             // btnDetalji
             // 
             this.btnDetalji.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDetalji.Location = new System.Drawing.Point(875, 265);
+            this.btnDetalji.Location = new System.Drawing.Point(795, 288);
             this.btnDetalji.Name = "btnDetalji";
-            this.btnDetalji.Size = new System.Drawing.Size(352, 29);
+            this.btnDetalji.Size = new System.Drawing.Size(320, 32);
             this.btnDetalji.TabIndex = 3;
             this.btnDetalji.Text = "Detalji";
             this.btnDetalji.UseVisualStyleBackColor = true;
+            this.btnDetalji.Click += new System.EventHandler(this.btnDetalji_Click);
             // 
             // btnDodaj
             // 
             this.btnDodaj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDodaj.Location = new System.Drawing.Point(875, 325);
+            this.btnDodaj.Location = new System.Drawing.Point(795, 353);
             this.btnDodaj.Name = "btnDodaj";
-            this.btnDodaj.Size = new System.Drawing.Size(352, 29);
+            this.btnDodaj.Size = new System.Drawing.Size(320, 32);
             this.btnDodaj.TabIndex = 4;
             this.btnDodaj.Text = "Dodaj";
             this.btnDodaj.UseVisualStyleBackColor = true;
@@ -152,9 +153,9 @@
             // btnIzmeni
             // 
             this.btnIzmeni.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnIzmeni.Location = new System.Drawing.Point(875, 385);
+            this.btnIzmeni.Location = new System.Drawing.Point(795, 418);
             this.btnIzmeni.Name = "btnIzmeni";
-            this.btnIzmeni.Size = new System.Drawing.Size(352, 29);
+            this.btnIzmeni.Size = new System.Drawing.Size(320, 32);
             this.btnIzmeni.TabIndex = 5;
             this.btnIzmeni.Text = "Izmeni";
             this.btnIzmeni.UseVisualStyleBackColor = true;
@@ -162,18 +163,18 @@
             // btnObrisi
             // 
             this.btnObrisi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnObrisi.Location = new System.Drawing.Point(875, 445);
+            this.btnObrisi.Location = new System.Drawing.Point(795, 484);
             this.btnObrisi.Name = "btnObrisi";
-            this.btnObrisi.Size = new System.Drawing.Size(352, 29);
+            this.btnObrisi.Size = new System.Drawing.Size(320, 32);
             this.btnObrisi.TabIndex = 6;
             this.btnObrisi.Text = "Obriši";
             this.btnObrisi.UseVisualStyleBackColor = true;
             // 
             // RacuniPregled
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1258, 664);
+            this.ClientSize = new System.Drawing.Size(1144, 722);
             this.Controls.Add(this.btnObrisi);
             this.Controls.Add(this.btnIzmeni);
             this.Controls.Add(this.btnDodaj);
@@ -181,9 +182,9 @@
             this.Controls.Add(this.gbPretraga);
             this.Controls.Add(this.gbRacuni);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MinimumSize = new System.Drawing.Size(1280, 720);
+            this.MinimumSize = new System.Drawing.Size(1166, 778);
             this.Name = "RacuniPregled";
-            this.Padding = new System.Windows.Forms.Padding(22, 18, 22, 18);
+            this.Padding = new System.Windows.Forms.Padding(20, 20, 20, 20);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "RacuniPregled";
             this.Load += new System.EventHandler(this.RacuniPregled_Load);
