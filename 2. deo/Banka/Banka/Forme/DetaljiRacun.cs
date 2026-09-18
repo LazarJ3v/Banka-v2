@@ -177,7 +177,7 @@ namespace Banka.Forme
                 string paketi = "";
                 foreach(TekuciPaketBasic paket in tekuci.TekuciPaketi)
                 {
-                    paketi.Concat(paket.Paket.ToString() + ", ");
+                    paketi += paket.Paket.ToString() + ", ";
                 }
                 lblPaketiVrednost.Text = paketi;
             }
@@ -199,14 +199,14 @@ namespace Banka.Forme
                 string ogranicenja = "";
                 foreach(DevizniOgranicenjeBasic ogranicenje in devizni.DevizniOgranicenja)
                 {
-                    ogranicenja.Concat(ogranicenje.Ogranicenje.ToString() + ", ");
+                    ogranicenja += ogranicenje.Ogranicenje.ToString() + ", ";
                 }
                 lblOgranicenjaVrednost.Text = ogranicenja;
 
                 string valute = "";
                 foreach(DevizniValutaBasic valuta in devizni.DevizniValute)
                 {
-                    valute.Concat(valuta.DozvoljenaValuta.ToString() + ", ");
+                    valute += valuta.DozvoljenaValuta.ToString() + ", ";
                 }
                 lblValuteVrednost.Text = valute;
             }
@@ -228,14 +228,14 @@ namespace Banka.Forme
                 string bonusi = "";
                 foreach(StedniBonusBasic bonus in stedni.StedniBonusi)
                 {
-                    bonusi.Concat(bonus.Bonus.ToString() + ", ");
+                    bonusi += bonus.Bonus.ToString() + ", ";
                 }
                 lblBonusiVrednost.Text = bonusi;
 
                 string uslovi = "";
                 foreach(StedniUsloviPodizanjaBasic uslov in stedni.StedniUsloviPodizanja)
                 {
-                    uslovi.Concat(uslov.UslovPodizanja.ToString() + ", ");
+                    uslovi += uslov.UslovPodizanja.ToString() + ", ";
                 }
                 lblUsloviPodizanjaVrednost.Text = uslovi;
             }

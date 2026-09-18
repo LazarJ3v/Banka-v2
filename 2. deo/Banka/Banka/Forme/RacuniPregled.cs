@@ -1,4 +1,5 @@
-﻿using Banka.Enumi;
+﻿using Banka.Entiteti;
+using Banka.Enumi;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -102,20 +103,40 @@ namespace Banka.Forme
             if (dgvRacuni.SelectedRows.Count > 0)
             {
                 int index = dgvRacuni.SelectedRows[0].Index;
-                
-                DetaljiRacun racun = new DetaljiRacun(sviRacuni[index]);
+
+
+                DetaljiRacun racun;
 
                 if (sviRacuni[index].TipRacuna == TipRacuna.Tekuci.GetDescription())
+                {
+                    TekuciBasic tekuci = DTOManager.VratiTekuci(sviRacuni[index].Id);
+                    racun = new DetaljiRacun(tekuci);
                     racun.PodesiPrikaz(TipRacuna.Tekuci);
+                }
                 else if (sviRacuni[index].TipRacuna == TipRacuna.Devizni.GetDescription())
+                {
+                    DevizniBasic devizni = DTOManager.VratiDevizni(sviRacuni[index].Id);
+                    racun = new DetaljiRacun(devizni);
                     racun.PodesiPrikaz(TipRacuna.Devizni);
+                }
                 else if (sviRacuni[index].TipRacuna == TipRacuna.Stedni.GetDescription())
+                {
+                    StedniBasic stedni = DTOManager.VratiStedni(sviRacuni[index].Id);
+                    racun = new DetaljiRacun(stedni);
                     racun.PodesiPrikaz(TipRacuna.Stedni);
+                }
                 else if (sviRacuni[index].TipRacuna == TipRacuna.Ziro.GetDescription())
+                {
+                    ZiroBasic ziro = DTOManager.VratiZiro(sviRacuni[index].Id);
+                    racun = new DetaljiRacun(ziro);
                     racun.PodesiPrikaz(TipRacuna.Ziro);
+                }    
                 else
+                {
+                    RacunBasic ostali = DTOManager.VratiRacun(sviRacuni[index].Id);
+                    racun = new DetaljiRacun(ostali);
                     racun.PodesiPrikaz(TipRacuna.Ostali);
-
+                }
                 racun.ShowDialog(this);
             }
         }
