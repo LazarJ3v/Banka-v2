@@ -13,6 +13,8 @@ namespace Banka.Forme
 {
     public partial class RacuniPregled : BaseForm
     {
+        //TIP: ovo je bug jer ce i ostali tipovi racuna da budu svi RacunBasic
+        //zbog ovoga trenutno ne radi detalji dugme u RacuniPregled formi
         private List<RacunBasic> sviRacuni;
         public RacuniPregled() : base()
         {
@@ -100,7 +102,8 @@ namespace Banka.Forme
             if (dgvRacuni.SelectedRows.Count > 0)
             {
                 int index = dgvRacuni.SelectedRows[0].Index;
-                DetaljiRacun racun = new DetaljiRacun();
+                
+                DetaljiRacun racun = new DetaljiRacun(sviRacuni[index]);
 
                 if (sviRacuni[index].TipRacuna == TipRacuna.Tekuci.GetDescription())
                     racun.PodesiPrikaz(TipRacuna.Tekuci);
