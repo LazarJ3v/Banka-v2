@@ -18,6 +18,7 @@ namespace Banka.Enumi
         Stedni,
         [Description("ZIRO")]
         Ziro,
-        Drugi
+        [Description("OSTALI")]
+        Ostali
     }
 }

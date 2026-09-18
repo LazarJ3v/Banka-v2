@@ -39,6 +39,13 @@ namespace Banka.Forme
 
         private void RacuniPregled_Load(object sender, EventArgs e)
         {
+            #region Dinamicki select
+
+            dgvRacuni.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvRacuni.MultiSelect = false;
+
+            #endregion
+
             cbTipRacuna.Items.Clear();
             object[] tipovi = {
                 TipRacuna.Svi,
@@ -46,7 +53,7 @@ namespace Banka.Forme
                 TipRacuna.Devizni,
                 TipRacuna.Stedni,
                 TipRacuna.Ziro,
-                TipRacuna.Drugi
+                TipRacuna.Ostali
             };
             cbTipRacuna.Items.AddRange(tipovi);
             cbTipRacuna.SelectedIndex = 0;
@@ -93,14 +100,20 @@ namespace Banka.Forme
             if (dgvRacuni.SelectedRows.Count > 0)
             {
                 int index = dgvRacuni.SelectedRows[0].Index;
-                if (sviRacuni[index].TipRacuna == TipRacuna.Tekuci.ToString())
-                {
-                    //TODO: proveriti da li poredjanje radi kako treba
-                    DetaljiRacun tekuci = new DetaljiRacun();
-                    tekuci.PodesiPrikaz(TipRacuna.Tekuci);
-                    tekuci.ShowDialog(this);
-                }
-                //TODO: Dodati ostale uslove za ostale tipove
+                DetaljiRacun racun = new DetaljiRacun();
+
+                if (sviRacuni[index].TipRacuna == TipRacuna.Tekuci.GetDescription())
+                    racun.PodesiPrikaz(TipRacuna.Tekuci);
+                else if (sviRacuni[index].TipRacuna == TipRacuna.Devizni.GetDescription())
+                    racun.PodesiPrikaz(TipRacuna.Devizni);
+                else if (sviRacuni[index].TipRacuna == TipRacuna.Stedni.GetDescription())
+                    racun.PodesiPrikaz(TipRacuna.Stedni);
+                else if (sviRacuni[index].TipRacuna == TipRacuna.Ziro.GetDescription())
+                    racun.PodesiPrikaz(TipRacuna.Ziro);
+                else
+                    racun.PodesiPrikaz(TipRacuna.Ostali);
+
+                racun.ShowDialog(this);
             }
         }
     }

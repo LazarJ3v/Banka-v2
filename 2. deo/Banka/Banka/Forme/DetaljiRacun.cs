@@ -106,6 +106,12 @@ namespace Banka.Forme
                     gbZiroInformacije.Visible = false;
                     gbStedniInformacije.Visible = false;
                     break;
+                default:
+                    gbTekuciInformacije.Visible = false;
+                    gbDevizniInformacije.Visible = false;
+                    gbZiroInformacije.Visible = false;
+                    gbStedniInformacije.Visible = false;
+                    break;
             }
         }
     }

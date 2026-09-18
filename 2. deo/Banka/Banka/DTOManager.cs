@@ -12,8 +12,6 @@ namespace Banka
 {
     internal class DTOManager
     {
-
-        // TODO: Uvesti transakcije u funkcijama koje menjaju podatke u bazi
         #region FizickaLica
 
         public static void DodajFizickoLice(FizickoLiceBasic fl)
@@ -23,7 +21,7 @@ namespace Banka
             {
                 try
                 {
-                    FizickoLice f = new FizickoLice
+                    var fizickoLice = new FizickoLice
                     {
                         Ime = fl.Ime?.Trim(),
                         Prezime = fl.Prezime?.Trim(),
@@ -38,124 +36,124 @@ namespace Banka
                         Komentar = fl.Komentar?.Trim()
                     };
 
-                    session.Save(f);
+                    session.Save(fizickoLice);
                     transaction.Commit();
 
-                    // Vrati generisani ID
-                    fl.Id = f.Id;
+                    fl.Id = fizickoLice.Id;
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri dodavanju fizičkog lica", ex);
+                    throw new InvalidOperationException(
+                        "Greška pri dodavanju fizičkog lica", ex);
                 }
             }
         }
 
         public static FizickoLiceBasic VratiFizickoLice(int id)
         {
-            FizickoLiceBasic fl = new FizickoLiceBasic();
-            ISession s = DataLayer.GetSession();
+            using (ISession session = DataLayer.GetSession())
+            {
+                try
+                {
+                    var fizickoLice = session.Get<FizickoLice>(id);
 
-            try
-            { 
-                FizickoLice f = s.Load<FizickoLice>(id);
-                fl = new FizickoLiceBasic
+                    if (fizickoLice == null)
+                        return null;
+
+                    return new FizickoLiceBasic
+                    {
+                        Id = fizickoLice.Id,
+                        Ime = fizickoLice.Ime,
+                        Prezime = fizickoLice.Prezime,
+                        Jmbg = fizickoLice.Jmbg,
+                        BrojLicneKarte = fizickoLice.BrojLicneKarte,
+                        DatumRodjenja = fizickoLice.DatumRodjenja,
+                        Adresa = fizickoLice.Adresa,
+                        Grad = fizickoLice.Grad,
+                        Telefon = fizickoLice.Telefon,
+                        Email = fizickoLice.Email,
+                        Status = fizickoLice.Status,
+                        Komentar = fizickoLice.Komentar
+                    };
+                }
+                catch (Exception ex)
                 {
-                    Id = f.Id,
-                    Ime = f.Ime,
-                    Prezime = f.Prezime,
-                    Jmbg = f.Jmbg,
-                    BrojLicneKarte = f.BrojLicneKarte,
-                    DatumRodjenja = f.DatumRodjenja,
-                    Adresa = f.Adresa,
-                    Grad = f.Grad,
-                    Telefon = f.Telefon,
-                    Email = f.Email,
-                    Status = f.Status,
-                    Komentar = f.Komentar
-                };
-            }
-            catch (Exception ec)
-            {
-                MessageBox.Show(ec.ToString());
-            }
-            finally
-            {
-                if (s.IsOpen)
-                {
-                    s.Flush();
-                    s.Close();
+                    throw new InvalidOperationException(
+                        "Greška pri učitavanju fizičkog lica.", ex);
                 }
             }
-
-            return fl;
         }
 
         public static FizickoLiceBasic IzmeniFizickoLice(FizickoLiceBasic fl)
         {
-            FizickoLice f = new FizickoLice();
-            ISession s = DataLayer.GetSession();
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                f = s.Load<FizickoLice>(fl.Id);
-
-                f.Ime = fl.Ime;
-                f.Prezime = fl.Prezime;
-                f.Jmbg = fl.Jmbg;
-                f.BrojLicneKarte = fl.BrojLicneKarte;
-                f.DatumRodjenja = fl.DatumRodjenja;
-                f.Adresa = fl.Adresa;
-                f.Grad = fl.Grad;
-                f.Telefon = fl.Telefon;
-                f.Email = fl.Email;
-                f.Status = fl.Status;
-                f.Komentar = fl.Komentar;
-
-                s.Update(f);
-            }
-            catch(Exception ec)
-            {
-                MessageBox.Show(ec.ToString());
-            }
-            finally
-            {
-                if (s.IsOpen)
+                try
                 {
-                    s.Flush();
-                    s.Close();
+                    var fizickoLice = session.Get<FizickoLice>(fl.Id);
+
+                    if (fizickoLice == null)
+                        return null;
+
+                    fizickoLice.Ime = fl.Ime?.Trim();
+                    fizickoLice.Prezime = fl.Prezime?.Trim();
+                    fizickoLice.Jmbg = fl.Jmbg?.Trim();
+                    fizickoLice.BrojLicneKarte = fl.BrojLicneKarte?.Trim();
+                    fizickoLice.DatumRodjenja = fl.DatumRodjenja;
+                    fizickoLice.Adresa = fl.Adresa?.Trim();
+                    fizickoLice.Grad = fl.Grad?.Trim();
+                    fizickoLice.Telefon = fl.Telefon?.Trim();
+                    fizickoLice.Email = fl.Email?.Trim();
+                    fizickoLice.Status = fl.Status;
+                    fizickoLice.Komentar = fl.Komentar?.Trim();
+
+                    transaction.Commit();
+
+                    return fl;
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+
+                    throw new InvalidOperationException(
+                        "Greška pri izmeni fizičkog lica.", ex);
                 }
             }
-
-            return fl;
         }
 
         public static void ObrisiFizickoLice(int id)
         {
-            ISession s = DataLayer.GetSession();
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                FizickoLice f = s.Load<FizickoLice>(id);
-
-                s.Delete(f);
-            }
-            catch(Exception ec)
-            {
-                MessageBox.Show(ec.ToString());
-            }
-            finally
-            {
-                if (s.IsOpen)
+                try
                 {
-                    s.Flush();
-                    s.Close();
+                    var fizickoLice = session.Get<FizickoLice>(id);
+
+                    if (fizickoLice == null)
+                        return;
+
+                    session.Delete(fizickoLice);
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+
+                    throw new InvalidOperationException(
+                        "Greška pri brisanju fizičkog lica.", ex);
                 }
             }
         }
 
-        public static List<FizickoLiceBasic> VratiFizickaLica(int brojPoStrani, int strana = 1)
+        public static List<FizickoLiceBasic> VratiFizickaLica
+        (
+            int brojPoStrani, 
+            int strana = 1
+        )
         {
             using (ISession session = DataLayer.GetSession())
             {

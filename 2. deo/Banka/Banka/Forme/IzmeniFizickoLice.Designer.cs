@@ -243,8 +243,8 @@
             // 
             // IzmeniFizickoLice
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(962, 372);
             this.Controls.Add(this.btnIzmeni);
             this.Controls.Add(this.lblKomentar);

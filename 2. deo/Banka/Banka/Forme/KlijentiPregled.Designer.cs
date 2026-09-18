@@ -236,8 +236,8 @@
             // 
             // KlijentiPregled
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1258, 519);
             this.Controls.Add(this.lblBroj);
             this.Controls.Add(this.lblBrojKlijenata);

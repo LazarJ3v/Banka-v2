@@ -26,6 +26,7 @@ namespace Banka.Forme
         public DodajRacun() : base()
         {
             InitializeComponent();
+
             StilizujGroupBox(
                 gbKlijent,
                 gbRacun,
@@ -33,6 +34,7 @@ namespace Banka.Forme
                 gbZiro,
                 gbDevizni,
                 gbStedni);
+
             StilizujRadioButton(
                 rbFizickoLice,
                 rbPravnoLice,
@@ -41,6 +43,7 @@ namespace Banka.Forme
                 rbDevizni,
                 rbStedni,
                 rbDrugi);
+
             StilizujLabel(
                 lblBrojRacuna,
                 lblDozvoljeniMinus,
@@ -63,6 +66,7 @@ namespace Banka.Forme
                 lblUslovPodizanja,
                 lblFrekvKapKamate,
                 lblMinimalniIznosOtvaranja);
+
             StilizujTextBox(
                 tbBrojRacuna,
                 tbJmbg,
@@ -72,9 +76,9 @@ namespace Banka.Forme
                 tbOgranicenje,
                 tbBonus,
                 tbUslovPodizanja);
-            StilizujRichTextBox(
-                rtbIntegracijaSaSistemima,
-                rtbKomentar);
+
+            StilizujRichTextBox(rtbIntegracijaSaSistemima, rtbKomentar);
+
             StilizujButton(
                 btnDodajPaket,
                 btnObrisiPaket,
@@ -87,17 +91,20 @@ namespace Banka.Forme
                 btnObrisiBonus,
                 btnDodajUslovPodizanja,
                 btnObrisiUslovPodizanja);
+
             StilizujDataGridView(
                 dgvPaketi,
                 dgvValute,
                 dgvOgranicenja,
                 dgvBonusi,
                 dgvUsloviPodizanja);
+
             StilizujComboBox(
                 cbDodajValutu,
                 cbValuta,
                 cbFrekvKapitalizKamate,
                 cbNamenaDevizni);
+
             StilizujNumericUpDown(
                 nudTrenutnoStanje,
                 nudDozvoljeniMinus,
@@ -293,109 +300,136 @@ namespace Banka.Forme
 
         private void btnSacuvaj_Click(object sender, EventArgs e)
         {
-            if (rbTekuci.Checked)
+            try
             {
-                TekuciBasic dto = new TekuciBasic
+                if (rbTekuci.Checked)
                 {
-                    BrojRacuna = tbBrojRacuna.Text,
-                    Valuta = cbValuta.Text,
-                    TrenutnoStanje = nudTrenutnoStanje.Value,
-                    DatumOtvaranja = DateTime.Now,
-                    Status = StatusRacuna.Aktivan.GetDescription(),
-                    DozvoljeniMinus = nudDozvoljeniMinus.Value,
-                    Komentar = rtbKomentar.Text,
-                    TipRacuna = TipRacuna.Tekuci.GetDescription(),
-                    KamatnaStopa = nudKamatnaStopa.Value,
-                    
+                    var dto = new TekuciBasic
+                    {
+                        BrojRacuna = tbBrojRacuna.Text.Trim(),
+                        Valuta = cbValuta.Text,
+                        TrenutnoStanje = nudTrenutnoStanje.Value,
+                        DatumOtvaranja = DateTime.Now,
+                        Status = StatusRacuna.Aktivan.GetDescription(),
+                        DozvoljeniMinus = nudDozvoljeniMinus.Value,
+                        Komentar = rtbKomentar.Text.Trim(),
+                        TipRacuna = TipRacuna.Tekuci.GetDescription(),
+                        KamatnaStopa = nudKamatnaStopa.Value,
+                        PlatnaKartica = cbPlatnaKartica.Checked,
+                        MesecniLimit = nudMesecniLimit.Value,
+                        TekuciPaketi = tekuciPaketi
+                    };
 
-                    PlatnaKartica = cbPlatnaKartica.Checked,
-                    MesecniLimit = nudMesecniLimit.Value,
-                    TekuciPaketi = tekuciPaketi
-                };
+                    DTOManager.DodajTekuci(dto, tbJmbg.Text.Trim(), tbPib.Text.Trim());
 
-                DTOManager.DodajTekuci(dto, tbJmbg.Text, tbPib.Text);
-                MessageBox.Show("Tekući račun uspešno dodat!", "Uspeh",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
-            }
-            else if (rbDevizni.Checked)
-            {
-                DevizniBasic dto = new DevizniBasic
+                    MessageBox.Show(
+                        "Tekući račun uspešno dodat!",
+                        "Uspeh",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                else if (rbDevizni.Checked)
                 {
-                    BrojRacuna = tbBrojRacuna.Text,
-                    Valuta = cbValuta.Text,
-                    TrenutnoStanje = nudTrenutnoStanje.Value,
-                    DatumOtvaranja = DateTime.Now,
-                    Status = StatusRacuna.Aktivan.GetDescription(),
-                    DozvoljeniMinus = nudMesecniLimit.Value,
-                    Komentar = rtbKomentar.Text,
-                    TipRacuna = TipRacuna.Devizni.GetDescription(),
-                    KamatnaStopa = nudKamatnaStopa.Value,
+                    var dto = new DevizniBasic
+                    {
+                        BrojRacuna = tbBrojRacuna.Text.Trim(),
+                        Valuta = cbValuta.Text,
+                        TrenutnoStanje = nudTrenutnoStanje.Value,
+                        DatumOtvaranja = DateTime.Now,
+                        Status = StatusRacuna.Aktivan.GetDescription(),
+                        DozvoljeniMinus = nudDozvoljeniMinus.Value,
+                        Komentar = rtbKomentar.Text.Trim(),
+                        TipRacuna = TipRacuna.Devizni.GetDescription(),
+                        KamatnaStopa = nudKamatnaStopa.Value,
+                        Namena = cbNamenaDevizni.Text,
+                        KursnaRazlika = nudKursnaRazlika.Value,
+                        DevizniOgranicenja = devizniOgranicenja,
+                        DevizniValute = devizniValute
+                    };
 
-                    Namena = cbNamenaDevizni.Text,
-                    KursnaRazlika = nudKursnaRazlika.Value,
-                    DevizniOgranicenja = devizniOgranicenja,
-                    DevizniValute = devizniValute
-                };
+                    DTOManager.DodajDevizni(dto, tbJmbg.Text.Trim(), tbPib.Text.Trim());
 
-                DTOManager.DodajDevizni(dto, tbJmbg.Text, tbPib.Text);
-                MessageBox.Show("Devizni račun uspešno dodat!", "Uspeh",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
-            }
-            else if (rbStedni.Checked)
-            {
-                StedniBasic dto = new StedniBasic
+                    MessageBox.Show(
+                        "Devizni račun uspešno dodat!",
+                        "Uspeh",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                else if (rbStedni.Checked)
                 {
-                    BrojRacuna = tbBrojRacuna.Text,
-                    Valuta = cbValuta.Text,
-                    TrenutnoStanje = nudTrenutnoStanje.Value,
-                    DatumOtvaranja = DateTime.Now,
-                    Status = StatusRacuna.Aktivan.GetDescription(),
-                    DozvoljeniMinus = nudDozvoljeniMinus.Value,
-                    Komentar = rtbKomentar.Text,
-                    TipRacuna = TipRacuna.Devizni.GetDescription(),
-                    KamatnaStopa = nudKamatnaStopa.Value,
+                    var dto = new StedniBasic
+                    {
+                        BrojRacuna = tbBrojRacuna.Text.Trim(),
+                        Valuta = cbValuta.Text,
+                        TrenutnoStanje = nudTrenutnoStanje.Value,
+                        DatumOtvaranja = DateTime.Now,
+                        Status = StatusRacuna.Aktivan.GetDescription(),
+                        DozvoljeniMinus = nudDozvoljeniMinus.Value,
+                        Komentar = rtbKomentar.Text.Trim(),
+                        TipRacuna = TipRacuna.Stedni.GetDescription(),
+                        KamatnaStopa = nudKamatnaStopa.Value,
+                        MinimalniIznosOtvaranja = nudMinIznosOtvaranja.Value,
+                        FrekvKapitalizKamate = (int)cbFrekvKapitalizKamate.SelectedValue,
+                        StedniBonusi = stedniBonusi,
+                        StedniUsloviPodizanja = stedniUsloviPodizanja
+                    };
 
-                    MinimalniIznosOtvaranja = nudMinIznosOtvaranja.Value,
-                    FrekvKapitalizKamate = (int)cbFrekvKapitalizKamate.SelectedValue,
-                    StedniBonusi = stedniBonusi,
-                    StedniUsloviPodizanja = stedniUsloviPodizanja
-                };
+                    DTOManager.DodajStedni(dto, tbJmbg.Text.Trim(), tbPib.Text.Trim());
 
-                DTOManager.DodajStedni(dto, tbJmbg.Text, tbPib.Text);
-                MessageBox.Show("Štedni račun uspešno dodat!", "Uspeh",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
-            }
-            else if (rbZiro.Checked)
-            {
-                ZiroBasic dto = new ZiroBasic
+                    MessageBox.Show(
+                        "Štedni račun uspešno dodat!",
+                        "Uspeh",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                else if (rbZiro.Checked)
                 {
-                    BrojRacuna = tbBrojRacuna.Text,
-                    Valuta = cbValuta.Text,
-                    TrenutnoStanje = nudTrenutnoStanje.Value,
-                    DatumOtvaranja = DateTime.Now,
-                    Status = StatusRacuna.Aktivan.GetDescription(),
-                    DozvoljeniMinus = nudDozvoljeniMinus.Value,
-                    Komentar = rtbKomentar.Text,
-                    TipRacuna = TipRacuna.Ziro.GetDescription(),
-                    KamatnaStopa = nudKamatnaStopa.Value,
+                    var dto = new ZiroBasic
+                    {
+                        BrojRacuna = tbBrojRacuna.Text.Trim(),
+                        Valuta = cbValuta.Text,
+                        TrenutnoStanje = nudTrenutnoStanje.Value,
+                        DatumOtvaranja = DateTime.Now,
+                        Status = StatusRacuna.Aktivan.GetDescription(),
+                        DozvoljeniMinus = nudDozvoljeniMinus.Value,
+                        Komentar = rtbKomentar.Text.Trim(),
+                        TipRacuna = TipRacuna.Ziro.GetDescription(),
+                        KamatnaStopa = nudKamatnaStopa.Value,
+                        Namena = tbNamena.Text.Trim(),
+                        ElektronskoBankarstvo = cbElektronskoBankarstvo.Checked,
+                        LimitZaMasovnaPlacanja = nudLimitZaMasPlacanja.Value,
+                        IntegracijaSaSistemima = rtbIntegracijaSaSistemima.Text.Trim()
+                    };
 
-                    Namena = tbNamena.Text,
-                    ElektronskoBankarstvo = cbElektronskoBankarstvo.Checked,
-                    LimitZaMasovnaPlacanja = nudLimitZaMasPlacanja.Value,
-                    IntegracijaSaSistemima = rtbIntegracijaSaSistemima.Text
-                };
+                    DTOManager.DodajZiro(dto, tbJmbg.Text.Trim(), tbPib.Text.Trim());
 
-                DTOManager.DodajZiro(dto, tbJmbg.Text, tbPib.Text);
-                MessageBox.Show("Žiro račun uspešno dodat!", "Uspeh",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
+                    MessageBox.Show(
+                        "Žiro račun uspešno dodat!",
+                        "Uspeh",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        "Izaberite tip računa.",
+                        "Upozorenje",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    return;
+                }
+
+                DialogResult = DialogResult.OK;
+                Close();
             }
-            else
+            catch (Exception ex)
             {
-
+                MessageBox.Show(
+                    "Nije moguće dodati račun.\n\n" + ex.Message,
+                    "Greška",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 

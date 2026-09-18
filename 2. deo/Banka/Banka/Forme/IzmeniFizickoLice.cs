@@ -17,9 +17,11 @@ namespace Banka.Forme
         public IzmeniFizickoLice(FizickoLiceBasic _fizickoLice) : base()
         {
             InitializeComponent();
+
             fizickoLice = _fizickoLice;
-            StilizujButton(
-                btnIzmeni);
+
+            StilizujButton(btnIzmeni);
+
             StilizujLabel(
                 lblAdresa,
                 lblBrojLicneKarte,
@@ -32,6 +34,7 @@ namespace Banka.Forme
                 lblPrezime,
                 lblStatus,
                 lblTelefon);
+
             StilizujTextBox(
                 tbAdresa,
                 tbBrojLicneKarte,
@@ -42,10 +45,9 @@ namespace Banka.Forme
                 tbPrezime,
                 tbTelefon
                 );
-            StilizujDateTimePicker(
-                dtpDatumRodjenja);
-            StilizujRichTextBox(
-                rtbKomentar);
+
+            StilizujDateTimePicker(dtpDatumRodjenja);
+            StilizujRichTextBox(rtbKomentar);
         }
 
         private void IzmeniFizickoLice_Load(object sender, EventArgs e)
@@ -69,25 +71,38 @@ namespace Banka.Forme
 
         private void btnIzmeni_Click(object sender, EventArgs e)
         {
-            fizickoLice.Ime = tbIme.Text.Trim();
-            fizickoLice.Prezime = tbPrezime.Text.Trim();
-            fizickoLice.Jmbg = tbJmbg.Text.Trim();
-            fizickoLice.BrojLicneKarte = tbBrojLicneKarte.Text.Trim();
-            fizickoLice.DatumRodjenja = dtpDatumRodjenja.Value;
-            fizickoLice.Adresa = tbAdresa.Text.Trim();
-            fizickoLice.Grad = tbGrad.Text.Trim();
-            fizickoLice.Telefon = tbTelefon.Text.Trim();
-            fizickoLice.Email = tbEmail.Text.Trim();
-            fizickoLice.Komentar = rtbKomentar.Text.Trim();
+            try
+            {
+                fizickoLice.Ime = tbIme.Text.Trim();
+                fizickoLice.Prezime = tbPrezime.Text.Trim();
+                fizickoLice.Jmbg = tbJmbg.Text.Trim();
+                fizickoLice.BrojLicneKarte = tbBrojLicneKarte.Text.Trim();
+                fizickoLice.DatumRodjenja = dtpDatumRodjenja.Value;
+                fizickoLice.Adresa = tbAdresa.Text.Trim();
+                fizickoLice.Grad = tbGrad.Text.Trim();
+                fizickoLice.Telefon = tbTelefon.Text.Trim();
+                fizickoLice.Email = tbEmail.Text.Trim();
+                fizickoLice.Komentar = rtbKomentar.Text.Trim();
 
-            // Čuvanje u bazu
-            DTOManager.IzmeniFizickoLice(fizickoLice);
+                DTOManager.IzmeniFizickoLice(fizickoLice);
 
-            MessageBox.Show("Podaci uspešno izmenjeni!", "Uspeh",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(
+                    "Podaci uspešno izmenjeni!",
+                    "Uspeh",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
 
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Nije moguće izmeniti podatke.\n\n" + ex.Message,
+                    "Greška",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
     }
 }

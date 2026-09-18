@@ -20,24 +20,23 @@ namespace Banka.Forme
         public KlijentiPregled() : base()
         {
             InitializeComponent();
+
             StilizujGroupBox(
                 gbFizickaLica,
                 gbPravnaLica,
                 gbPretraga);
-            StilizujDataGridView(
-                dgvFizickaLica,
-                dgvPravnaLica);
-            StilizujTextBox(
-                tbEmail);
-            StilizujComboBox(
-                cbTipKlijenta,
-                cbStatusKlijenta);
+
+            StilizujDataGridView(dgvFizickaLica, dgvPravnaLica);
+            StilizujTextBox(tbEmail);
+            StilizujComboBox(cbTipKlijenta, cbStatusKlijenta);
+
             StilizujLabel(
                 lblEmail,
                 lblTipKlijenta,
                 lblStatusKlijenta,
                 lblBrojKlijenata,
                 lblBroj);
+
             StilizujButton(
                 btnPretrazi,
                 btnDodaj,

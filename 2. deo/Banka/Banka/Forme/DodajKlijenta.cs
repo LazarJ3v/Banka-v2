@@ -16,12 +16,14 @@ namespace Banka.Forme
         public DodajKlijenta()
         {
             InitializeComponent();
+
             StilizujGroupBox(
                 gbTipKlijenta,
                 gbFizickoLicePodaci,
                 gbPravnoLicePodaci);
-            StilizujButton(
-                btnSacuvaj);
+
+            StilizujButton(btnSacuvaj);
+
             StilizujLabel(
                 lblAdresaFL,
                 lblAdresaPL,
@@ -41,6 +43,7 @@ namespace Banka.Forme
                 lblTelefonFL,
                 lblTelefonPL
                 );
+
             StilizujTextBox(
                 tbAdresaFL,
                 tbAdresaPL,
@@ -56,11 +59,9 @@ namespace Banka.Forme
                 tbPrezimeFL,
                 tbTelefonFL,
                 tbTelefonPL);
-            StilizujDateTimePicker(
-                dtpDatumRodjenjaFL);
-            StilizujRichTextBox(
-                rtbKomentarFL,
-                rtbKomentarPL);
+
+            StilizujDateTimePicker(dtpDatumRodjenjaFL);
+            StilizujRichTextBox(rtbKomentarFL, rtbKomentarPL);
         }
 
         private void rbFizickoLice_CheckedChanged(object sender, EventArgs e)
@@ -71,48 +72,71 @@ namespace Banka.Forme
 
         private void btnSacuvaj_Click(object sender, EventArgs e)
         {
-            if (rbFizickoLice.Checked)
+            try
             {
-                FizickoLiceBasic fl = new FizickoLiceBasic
+                if (rbFizickoLice.Checked)
                 {
-                    Ime = tbImeFL.Text.Trim(),
-                    Prezime = tbPrezimeFL.Text.Trim(),
-                    Jmbg = tbJmbgFL.Text.Trim(),
-                    BrojLicneKarte = tbBrojLicneKarteFL.Text.Trim(),
-                    DatumRodjenja = dtpDatumRodjenjaFL.Value,
-                    Adresa = tbAdresaFL.Text.Trim(),
-                    Grad = tbGradFL.Text.Trim(),
-                    Telefon = tbTelefonFL.Text.Trim(),
-                    Email = tbEmailFL.Text.Trim(),
-                    Status = "Aktivan",
-                    Komentar = rtbKomentarFL.Text.Trim()
-                };
+                    var fl = new FizickoLiceBasic
+                    {
+                        Ime = tbImeFL.Text.Trim(),
+                        Prezime = tbPrezimeFL.Text.Trim(),
+                        Jmbg = tbJmbgFL.Text.Trim(),
+                        BrojLicneKarte = tbBrojLicneKarteFL.Text.Trim(),
+                        DatumRodjenja = dtpDatumRodjenjaFL.Value,
+                        Adresa = tbAdresaFL.Text.Trim(),
+                        Grad = tbGradFL.Text.Trim(),
+                        Telefon = tbTelefonFL.Text.Trim(),
+                        Email = tbEmailFL.Text.Trim(),
+                        Status = "Aktivan",
+                        Komentar = rtbKomentarFL.Text.Trim()
+                    };
 
-                // Čuvanje u bazu
-                DTOManager.DodajFizickoLice(fl);
+                    DTOManager.DodajFizickoLice(fl);
+                }
+                else if (rbPravnoLice.Checked)
+                {
+                    var pl = new PravnoLiceBasic
+                    {
+                        NazivFirme = tbNazivFirmePL.Text.Trim(),
+                        Pib = tbPibPL.Text.Trim(),
+                        Adresa = tbAdresaPL.Text.Trim(),
+                        Grad = tbGradPL.Text.Trim(),
+                        Telefon = tbTelefonPL.Text.Trim(),
+                        Email = tbEmailPL.Text.Trim(),
+                        Status = "Aktivan",
+                        Komentar = rtbKomentarPL.Text.Trim()
+                    };
+
+                    DTOManager.DodajPravnoLice(pl);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        "Izaberite tip klijenta.",
+                        "Upozorenje",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    return;
+                }
+
+                MessageBox.Show(
+                    "Klijent uspešno dodat!",
+                    "Uspeh",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                DialogResult = DialogResult.OK;
+                Close();
             }
-            else if(rbPravnoLice.Checked)
+            catch (Exception ex)
             {
-                PravnoLiceBasic pl = new PravnoLiceBasic
-                {
-                    NazivFirme = tbNazivFirmePL.Text.Trim(),
-                    Pib = tbPibPL.Text.Trim(),
-                    Adresa = tbAdresaPL.Text.Trim(),
-                    Grad = tbGradPL.Text.Trim(),
-                    Telefon = tbTelefonPL.Text.Trim(),
-                    Email = tbEmailPL.Text.Trim(),
-                    Status = "Aktivan",
-                    Komentar = rtbKomentarPL.Text.Trim()
-                };
-
-                DTOManager.DodajPravnoLice(pl);
+                MessageBox.Show(
+                    "Nije moguće dodati klijenta.\n\n" + ex.Message,
+                    "Greška",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
-            
-            MessageBox.Show("Klijent uspešno dodat!", "Uspeh",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            this.DialogResult = DialogResult.OK;
-            this.Close();
         }
     }
 }

@@ -32,6 +32,7 @@ namespace Banka.Forme
             this.BackColor = BojaNajtamnija;
             this.ForeColor = TekstBoja;
             this.Font = new Font("Segoe UI", 9);
+            AutoScaleMode = AutoScaleMode.Dpi;
         }
 
         // ==========================================

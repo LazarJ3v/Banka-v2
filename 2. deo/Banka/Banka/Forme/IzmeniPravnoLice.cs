@@ -16,7 +16,9 @@ namespace Banka.Forme
         public IzmeniPravnoLice(PravnoLiceBasic _pravnoLice) : base()
         {
             InitializeComponent();
+
             pravnoLice = _pravnoLice;
+
             StilizujLabel(
                 lblAdresa,
                 lblEmail,
@@ -26,6 +28,7 @@ namespace Banka.Forme
                 lblPib,
                 lblStatus,
                 lblTelefon);
+
             StilizujTextBox(
                 tbAdresa,
                 tbEmail,
@@ -33,12 +36,10 @@ namespace Banka.Forme
                 tbNazivFirme,
                 tbPib,
                 tbTelefon);
-            StilizujComboBox(
-                cbStatus);
-            StilizujRichTextBox(
-                rtbKomentar);
-            StilizujButton(
-                btnIzmeni);
+
+            StilizujComboBox(cbStatus);
+            StilizujRichTextBox(rtbKomentar);
+            StilizujButton(btnIzmeni);
         }
 
         private void IzmeniPravnoLice_Load(object sender, EventArgs e)
@@ -57,22 +58,36 @@ namespace Banka.Forme
 
         private void btnIzmeni_Click(object sender, EventArgs e)
         {
-            pravnoLice.NazivFirme = tbNazivFirme.Text.Trim();
-            pravnoLice.Pib = tbPib.Text.Trim();
-            pravnoLice.Adresa = tbAdresa.Text.Trim();
-            pravnoLice.Grad = tbGrad.Text.Trim();
-            pravnoLice.Telefon = tbTelefon.Text.Trim();
-            pravnoLice.Email = tbEmail.Text.Trim();
-            pravnoLice.Status = cbStatus.SelectedItem.ToString();
-            pravnoLice.Komentar = rtbKomentar.Text.Trim();
+            try
+            {
+                pravnoLice.NazivFirme = tbNazivFirme.Text.Trim();
+                pravnoLice.Pib = tbPib.Text.Trim();
+                pravnoLice.Adresa = tbAdresa.Text.Trim();
+                pravnoLice.Grad = tbGrad.Text.Trim();
+                pravnoLice.Telefon = tbTelefon.Text.Trim();
+                pravnoLice.Email = tbEmail.Text.Trim();
+                pravnoLice.Status = cbStatus.SelectedItem?.ToString();
+                pravnoLice.Komentar = rtbKomentar.Text.Trim();
 
-            DTOManager.IzmeniPravnoLice(pravnoLice);
+                DTOManager.IzmeniPravnoLice(pravnoLice);
 
-            MessageBox.Show("Podaci uspešno izmenjeni!", "Uspeh",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(
+                    "Podaci uspešno izmenjeni!",
+                    "Uspeh",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
 
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Nije moguće izmeniti podatke.\n\n" + ex.Message,
+                    "Greška",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
     }
 }
