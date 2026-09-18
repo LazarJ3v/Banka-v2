@@ -93,7 +93,7 @@
             this.lblBrojRacuna.AutoSize = true;
             this.lblBrojRacuna.Location = new System.Drawing.Point(7, 66);
             this.lblBrojRacuna.Name = "lblBrojRacuna";
-            this.lblBrojRacuna.Size = new System.Drawing.Size(142, 23);
+            this.lblBrojRacuna.Size = new System.Drawing.Size(104, 25);
             this.lblBrojRacuna.TabIndex = 3;
             this.lblBrojRacuna.Text = "Broj računa:";
             // 
@@ -109,7 +109,7 @@
             this.lblTipRacuna.AutoSize = true;
             this.lblTipRacuna.Location = new System.Drawing.Point(14, 30);
             this.lblTipRacuna.Name = "lblTipRacuna";
-            this.lblTipRacuna.Size = new System.Drawing.Size(131, 23);
+            this.lblTipRacuna.Size = new System.Drawing.Size(97, 25);
             this.lblTipRacuna.TabIndex = 1;
             this.lblTipRacuna.Text = "Tip računa:";
             // 
@@ -118,7 +118,7 @@
             this.cbTipRacuna.FormattingEnabled = true;
             this.cbTipRacuna.Location = new System.Drawing.Point(151, 26);
             this.cbTipRacuna.Name = "cbTipRacuna";
-            this.cbTipRacuna.Size = new System.Drawing.Size(198, 31);
+            this.cbTipRacuna.Size = new System.Drawing.Size(198, 33);
             this.cbTipRacuna.TabIndex = 0;
             // 
             // btnDetalji
@@ -158,6 +158,7 @@
             this.btnObrisi.TabIndex = 6;
             this.btnObrisi.Text = "Obriši";
             this.btnObrisi.UseVisualStyleBackColor = true;
+            this.btnObrisi.Click += new System.EventHandler(this.btnObrisi_Click);
             // 
             // RacuniPregled
             // 

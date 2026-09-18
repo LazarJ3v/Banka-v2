@@ -116,5 +116,25 @@ namespace Banka.Forme
                 racun.ShowDialog(this);
             }
         }
+
+        private void btnObrisi_Click(object sender, EventArgs e)
+        {
+            if (dgvRacuni.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selektujte zapis!");
+                return;
+            }
+
+            if (dgvRacuni.SelectedRows.Count > 0)
+            {
+                int index = dgvRacuni.SelectedRows[0].Index;
+                int id = sviRacuni[index].Id;
+                DTOManager.ObrisiRacun(id);
+                RacuniPregled_Load(null, null);
+
+                MessageBox.Show("Račun uspešno obrisan!", "Uspeh",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
     }
 }
