@@ -10,7 +10,7 @@ namespace Banka.Entiteti
     public class Devizni : Racun
     {
         public virtual string Namena { get; set; }
-        public virtual decimal KursnaRazlika { get; set; }
+        public virtual decimal? KursnaRazlika { get; set; }
 
         public virtual IList<DevizniOgranicenje> Ogranicanja { get; set; }
         public virtual IList<DevizniValuta> Valute { get; set; }

@@ -10,7 +10,7 @@ namespace Banka.Mapiranja
 {
     class RacunMapiranja : ClassMap<Racun>
     {
-        RacunMapiranja()
+        public RacunMapiranja()
         {
             Table("RACUN");
 

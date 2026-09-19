@@ -502,6 +502,11 @@ namespace Banka
                         .Where(x => x.Pib == pib)
                         .FirstOrDefault();
 
+                    if (fl == null && pl == null)
+                    {
+                        throw new InvalidOperationException("Nema pravnog ili fizickog lica");
+                    }
+
                     Tekuci t = new Tekuci
                     {
                         BrojRacuna = tb.BrojRacuna?.Trim(),
@@ -691,6 +696,11 @@ namespace Banka
                         .Where(x => x.Pib == pib)
                         .FirstOrDefault();
 
+                    if (fl == null && pl == null)
+                    {
+                        throw new InvalidOperationException("Nema pravnog ili fizickog lica");
+                    }
+
                     Devizni d = new Devizni
                     {
                         BrojRacuna = db.BrojRacuna?.Trim(),
@@ -703,7 +713,7 @@ namespace Banka
                         TipRacuna = db.TipRacuna?.Trim(),
                         KamatnaStopa = db.KamatnaStopa,
 
-                        Namena = db.Namena.Trim(),
+                        Namena = db.Namena?.Trim(),
                         KursnaRazlika = db.KursnaRazlika ?? 0,
 
                         PripadaFizickomLicu = fl,
@@ -931,6 +941,11 @@ namespace Banka
                     pl = session.Query<PravnoLice>()
                         .Where(x => x.Pib == pib)
                         .FirstOrDefault();
+
+                    if (fl == null && pl == null)
+                    {
+                        throw new InvalidOperationException("Nema pravnog ili fizickog lica");
+                    }
 
                     Stedni s = new Stedni
                     {
@@ -1173,6 +1188,11 @@ namespace Banka
                     pl = session.Query<PravnoLice>()
                         .Where(x => x.Pib == pib)
                         .FirstOrDefault();
+
+                    if (fl == null && pl == null)
+                    {
+                        throw new InvalidOperationException("Nema pravnog ili fizickog lica");
+                    }
 
                     Ziro z = new Ziro
                     {

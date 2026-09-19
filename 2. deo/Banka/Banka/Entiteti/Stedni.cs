@@ -8,7 +8,7 @@ namespace Banka.Entiteti
 {
     public class Stedni : Racun
     {
-        public virtual decimal MinimalniIznosOtvaranja { get; set; }
+        public virtual decimal? MinimalniIznosOtvaranja { get; set; }
         public virtual int FrekvKapitKamate { get; set; }
 
         public virtual IList<StedniBonus> Bonusi { get; set; }

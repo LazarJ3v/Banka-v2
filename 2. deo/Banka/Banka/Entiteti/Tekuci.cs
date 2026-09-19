@@ -9,7 +9,7 @@ namespace Banka.Entiteti
     public class Tekuci : Racun
     {
         public virtual bool PlatnaKartica { get; set; }
-        public virtual decimal MesecniLimit { get; set; }
+        public virtual decimal? MesecniLimit { get; set; }
 
         public virtual IList<TekuciPaket> Paketi { get; set; }
 

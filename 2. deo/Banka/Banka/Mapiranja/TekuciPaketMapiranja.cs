@@ -10,7 +10,7 @@ namespace Banka.Mapiranja
 {
     class TekuciPaketMapiranja : ClassMap<TekuciPaket>
     {
-        TekuciPaketMapiranja()
+        public TekuciPaketMapiranja()
         {
             Table("TEKUCI_PAKET");
 

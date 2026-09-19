@@ -10,7 +10,7 @@ namespace Banka.Mapiranja
 {
     class TekuciMapiranja : SubclassMap<Tekuci>
     {
-        TekuciMapiranja()
+        public TekuciMapiranja()
         {
             Table("TEKUCI");
 

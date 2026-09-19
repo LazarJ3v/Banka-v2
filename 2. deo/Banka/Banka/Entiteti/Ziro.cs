@@ -10,7 +10,7 @@ namespace Banka.Entiteti
     {
         public virtual string Namena { get; set; }
         public virtual bool ElektronskoBankarstvo { get; set; }
-        public virtual decimal LimitZaMasovnaPlacanja { get; set; }
+        public virtual decimal? LimitZaMasovnaPlacanja { get; set; }
         public virtual string IntegracijaSaSistemima { get; set; }
 
         public Ziro()
