@@ -173,6 +173,12 @@
     <Compile Include="Forme\IzmeniPravnoLice.Designer.cs">
       <DependentUpon>IzmeniPravnoLice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forme\IzmeniRacun.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forme\IzmeniRacun.Designer.cs">
+      <DependentUpon>IzmeniRacun.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forme\KlijentiPregled.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -222,6 +228,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forme\IzmeniPravnoLice.resx">
       <DependentUpon>IzmeniPravnoLice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forme\IzmeniRacun.resx">
+      <DependentUpon>IzmeniRacun.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forme\KlijentiPregled.resx">
       <DependentUpon>KlijentiPregled.cs</DependentUpon>

@@ -94,7 +94,7 @@
             this.lblBrojRacuna.Location = new System.Drawing.Point(7, 25);
             this.lblBrojRacuna.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblBrojRacuna.Name = "lblBrojRacuna";
-            this.lblBrojRacuna.Size = new System.Drawing.Size(142, 23);
+            this.lblBrojRacuna.Size = new System.Drawing.Size(104, 25);
             this.lblBrojRacuna.TabIndex = 0;
             this.lblBrojRacuna.Text = "Broj računa:";
             // 
@@ -104,7 +104,7 @@
             this.lblBrojRacunaVrednost.Location = new System.Drawing.Point(212, 25);
             this.lblBrojRacunaVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblBrojRacunaVrednost.Name = "lblBrojRacunaVrednost";
-            this.lblBrojRacunaVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblBrojRacunaVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblBrojRacunaVrednost.TabIndex = 1;
             this.lblBrojRacunaVrednost.Text = "vrednost";
             // 
@@ -145,7 +145,7 @@
             this.lblKomentarVrednost.Location = new System.Drawing.Point(212, 209);
             this.lblKomentarVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblKomentarVrednost.Name = "lblKomentarVrednost";
-            this.lblKomentarVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblKomentarVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblKomentarVrednost.TabIndex = 17;
             this.lblKomentarVrednost.Text = "vrednost";
             // 
@@ -155,7 +155,7 @@
             this.lblKomentar.Location = new System.Drawing.Point(7, 209);
             this.lblKomentar.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblKomentar.Name = "lblKomentar";
-            this.lblKomentar.Size = new System.Drawing.Size(109, 23);
+            this.lblKomentar.Size = new System.Drawing.Size(93, 25);
             this.lblKomentar.TabIndex = 16;
             this.lblKomentar.Text = "Komentar:";
             // 
@@ -165,7 +165,7 @@
             this.lblTipRacunaVrednost.Location = new System.Drawing.Point(212, 186);
             this.lblTipRacunaVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTipRacunaVrednost.Name = "lblTipRacunaVrednost";
-            this.lblTipRacunaVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblTipRacunaVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblTipRacunaVrednost.TabIndex = 15;
             this.lblTipRacunaVrednost.Text = "vrednost";
             // 
@@ -175,7 +175,7 @@
             this.lblTipRacuna.Location = new System.Drawing.Point(7, 186);
             this.lblTipRacuna.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTipRacuna.Name = "lblTipRacuna";
-            this.lblTipRacuna.Size = new System.Drawing.Size(131, 23);
+            this.lblTipRacuna.Size = new System.Drawing.Size(97, 25);
             this.lblTipRacuna.TabIndex = 14;
             this.lblTipRacuna.Text = "Tip računa:";
             // 
@@ -185,7 +185,7 @@
             this.lblKamatnaStopaVrednost.Location = new System.Drawing.Point(212, 163);
             this.lblKamatnaStopaVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblKamatnaStopaVrednost.Name = "lblKamatnaStopaVrednost";
-            this.lblKamatnaStopaVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblKamatnaStopaVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblKamatnaStopaVrednost.TabIndex = 13;
             this.lblKamatnaStopaVrednost.Text = "vrednost";
             // 
@@ -195,7 +195,7 @@
             this.lblKamatnaStopa.Location = new System.Drawing.Point(7, 163);
             this.lblKamatnaStopa.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblKamatnaStopa.Name = "lblKamatnaStopa";
-            this.lblKamatnaStopa.Size = new System.Drawing.Size(164, 23);
+            this.lblKamatnaStopa.Size = new System.Drawing.Size(135, 25);
             this.lblKamatnaStopa.TabIndex = 12;
             this.lblKamatnaStopa.Text = "Kamatna stopa:";
             // 
@@ -205,7 +205,7 @@
             this.lblDozvoljeniMinusVrednost.Location = new System.Drawing.Point(212, 140);
             this.lblDozvoljeniMinusVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDozvoljeniMinusVrednost.Name = "lblDozvoljeniMinusVrednost";
-            this.lblDozvoljeniMinusVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblDozvoljeniMinusVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblDozvoljeniMinusVrednost.TabIndex = 11;
             this.lblDozvoljeniMinusVrednost.Text = "vrednost";
             // 
@@ -215,7 +215,7 @@
             this.lblDozvoljeniMinus.Location = new System.Drawing.Point(7, 140);
             this.lblDozvoljeniMinus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDozvoljeniMinus.Name = "lblDozvoljeniMinus";
-            this.lblDozvoljeniMinus.Size = new System.Drawing.Size(197, 23);
+            this.lblDozvoljeniMinus.Size = new System.Drawing.Size(152, 25);
             this.lblDozvoljeniMinus.TabIndex = 10;
             this.lblDozvoljeniMinus.Text = "Dozvoljeni minus:";
             // 
@@ -225,7 +225,7 @@
             this.lblStatusVrednost.Location = new System.Drawing.Point(212, 117);
             this.lblStatusVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblStatusVrednost.Name = "lblStatusVrednost";
-            this.lblStatusVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblStatusVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblStatusVrednost.TabIndex = 9;
             this.lblStatusVrednost.Text = "vrednost";
             // 
@@ -235,7 +235,7 @@
             this.lblStatus.Location = new System.Drawing.Point(7, 117);
             this.lblStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(87, 23);
+            this.lblStatus.Size = new System.Drawing.Size(64, 25);
             this.lblStatus.TabIndex = 8;
             this.lblStatus.Text = "Status:";
             // 
@@ -245,7 +245,7 @@
             this.lblDatumOtvaranjaVrednost.Location = new System.Drawing.Point(212, 94);
             this.lblDatumOtvaranjaVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDatumOtvaranjaVrednost.Name = "lblDatumOtvaranjaVrednost";
-            this.lblDatumOtvaranjaVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblDatumOtvaranjaVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblDatumOtvaranjaVrednost.TabIndex = 7;
             this.lblDatumOtvaranjaVrednost.Text = "vrednost";
             // 
@@ -255,7 +255,7 @@
             this.lblDatumOtvaranja.Location = new System.Drawing.Point(7, 94);
             this.lblDatumOtvaranja.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDatumOtvaranja.Name = "lblDatumOtvaranja";
-            this.lblDatumOtvaranja.Size = new System.Drawing.Size(186, 23);
+            this.lblDatumOtvaranja.Size = new System.Drawing.Size(148, 25);
             this.lblDatumOtvaranja.TabIndex = 6;
             this.lblDatumOtvaranja.Text = "Datum otvaranja:";
             // 
@@ -265,7 +265,7 @@
             this.lblTrenutnoStanjeVrednost.Location = new System.Drawing.Point(212, 71);
             this.lblTrenutnoStanjeVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTrenutnoStanjeVrednost.Name = "lblTrenutnoStanjeVrednost";
-            this.lblTrenutnoStanjeVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblTrenutnoStanjeVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblTrenutnoStanjeVrednost.TabIndex = 5;
             this.lblTrenutnoStanjeVrednost.Text = "vrednost";
             // 
@@ -275,7 +275,7 @@
             this.lblTrenutnoStanje.Location = new System.Drawing.Point(7, 71);
             this.lblTrenutnoStanje.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTrenutnoStanje.Name = "lblTrenutnoStanje";
-            this.lblTrenutnoStanje.Size = new System.Drawing.Size(186, 23);
+            this.lblTrenutnoStanje.Size = new System.Drawing.Size(136, 25);
             this.lblTrenutnoStanje.TabIndex = 4;
             this.lblTrenutnoStanje.Text = "Trenutno stanje:";
             // 
@@ -285,7 +285,7 @@
             this.lblValutaVrednost.Location = new System.Drawing.Point(212, 48);
             this.lblValutaVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblValutaVrednost.Name = "lblValutaVrednost";
-            this.lblValutaVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblValutaVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblValutaVrednost.TabIndex = 3;
             this.lblValutaVrednost.Text = "vrednost";
             // 
@@ -295,7 +295,7 @@
             this.lblValuta.Location = new System.Drawing.Point(7, 48);
             this.lblValuta.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblValuta.Name = "lblValuta";
-            this.lblValuta.Size = new System.Drawing.Size(87, 23);
+            this.lblValuta.Size = new System.Drawing.Size(64, 25);
             this.lblValuta.TabIndex = 2;
             this.lblValuta.Text = "Valuta:";
             // 
@@ -324,7 +324,7 @@
             this.lblPaketiVrednost.Location = new System.Drawing.Point(212, 71);
             this.lblPaketiVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPaketiVrednost.Name = "lblPaketiVrednost";
-            this.lblPaketiVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblPaketiVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblPaketiVrednost.TabIndex = 5;
             this.lblPaketiVrednost.Text = "vrednost";
             // 
@@ -334,7 +334,7 @@
             this.lblPaketi.Location = new System.Drawing.Point(7, 71);
             this.lblPaketi.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPaketi.Name = "lblPaketi";
-            this.lblPaketi.Size = new System.Drawing.Size(87, 23);
+            this.lblPaketi.Size = new System.Drawing.Size(62, 25);
             this.lblPaketi.TabIndex = 4;
             this.lblPaketi.Text = "Paketi:";
             // 
@@ -344,7 +344,7 @@
             this.lblMesecniLimitVrednost.Location = new System.Drawing.Point(212, 48);
             this.lblMesecniLimitVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMesecniLimitVrednost.Name = "lblMesecniLimitVrednost";
-            this.lblMesecniLimitVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblMesecniLimitVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblMesecniLimitVrednost.TabIndex = 3;
             this.lblMesecniLimitVrednost.Text = "vrednost";
             // 
@@ -354,7 +354,7 @@
             this.lblMesecniLimit.Location = new System.Drawing.Point(7, 48);
             this.lblMesecniLimit.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMesecniLimit.Name = "lblMesecniLimit";
-            this.lblMesecniLimit.Size = new System.Drawing.Size(164, 23);
+            this.lblMesecniLimit.Size = new System.Drawing.Size(119, 25);
             this.lblMesecniLimit.TabIndex = 2;
             this.lblMesecniLimit.Text = "Mesečni limit:";
             // 
@@ -364,7 +364,7 @@
             this.lblPlatnaKarticaVrednost.Location = new System.Drawing.Point(212, 25);
             this.lblPlatnaKarticaVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPlatnaKarticaVrednost.Name = "lblPlatnaKarticaVrednost";
-            this.lblPlatnaKarticaVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblPlatnaKarticaVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblPlatnaKarticaVrednost.TabIndex = 1;
             this.lblPlatnaKarticaVrednost.Text = "vrednost";
             // 
@@ -374,7 +374,7 @@
             this.lblPlatnaKartica.Location = new System.Drawing.Point(7, 25);
             this.lblPlatnaKartica.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPlatnaKartica.Name = "lblPlatnaKartica";
-            this.lblPlatnaKartica.Size = new System.Drawing.Size(175, 23);
+            this.lblPlatnaKartica.Size = new System.Drawing.Size(120, 25);
             this.lblPlatnaKartica.TabIndex = 0;
             this.lblPlatnaKartica.Text = "Platna kartica:";
             // 
@@ -405,7 +405,7 @@
             this.lblValuteVrednost.Location = new System.Drawing.Point(212, 99);
             this.lblValuteVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblValuteVrednost.Name = "lblValuteVrednost";
-            this.lblValuteVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblValuteVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblValuteVrednost.TabIndex = 7;
             this.lblValuteVrednost.Text = "vrednost";
             // 
@@ -415,7 +415,7 @@
             this.lblValute.Location = new System.Drawing.Point(7, 99);
             this.lblValute.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblValute.Name = "lblValute";
-            this.lblValute.Size = new System.Drawing.Size(87, 23);
+            this.lblValute.Size = new System.Drawing.Size(64, 25);
             this.lblValute.TabIndex = 6;
             this.lblValute.Text = "Valute:";
             // 
@@ -425,7 +425,7 @@
             this.lblOgranicenjaVrednost.Location = new System.Drawing.Point(212, 71);
             this.lblOgranicenjaVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblOgranicenjaVrednost.Name = "lblOgranicenjaVrednost";
-            this.lblOgranicenjaVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblOgranicenjaVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblOgranicenjaVrednost.TabIndex = 5;
             this.lblOgranicenjaVrednost.Text = "vrednost";
             // 
@@ -435,7 +435,7 @@
             this.lblOgranicenja.Location = new System.Drawing.Point(7, 71);
             this.lblOgranicenja.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblOgranicenja.Name = "lblOgranicenja";
-            this.lblOgranicenja.Size = new System.Drawing.Size(142, 23);
+            this.lblOgranicenja.Size = new System.Drawing.Size(110, 25);
             this.lblOgranicenja.TabIndex = 4;
             this.lblOgranicenja.Text = "Ograničenja:";
             // 
@@ -445,7 +445,7 @@
             this.lblKursnaRazlikaVrednost.Location = new System.Drawing.Point(212, 48);
             this.lblKursnaRazlikaVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblKursnaRazlikaVrednost.Name = "lblKursnaRazlikaVrednost";
-            this.lblKursnaRazlikaVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblKursnaRazlikaVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblKursnaRazlikaVrednost.TabIndex = 3;
             this.lblKursnaRazlikaVrednost.Text = "vrednost";
             // 
@@ -455,7 +455,7 @@
             this.lblKursnaRazlika.Location = new System.Drawing.Point(7, 48);
             this.lblKursnaRazlika.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblKursnaRazlika.Name = "lblKursnaRazlika";
-            this.lblKursnaRazlika.Size = new System.Drawing.Size(175, 23);
+            this.lblKursnaRazlika.Size = new System.Drawing.Size(123, 25);
             this.lblKursnaRazlika.TabIndex = 2;
             this.lblKursnaRazlika.Text = "Kursna razlika:";
             // 
@@ -465,7 +465,7 @@
             this.lblNamenaDevizniVrednost.Location = new System.Drawing.Point(212, 25);
             this.lblNamenaDevizniVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNamenaDevizniVrednost.Name = "lblNamenaDevizniVrednost";
-            this.lblNamenaDevizniVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblNamenaDevizniVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblNamenaDevizniVrednost.TabIndex = 1;
             this.lblNamenaDevizniVrednost.Text = "vrednost";
             // 
@@ -475,7 +475,7 @@
             this.lblNamenaDevizni.Location = new System.Drawing.Point(7, 25);
             this.lblNamenaDevizni.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNamenaDevizni.Name = "lblNamenaDevizni";
-            this.lblNamenaDevizni.Size = new System.Drawing.Size(87, 23);
+            this.lblNamenaDevizni.Size = new System.Drawing.Size(82, 25);
             this.lblNamenaDevizni.TabIndex = 0;
             this.lblNamenaDevizni.Text = "Namena:";
             // 
@@ -506,7 +506,7 @@
             this.lblUsloviPodizanjaVrednost.Location = new System.Drawing.Point(360, 94);
             this.lblUsloviPodizanjaVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblUsloviPodizanjaVrednost.Name = "lblUsloviPodizanjaVrednost";
-            this.lblUsloviPodizanjaVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblUsloviPodizanjaVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblUsloviPodizanjaVrednost.TabIndex = 7;
             this.lblUsloviPodizanjaVrednost.Text = "vrednost";
             // 
@@ -516,7 +516,7 @@
             this.lblUsloviPodizanja.Location = new System.Drawing.Point(7, 94);
             this.lblUsloviPodizanja.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblUsloviPodizanja.Name = "lblUsloviPodizanja";
-            this.lblUsloviPodizanja.Size = new System.Drawing.Size(197, 23);
+            this.lblUsloviPodizanja.Size = new System.Drawing.Size(146, 25);
             this.lblUsloviPodizanja.TabIndex = 6;
             this.lblUsloviPodizanja.Text = "Uslovi podizanja:";
             // 
@@ -526,7 +526,7 @@
             this.lblBonusiVrednost.Location = new System.Drawing.Point(360, 71);
             this.lblBonusiVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblBonusiVrednost.Name = "lblBonusiVrednost";
-            this.lblBonusiVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblBonusiVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblBonusiVrednost.TabIndex = 5;
             this.lblBonusiVrednost.Text = "vrednost";
             // 
@@ -536,7 +536,7 @@
             this.lblBonusi.Location = new System.Drawing.Point(7, 71);
             this.lblBonusi.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblBonusi.Name = "lblBonusi";
-            this.lblBonusi.Size = new System.Drawing.Size(87, 23);
+            this.lblBonusi.Size = new System.Drawing.Size(69, 25);
             this.lblBonusi.TabIndex = 4;
             this.lblBonusi.Text = "Bonusi:";
             // 
@@ -546,7 +546,7 @@
             this.lblFrekvKapitalizKamateVrednost.Location = new System.Drawing.Point(360, 48);
             this.lblFrekvKapitalizKamateVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblFrekvKapitalizKamateVrednost.Name = "lblFrekvKapitalizKamateVrednost";
-            this.lblFrekvKapitalizKamateVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblFrekvKapitalizKamateVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblFrekvKapitalizKamateVrednost.TabIndex = 3;
             this.lblFrekvKapitalizKamateVrednost.Text = "vrednost";
             // 
@@ -556,7 +556,7 @@
             this.lblMinimalniIznosOtvaranjaVrednost.Location = new System.Drawing.Point(360, 25);
             this.lblMinimalniIznosOtvaranjaVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMinimalniIznosOtvaranjaVrednost.Name = "lblMinimalniIznosOtvaranjaVrednost";
-            this.lblMinimalniIznosOtvaranjaVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblMinimalniIznosOtvaranjaVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblMinimalniIznosOtvaranjaVrednost.TabIndex = 1;
             this.lblMinimalniIznosOtvaranjaVrednost.Text = "vrednost";
             // 
@@ -566,7 +566,7 @@
             this.lblMinimalniIznosOtvaranja.Location = new System.Drawing.Point(7, 25);
             this.lblMinimalniIznosOtvaranja.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMinimalniIznosOtvaranja.Name = "lblMinimalniIznosOtvaranja";
-            this.lblMinimalniIznosOtvaranja.Size = new System.Drawing.Size(296, 23);
+            this.lblMinimalniIznosOtvaranja.Size = new System.Drawing.Size(217, 25);
             this.lblMinimalniIznosOtvaranja.TabIndex = 0;
             this.lblMinimalniIznosOtvaranja.Text = "Minimalni iznos otvaranja:";
             // 
@@ -576,7 +576,7 @@
             this.lblFrekvKapitalizKamate.Location = new System.Drawing.Point(7, 48);
             this.lblFrekvKapitalizKamate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblFrekvKapitalizKamate.Name = "lblFrekvKapitalizKamate";
-            this.lblFrekvKapitalizKamate.Size = new System.Drawing.Size(329, 23);
+            this.lblFrekvKapitalizKamate.Size = new System.Drawing.Size(228, 25);
             this.lblFrekvKapitalizKamate.TabIndex = 2;
             this.lblFrekvKapitalizKamate.Text = "Frekv. kapitalizacije kamate:";
             // 
@@ -607,7 +607,7 @@
             this.lblIntegracijaSaSistemimaVrednost.Location = new System.Drawing.Point(340, 94);
             this.lblIntegracijaSaSistemimaVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblIntegracijaSaSistemimaVrednost.Name = "lblIntegracijaSaSistemimaVrednost";
-            this.lblIntegracijaSaSistemimaVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblIntegracijaSaSistemimaVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblIntegracijaSaSistemimaVrednost.TabIndex = 7;
             this.lblIntegracijaSaSistemimaVrednost.Text = "vrednost";
             // 
@@ -617,7 +617,7 @@
             this.lblIntegracijaSaSistemima.Location = new System.Drawing.Point(7, 94);
             this.lblIntegracijaSaSistemima.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblIntegracijaSaSistemima.Name = "lblIntegracijaSaSistemima";
-            this.lblIntegracijaSaSistemima.Size = new System.Drawing.Size(285, 23);
+            this.lblIntegracijaSaSistemima.Size = new System.Drawing.Size(204, 25);
             this.lblIntegracijaSaSistemima.TabIndex = 6;
             this.lblIntegracijaSaSistemima.Text = "Integracija sa sistemima:";
             // 
@@ -627,7 +627,7 @@
             this.lblLimitZaMasovnaPlacanjaVrednost.Location = new System.Drawing.Point(340, 71);
             this.lblLimitZaMasovnaPlacanjaVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblLimitZaMasovnaPlacanjaVrednost.Name = "lblLimitZaMasovnaPlacanjaVrednost";
-            this.lblLimitZaMasovnaPlacanjaVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblLimitZaMasovnaPlacanjaVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblLimitZaMasovnaPlacanjaVrednost.TabIndex = 5;
             this.lblLimitZaMasovnaPlacanjaVrednost.Text = "vrednost";
             // 
@@ -637,7 +637,7 @@
             this.lblLimitZaMasovnaPlacanja.Location = new System.Drawing.Point(7, 71);
             this.lblLimitZaMasovnaPlacanja.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblLimitZaMasovnaPlacanja.Name = "lblLimitZaMasovnaPlacanja";
-            this.lblLimitZaMasovnaPlacanja.Size = new System.Drawing.Size(296, 23);
+            this.lblLimitZaMasovnaPlacanja.Size = new System.Drawing.Size(222, 25);
             this.lblLimitZaMasovnaPlacanja.TabIndex = 4;
             this.lblLimitZaMasovnaPlacanja.Text = "Limit za masovna plaćanja:";
             // 
@@ -647,7 +647,7 @@
             this.lblElektronskoBankarstvoVrednost.Location = new System.Drawing.Point(340, 48);
             this.lblElektronskoBankarstvoVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblElektronskoBankarstvoVrednost.Name = "lblElektronskoBankarstvoVrednost";
-            this.lblElektronskoBankarstvoVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblElektronskoBankarstvoVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblElektronskoBankarstvoVrednost.TabIndex = 3;
             this.lblElektronskoBankarstvoVrednost.Text = "vrednost";
             // 
@@ -657,7 +657,7 @@
             this.lblElektronskoBankarstvo.Location = new System.Drawing.Point(7, 48);
             this.lblElektronskoBankarstvo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblElektronskoBankarstvo.Name = "lblElektronskoBankarstvo";
-            this.lblElektronskoBankarstvo.Size = new System.Drawing.Size(263, 23);
+            this.lblElektronskoBankarstvo.Size = new System.Drawing.Size(201, 25);
             this.lblElektronskoBankarstvo.TabIndex = 2;
             this.lblElektronskoBankarstvo.Text = "Elektronsko bankarstvo:";
             // 
@@ -667,7 +667,7 @@
             this.lblNamenaZiroVrednost.Location = new System.Drawing.Point(340, 25);
             this.lblNamenaZiroVrednost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNamenaZiroVrednost.Name = "lblNamenaZiroVrednost";
-            this.lblNamenaZiroVrednost.Size = new System.Drawing.Size(98, 23);
+            this.lblNamenaZiroVrednost.Size = new System.Drawing.Size(82, 25);
             this.lblNamenaZiroVrednost.TabIndex = 1;
             this.lblNamenaZiroVrednost.Text = "vrednost";
             // 
@@ -677,7 +677,7 @@
             this.lblNamenaZiro.Location = new System.Drawing.Point(7, 25);
             this.lblNamenaZiro.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNamenaZiro.Name = "lblNamenaZiro";
-            this.lblNamenaZiro.Size = new System.Drawing.Size(87, 23);
+            this.lblNamenaZiro.Size = new System.Drawing.Size(82, 25);
             this.lblNamenaZiro.TabIndex = 0;
             this.lblNamenaZiro.Text = "Namena:";
             // 
@@ -687,10 +687,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(511, 586);
             this.Controls.Add(this.gbOsnovneInformacije);
-            this.Controls.Add(this.gbDevizniInformacije);
-            this.Controls.Add(this.gbTekuciInformacije);
             this.Controls.Add(this.gbZiroInformacije);
             this.Controls.Add(this.gbStedniInformacije);
+            this.Controls.Add(this.gbDevizniInformacije);
+            this.Controls.Add(this.gbTekuciInformacije);
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "DetaljiRacun";
             this.Text = "DetaljiRacun";
