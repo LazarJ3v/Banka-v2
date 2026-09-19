@@ -14,15 +14,25 @@ namespace Banka.Forme
         // ==========================================
         // PALETA BOJA
         // ==========================================
-        protected static readonly Color BojaNajtamnija = Color.FromArgb(28, 28, 28);        // pozadina forme
-        protected static readonly Color BojaTamna = Color.FromArgb(41, 41, 41);             // pozadina panela/groupbox
-        protected static readonly Color BojaSrednja = Color.FromArgb(51, 51, 51);           // pozadina input kontrola
-        protected static readonly Color BojaSvetlija = Color.FromArgb(61, 61, 61);          // border / dgv pozadina
-        protected static readonly Color BojaNajsvetlija = Color.FromArgb(71, 71, 71);       // hover / dgv border / akcenti
-        protected static readonly Color BojaGridCellSelect = Color.FromArgb(255, 149, 81);  // select
+        //protected static readonly Color BojaNajtamnija = Color.FromArgb(28, 28, 28);        // pozadina forme
+        //protected static readonly Color BojaTamna = Color.FromArgb(41, 41, 41);             // pozadina panela/groupbox
+        //protected static readonly Color BojaSrednja = Color.FromArgb(51, 51, 51);           // pozadina input kontrola
+        //protected static readonly Color BojaSvetlija = Color.FromArgb(61, 61, 61);          // border / dgv pozadina
+        //protected static readonly Color BojaNajsvetlija = Color.FromArgb(71, 71, 71);       // hover / dgv border / akcenti
+        //protected static readonly Color BojaGridCellSelect = Color.FromArgb(255, 149, 81);  // select
 
-        protected static readonly Color TekstBoja = Color.FromArgb(230, 230, 230);
-        protected static readonly Color TekstBojaSekundarna = Color.FromArgb(160, 160, 160);
+        protected static readonly Color BojaNajsvetlija = Color.FromArgb(250, 251, 253);
+        protected static readonly Color BojaSvetlija = Color.FromArgb(240, 243, 248);
+        protected static readonly Color BojaSrednja = Color.FromArgb(228, 233, 240);
+        protected static readonly Color BojaTamna = Color.FromArgb(214, 221, 232);
+        protected static readonly Color BojaNajtamnija = Color.FromArgb(197, 206, 220);
+
+        protected static readonly Color BojaGridCellSelect = Color.FromArgb(21, 101, 192);
+
+        //protected static readonly Color TekstBoja = Color.FromArgb(230, 230, 230);
+        //protected static readonly Color TekstBojaSekundarna = Color.FromArgb(160, 160, 160);
+        protected static readonly Color TekstBoja = Color.FromArgb(21, 28, 38);
+        protected static readonly Color TekstBojaSekundarna = Color.FromArgb(85, 96, 112);
 
         // ==========================================
         // KONSTRUKTOR
@@ -156,7 +166,7 @@ namespace Banka.Forme
         protected void StilizujLabelHeader(Label lbl)
         {
             lbl.BackColor = Color.Transparent;
-            lbl.ForeColor = Color.White;
+            lbl.ForeColor = TekstBojaSekundarna;
             lbl.Font = new Font("Segoe UI", 11);
         }
 
