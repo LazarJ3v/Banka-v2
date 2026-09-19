@@ -22,9 +22,11 @@ namespace Banka.Entiteti
         public virtual FizickoLice PripadaFizickomLicu { get; set; }
         public virtual PravnoLice PripadaPravnomLicu { get; set; }
 
+        public virtual IList<Transakcija> Transakcije { get; set; }
+
         public Racun()
         {
-
+            Transakcije = new List<Transakcija>();
         }
     }
 }

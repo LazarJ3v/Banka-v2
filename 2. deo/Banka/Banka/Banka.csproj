@@ -115,16 +115,21 @@
     <Compile Include="DataLayer.cs" />
     <Compile Include="DTOManager.cs" />
     <Compile Include="DTOs.cs" />
+    <Compile Include="Entiteti\Depozit.cs" />
     <Compile Include="Entiteti\Devizni.cs" />
     <Compile Include="Entiteti\DevizniOgranicenje.cs" />
     <Compile Include="Entiteti\DevizniValuta.cs" />
+    <Compile Include="Entiteti\Kamata.cs" />
+    <Compile Include="Entiteti\Kredit.cs" />
     <Compile Include="Entiteti\PravnoLice.cs" />
     <Compile Include="Entiteti\Racun.cs" />
+    <Compile Include="Entiteti\SigurnosnaKontrola.cs" />
     <Compile Include="Entiteti\Stedni.cs" />
     <Compile Include="Entiteti\StedniBonus.cs" />
     <Compile Include="Entiteti\StedniUslovPodizanja.cs" />
     <Compile Include="Entiteti\Tekuci.cs" />
     <Compile Include="Entiteti\TekuciPaket.cs" />
+    <Compile Include="Entiteti\Transakcija.cs" />
     <Compile Include="Entiteti\Ziro.cs" />
     <Compile Include="Enumi\DevizniNamena.cs" />
     <Compile Include="Enumi\DevizniValuta.cs" />
@@ -133,6 +138,7 @@
     <Compile Include="Enumi\StatusRacuna.cs" />
     <Compile Include="Enumi\TipRacuna.cs" />
     <Compile Include="Enumi\KorisnikStatus.cs" />
+    <Compile Include="Enumi\TipTransakcije.cs" />
     <Compile Include="Forme\BaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -191,17 +197,22 @@
     <Compile Include="Forme\RacuniPregled.Designer.cs">
       <DependentUpon>RacuniPregled.cs</DependentUpon>
     </Compile>
+    <Compile Include="Mapiranja\DepozitMapiranja.cs" />
     <Compile Include="Mapiranja\DevizniMapiranja.cs" />
     <Compile Include="Mapiranja\DevizniOgranicenjeMapiranja.cs" />
     <Compile Include="Mapiranja\DevizniValutaMapiranja.cs" />
     <Compile Include="Mapiranja\FizickoLiceMapiranja.cs" />
+    <Compile Include="Mapiranja\KamataMapiranja.cs" />
+    <Compile Include="Mapiranja\KreditMapiranja.cs" />
     <Compile Include="Mapiranja\PravnoLiceMapiranja.cs" />
     <Compile Include="Mapiranja\RacunMapiranja.cs" />
+    <Compile Include="Mapiranja\SigurnosnaKontrolaMapiranja.cs" />
     <Compile Include="Mapiranja\StedniBonusMapiranja.cs" />
     <Compile Include="Mapiranja\StedniMapiranja.cs" />
     <Compile Include="Mapiranja\StedniUslovPodizanjaMapiranja.cs" />
     <Compile Include="Mapiranja\TekuciMapiranja.cs" />
     <Compile Include="Mapiranja\TekuciPaketMapiranja.cs" />
+    <Compile Include="Mapiranja\TransakcijaMapiranja.cs" />
     <Compile Include="Mapiranja\ZiroMapiranja.cs" />
     <Compile Include="PocetnaStrana.cs">
       <SubType>Form</SubType>

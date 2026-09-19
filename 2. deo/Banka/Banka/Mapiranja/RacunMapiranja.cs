@@ -28,6 +28,10 @@ namespace Banka.Mapiranja
 
             References(x => x.PripadaFizickomLicu).Column("FIZICKOLICEID").LazyLoad();
             References(x => x.PripadaPravnomLicu).Column("PRAVNOLICEID").LazyLoad();
+
+            HasMany(x => x.Transakcije)
+                .KeyColumn("RACUNID")
+                .Inverse();
         }
     }
 }
