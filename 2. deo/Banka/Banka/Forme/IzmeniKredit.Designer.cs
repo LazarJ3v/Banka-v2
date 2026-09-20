@@ -105,7 +105,7 @@
             this.cbStatus.FormattingEnabled = true;
             this.cbStatus.Location = new System.Drawing.Point(237, 186);
             this.cbStatus.Name = "cbStatus";
-            this.cbStatus.Size = new System.Drawing.Size(200, 31);
+            this.cbStatus.Size = new System.Drawing.Size(200, 33);
             this.cbStatus.TabIndex = 35;
             // 
             // cbValuta
@@ -113,7 +113,7 @@
             this.cbValuta.FormattingEnabled = true;
             this.cbValuta.Location = new System.Drawing.Point(237, 146);
             this.cbValuta.Name = "cbValuta";
-            this.cbValuta.Size = new System.Drawing.Size(200, 31);
+            this.cbValuta.Size = new System.Drawing.Size(200, 33);
             this.cbValuta.TabIndex = 34;
             // 
             // nudIznos
@@ -142,7 +142,7 @@
             this.lblKomentar.AutoSize = true;
             this.lblKomentar.Location = new System.Drawing.Point(122, 389);
             this.lblKomentar.Name = "lblKomentar";
-            this.lblKomentar.Size = new System.Drawing.Size(109, 23);
+            this.lblKomentar.Size = new System.Drawing.Size(93, 25);
             this.lblKomentar.TabIndex = 30;
             this.lblKomentar.Text = "Komentar:";
             // 
@@ -151,7 +151,7 @@
             this.lblKamatnaStopa.AutoSize = true;
             this.lblKamatnaStopa.Location = new System.Drawing.Point(67, 348);
             this.lblKamatnaStopa.Name = "lblKamatnaStopa";
-            this.lblKamatnaStopa.Size = new System.Drawing.Size(164, 23);
+            this.lblKamatnaStopa.Size = new System.Drawing.Size(135, 25);
             this.lblKamatnaStopa.TabIndex = 29;
             this.lblKamatnaStopa.Text = "Kamatna stopa:";
             // 
@@ -160,7 +160,7 @@
             this.lblNamena.AutoSize = true;
             this.lblNamena.Location = new System.Drawing.Point(144, 309);
             this.lblNamena.Name = "lblNamena";
-            this.lblNamena.Size = new System.Drawing.Size(87, 23);
+            this.lblNamena.Size = new System.Drawing.Size(82, 25);
             this.lblNamena.TabIndex = 28;
             this.lblNamena.Text = "Namena:";
             // 
@@ -169,7 +169,7 @@
             this.lblRokOtplate.AutoSize = true;
             this.lblRokOtplate.Location = new System.Drawing.Point(89, 268);
             this.lblRokOtplate.Name = "lblRokOtplate";
-            this.lblRokOtplate.Size = new System.Drawing.Size(142, 23);
+            this.lblRokOtplate.Size = new System.Drawing.Size(107, 25);
             this.lblRokOtplate.TabIndex = 27;
             this.lblRokOtplate.Text = "Rok otplate:";
             // 
@@ -178,7 +178,7 @@
             this.lblMesecnaRata.AutoSize = true;
             this.lblMesecnaRata.Location = new System.Drawing.Point(78, 228);
             this.lblMesecnaRata.Name = "lblMesecnaRata";
-            this.lblMesecnaRata.Size = new System.Drawing.Size(153, 23);
+            this.lblMesecnaRata.Size = new System.Drawing.Size(120, 25);
             this.lblMesecnaRata.TabIndex = 26;
             this.lblMesecnaRata.Text = "Mesečna rata:";
             // 
@@ -187,7 +187,7 @@
             this.lblStatus.AutoSize = true;
             this.lblStatus.Location = new System.Drawing.Point(56, 189);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(175, 23);
+            this.lblStatus.Size = new System.Drawing.Size(123, 25);
             this.lblStatus.TabIndex = 25;
             this.lblStatus.Text = "Status kredita:";
             // 
@@ -196,7 +196,7 @@
             this.lblValuta.AutoSize = true;
             this.lblValuta.Location = new System.Drawing.Point(144, 149);
             this.lblValuta.Name = "lblValuta";
-            this.lblValuta.Size = new System.Drawing.Size(87, 23);
+            this.lblValuta.Size = new System.Drawing.Size(64, 25);
             this.lblValuta.TabIndex = 24;
             this.lblValuta.Text = "Valuta:";
             // 
@@ -205,7 +205,7 @@
             this.lblIznos.AutoSize = true;
             this.lblIznos.Location = new System.Drawing.Point(155, 108);
             this.lblIznos.Name = "lblIznos";
-            this.lblIznos.Size = new System.Drawing.Size(76, 23);
+            this.lblIznos.Size = new System.Drawing.Size(58, 25);
             this.lblIznos.TabIndex = 23;
             this.lblIznos.Text = "Iznos:";
             // 
@@ -214,7 +214,7 @@
             this.lblDatumOdobrenja.AutoSize = true;
             this.lblDatumOdobrenja.Location = new System.Drawing.Point(45, 72);
             this.lblDatumOdobrenja.Name = "lblDatumOdobrenja";
-            this.lblDatumOdobrenja.Size = new System.Drawing.Size(186, 23);
+            this.lblDatumOdobrenja.Size = new System.Drawing.Size(157, 25);
             this.lblDatumOdobrenja.TabIndex = 22;
             this.lblDatumOdobrenja.Text = "Datum odobrenja:";
             // 
@@ -223,13 +223,13 @@
             this.lblDatumDospeca.AutoSize = true;
             this.lblDatumDospeca.Location = new System.Drawing.Point(67, 32);
             this.lblDatumDospeca.Name = "lblDatumDospeca";
-            this.lblDatumDospeca.Size = new System.Drawing.Size(164, 23);
+            this.lblDatumDospeca.Size = new System.Drawing.Size(142, 25);
             this.lblDatumDospeca.TabIndex = 21;
             this.lblDatumDospeca.Text = "Datum dospeća:";
             // 
             // IzmeniKredit
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(685, 562);
             this.Controls.Add(this.btnSacuvaj);

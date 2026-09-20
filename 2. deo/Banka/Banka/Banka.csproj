@@ -168,6 +168,12 @@
     <Compile Include="Forme\DodajDepozit.Designer.cs">
       <DependentUpon>DodajDepozit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forme\DodajKamatu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forme\DodajKamatu.Designer.cs">
+      <DependentUpon>DodajKamatu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forme\DodajKlijenta.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -204,6 +210,12 @@
     <Compile Include="Forme\IzmeniFizickoLice.Designer.cs">
       <DependentUpon>IzmeniFizickoLice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forme\IzmeniKamatu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forme\IzmeniKamatu.Designer.cs">
+      <DependentUpon>IzmeniKamatu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forme\IzmeniKredit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -227,6 +239,12 @@
     </Compile>
     <Compile Include="Forme\IzmeniTransakciju.Designer.cs">
       <DependentUpon>IzmeniTransakciju.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forme\KamatePregled.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forme\KamatePregled.Designer.cs">
+      <DependentUpon>KamatePregled.cs</DependentUpon>
     </Compile>
     <Compile Include="Forme\KlijentiPregled.cs">
       <SubType>Form</SubType>
@@ -289,6 +307,9 @@
     <EmbeddedResource Include="Forme\DodajDepozit.resx">
       <DependentUpon>DodajDepozit.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forme\DodajKamatu.resx">
+      <DependentUpon>DodajKamatu.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forme\DodajKlijenta.resx">
       <DependentUpon>DodajKlijenta.cs</DependentUpon>
     </EmbeddedResource>
@@ -307,6 +328,9 @@
     <EmbeddedResource Include="Forme\IzmeniFizickoLice.resx">
       <DependentUpon>IzmeniFizickoLice.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forme\IzmeniKamatu.resx">
+      <DependentUpon>IzmeniKamatu.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forme\IzmeniKredit.resx">
       <DependentUpon>IzmeniKredit.cs</DependentUpon>
     </EmbeddedResource>
@@ -318,6 +342,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forme\IzmeniTransakciju.resx">
       <DependentUpon>IzmeniTransakciju.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forme\KamatePregled.resx">
+      <DependentUpon>KamatePregled.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forme\KlijentiPregled.resx">
       <DependentUpon>KlijentiPregled.cs</DependentUpon>
