@@ -21,7 +21,9 @@ namespace Banka
             StilizujButton(
                 btnKlijenti,
                 btnRacuni,
-                btnTransakcije);
+                btnTransakcije,
+                btnDepoziti,
+                btnKrediti);
         }
 
         private void btnKlijenti_Click(object sender, EventArgs e)
@@ -40,6 +42,18 @@ namespace Banka
         {
             var transakcijePregled = new TransakcijePregled();
             transakcijePregled.ShowDialog();
+        }
+
+        private void btnDepoziti_Click(object sender, EventArgs e)
+        {
+            var depozitiPregled = new DepozitiPregled();
+            depozitiPregled.ShowDialog();
+        }
+
+        private void btnKrediti_Click(object sender, EventArgs e)
+        {
+            var kreditiPregled = new KreditiPregled();
+            kreditiPregled.ShowDialog();
         }
     }
 }

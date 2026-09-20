@@ -174,6 +174,12 @@
     <Compile Include="Forme\DodajKlijenta.Designer.cs">
       <DependentUpon>DodajKlijenta.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forme\DodajKredit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forme\DodajKredit.Designer.cs">
+      <DependentUpon>DodajKredit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forme\DodajRacun.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -198,6 +204,12 @@
     <Compile Include="Forme\IzmeniFizickoLice.Designer.cs">
       <DependentUpon>IzmeniFizickoLice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forme\IzmeniKredit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forme\IzmeniKredit.Designer.cs">
+      <DependentUpon>IzmeniKredit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forme\IzmeniPravnoLice.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -221,6 +233,12 @@
     </Compile>
     <Compile Include="Forme\KlijentiPregled.Designer.cs">
       <DependentUpon>KlijentiPregled.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forme\KreditiPregled.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forme\KreditiPregled.Designer.cs">
+      <DependentUpon>KreditiPregled.cs</DependentUpon>
     </Compile>
     <Compile Include="Forme\RacuniPregled.cs">
       <SubType>Form</SubType>
@@ -274,6 +292,9 @@
     <EmbeddedResource Include="Forme\DodajKlijenta.resx">
       <DependentUpon>DodajKlijenta.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forme\DodajKredit.resx">
+      <DependentUpon>DodajKredit.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forme\DodajRacun.resx">
       <DependentUpon>DodajRacun.cs</DependentUpon>
     </EmbeddedResource>
@@ -286,6 +307,9 @@
     <EmbeddedResource Include="Forme\IzmeniFizickoLice.resx">
       <DependentUpon>IzmeniFizickoLice.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forme\IzmeniKredit.resx">
+      <DependentUpon>IzmeniKredit.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forme\IzmeniPravnoLice.resx">
       <DependentUpon>IzmeniPravnoLice.cs</DependentUpon>
     </EmbeddedResource>
@@ -297,6 +321,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forme\KlijentiPregled.resx">
       <DependentUpon>KlijentiPregled.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forme\KreditiPregled.resx">
+      <DependentUpon>KreditiPregled.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forme\RacuniPregled.resx">
       <DependentUpon>RacuniPregled.cs</DependentUpon>

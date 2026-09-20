@@ -31,6 +31,8 @@
             this.btnKlijenti = new System.Windows.Forms.Button();
             this.btnRacuni = new System.Windows.Forms.Button();
             this.btnTransakcije = new System.Windows.Forms.Button();
+            this.btnDepoziti = new System.Windows.Forms.Button();
+            this.btnKrediti = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnKlijenti
@@ -63,11 +65,33 @@
             this.btnTransakcije.UseVisualStyleBackColor = true;
             this.btnTransakcije.Click += new System.EventHandler(this.btnTransakcije_Click);
             // 
+            // btnDepoziti
+            // 
+            this.btnDepoziti.Location = new System.Drawing.Point(13, 305);
+            this.btnDepoziti.Name = "btnDepoziti";
+            this.btnDepoziti.Size = new System.Drawing.Size(220, 37);
+            this.btnDepoziti.TabIndex = 3;
+            this.btnDepoziti.Text = "Depoziti";
+            this.btnDepoziti.UseVisualStyleBackColor = true;
+            this.btnDepoziti.Click += new System.EventHandler(this.btnDepoziti_Click);
+            // 
+            // btnKrediti
+            // 
+            this.btnKrediti.Location = new System.Drawing.Point(239, 305);
+            this.btnKrediti.Name = "btnKrediti";
+            this.btnKrediti.Size = new System.Drawing.Size(221, 37);
+            this.btnKrediti.TabIndex = 4;
+            this.btnKrediti.Text = "Krediti";
+            this.btnKrediti.UseVisualStyleBackColor = true;
+            this.btnKrediti.Click += new System.EventHandler(this.btnKrediti_Click);
+            // 
             // PocetnaStrana
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(880, 414);
+            this.Controls.Add(this.btnKrediti);
+            this.Controls.Add(this.btnDepoziti);
             this.Controls.Add(this.btnTransakcije);
             this.Controls.Add(this.btnRacuni);
             this.Controls.Add(this.btnKlijenti);
@@ -82,5 +106,7 @@
         private System.Windows.Forms.Button btnKlijenti;
         private System.Windows.Forms.Button btnRacuni;
         private System.Windows.Forms.Button btnTransakcije;
+        private System.Windows.Forms.Button btnDepoziti;
+        private System.Windows.Forms.Button btnKrediti;
     }
 }
