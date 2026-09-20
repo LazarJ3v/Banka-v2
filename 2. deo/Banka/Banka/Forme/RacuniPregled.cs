@@ -160,5 +160,61 @@ namespace Banka.Forme
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
+
+        private void btnIzmeni_Click(object sender, EventArgs e)
+        {
+            if (dgvRacuni.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selektujte zapis!");
+                return;
+            }
+
+            int index = dgvRacuni.SelectedRows[0].Index;
+            var selektovani = sviRacuni[index];
+
+            IzmeniRacun forma;
+
+            if (selektovani.TipRacuna == TipRacuna.Tekuci.GetDescription())
+            {
+                TekuciBasic tekuci = DTOManager.VratiTekuci(selektovani.Id);
+                if (tekuci == null) { PrikaziNema(); return; }
+                forma = new IzmeniRacun(tekuci);
+            }
+            else if (selektovani.TipRacuna == TipRacuna.Devizni.GetDescription())
+            {
+                DevizniBasic devizni = DTOManager.VratiDevizni(selektovani.Id);
+                if (devizni == null) { PrikaziNema(); return; }
+                forma = new IzmeniRacun(devizni);
+            }
+            else if (selektovani.TipRacuna == TipRacuna.Stedni.GetDescription())
+            {
+                StedniBasic stedni = DTOManager.VratiStedni(selektovani.Id);
+                if (stedni == null) { PrikaziNema(); return; }
+                forma = new IzmeniRacun(stedni);
+            }
+            else if (selektovani.TipRacuna == TipRacuna.Ziro.GetDescription())
+            {
+                ZiroBasic ziro = DTOManager.VratiZiro(selektovani.Id);
+                if (ziro == null) { PrikaziNema(); return; }
+                forma = new IzmeniRacun(ziro);
+            }
+            else
+            {
+                RacunBasic ostali = DTOManager.VratiRacun(selektovani.Id);
+                if (ostali == null) { PrikaziNema(); return; }
+                forma = new IzmeniRacun(ostali);
+            }
+
+            if (forma.ShowDialog(this) == DialogResult.OK)
+            {
+                RacuniPregled_Load(null, null);
+            }
+        }
+
+        private void PrikaziNema()
+        {
+            MessageBox.Show("Račun više ne postoji. Osvežite listu.", "Greška",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 }

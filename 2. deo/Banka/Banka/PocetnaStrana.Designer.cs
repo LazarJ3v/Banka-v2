@@ -30,6 +30,7 @@
         {
             this.btnKlijenti = new System.Windows.Forms.Button();
             this.btnRacuni = new System.Windows.Forms.Button();
+            this.btnTransakcije = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnKlijenti
@@ -52,11 +53,22 @@
             this.btnRacuni.UseVisualStyleBackColor = true;
             this.btnRacuni.Click += new System.EventHandler(this.btnRacuni_Click);
             // 
+            // btnTransakcije
+            // 
+            this.btnTransakcije.Location = new System.Drawing.Point(466, 348);
+            this.btnTransakcije.Name = "btnTransakcije";
+            this.btnTransakcije.Size = new System.Drawing.Size(221, 37);
+            this.btnTransakcije.TabIndex = 2;
+            this.btnTransakcije.Text = "Transakcije";
+            this.btnTransakcije.UseVisualStyleBackColor = true;
+            this.btnTransakcije.Click += new System.EventHandler(this.btnTransakcije_Click);
+            // 
             // PocetnaStrana
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(880, 414);
+            this.Controls.Add(this.btnTransakcije);
             this.Controls.Add(this.btnRacuni);
             this.Controls.Add(this.btnKlijenti);
             this.Name = "PocetnaStrana";
@@ -69,5 +81,6 @@
 
         private System.Windows.Forms.Button btnKlijenti;
         private System.Windows.Forms.Button btnRacuni;
+        private System.Windows.Forms.Button btnTransakcije;
     }
 }

@@ -20,19 +20,26 @@ namespace Banka
             InitializeComponent();
             StilizujButton(
                 btnKlijenti,
-                btnRacuni);
+                btnRacuni,
+                btnTransakcije);
         }
 
         private void btnKlijenti_Click(object sender, EventArgs e)
         {
-            KlijentiPregled klijentPregled = new KlijentiPregled();
+            var klijentPregled = new KlijentiPregled();
             klijentPregled.Show();
         }
 
         private void btnRacuni_Click(object sender, EventArgs e)
         {
-            RacuniPregled racuniPregled = new RacuniPregled();
+            var racuniPregled = new RacuniPregled();
             racuniPregled.ShowDialog();
+        }
+
+        private void btnTransakcije_Click(object sender, EventArgs e)
+        {
+            var transakcijePregled = new TransakcijePregled();
+            transakcijePregled.ShowDialog();
         }
     }
 }
