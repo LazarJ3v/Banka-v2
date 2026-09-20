@@ -46,6 +46,7 @@
             // tbIpAdresa
             // 
             this.tbIpAdresa.Location = new System.Drawing.Point(233, 58);
+            this.tbIpAdresa.MaxLength = 15;
             this.tbIpAdresa.Name = "tbIpAdresa";
             this.tbIpAdresa.Size = new System.Drawing.Size(200, 31);
             this.tbIpAdresa.TabIndex = 0;
@@ -130,6 +131,7 @@
             // rtbPodaciUredjaja
             // 
             this.rtbPodaciUredjaja.Location = new System.Drawing.Point(233, 218);
+            this.rtbPodaciUredjaja.MaxLength = 255;
             this.rtbPodaciUredjaja.Name = "rtbPodaciUredjaja";
             this.rtbPodaciUredjaja.Size = new System.Drawing.Size(200, 62);
             this.rtbPodaciUredjaja.TabIndex = 10;
@@ -138,6 +140,7 @@
             // rtbOpis
             // 
             this.rtbOpis.Location = new System.Drawing.Point(233, 286);
+            this.rtbOpis.MaxLength = 1000;
             this.rtbOpis.Name = "rtbOpis";
             this.rtbOpis.Size = new System.Drawing.Size(200, 124);
             this.rtbOpis.TabIndex = 11;
