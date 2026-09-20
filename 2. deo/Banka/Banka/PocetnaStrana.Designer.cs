@@ -34,6 +34,7 @@
             this.btnDepoziti = new System.Windows.Forms.Button();
             this.btnKrediti = new System.Windows.Forms.Button();
             this.btnKamate = new System.Windows.Forms.Button();
+            this.btnSigurnosneKontrole = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnKlijenti
@@ -96,11 +97,22 @@
             this.btnKamate.UseVisualStyleBackColor = true;
             this.btnKamate.Click += new System.EventHandler(this.btnKamate_Click);
             // 
+            // btnSigurnosneKontrole
+            // 
+            this.btnSigurnosneKontrole.Location = new System.Drawing.Point(693, 305);
+            this.btnSigurnosneKontrole.Name = "btnSigurnosneKontrole";
+            this.btnSigurnosneKontrole.Size = new System.Drawing.Size(175, 80);
+            this.btnSigurnosneKontrole.TabIndex = 6;
+            this.btnSigurnosneKontrole.Text = "Sigurnosne kontrole";
+            this.btnSigurnosneKontrole.UseVisualStyleBackColor = true;
+            this.btnSigurnosneKontrole.Click += new System.EventHandler(this.btnSigurnosneKontrole_Click);
+            // 
             // PocetnaStrana
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(880, 414);
+            this.Controls.Add(this.btnSigurnosneKontrole);
             this.Controls.Add(this.btnKamate);
             this.Controls.Add(this.btnKrediti);
             this.Controls.Add(this.btnDepoziti);
@@ -121,5 +133,6 @@
         private System.Windows.Forms.Button btnDepoziti;
         private System.Windows.Forms.Button btnKrediti;
         private System.Windows.Forms.Button btnKamate;
+        private System.Windows.Forms.Button btnSigurnosneKontrole;
     }
 }

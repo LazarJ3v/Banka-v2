@@ -24,7 +24,8 @@ namespace Banka
                 btnTransakcije,
                 btnDepoziti,
                 btnKrediti,
-                btnKamate);
+                btnKamate,
+                btnSigurnosneKontrole);
         }
 
         private void btnKlijenti_Click(object sender, EventArgs e)
@@ -61,6 +62,12 @@ namespace Banka
         {
             var kamatePregled = new KamatePregled();
             kamatePregled.ShowDialog();
+        }
+
+        private void btnSigurnosneKontrole_Click(object sender, EventArgs e)
+        {
+            var sigurnosneKontrolePregled = new SigurnosneKontrolePregled();
+            sigurnosneKontrolePregled.ShowDialog();
         }
     }
 }

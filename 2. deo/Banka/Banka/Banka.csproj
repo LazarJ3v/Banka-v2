@@ -192,6 +192,12 @@
     <Compile Include="Forme\DodajRacun.Designer.cs">
       <DependentUpon>DodajRacun.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forme\DodajSigurnosnuKontrolu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forme\DodajSigurnosnuKontrolu.Designer.cs">
+      <DependentUpon>DodajSigurnosnuKontrolu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forme\DodajTransakciju.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -234,6 +240,12 @@
     <Compile Include="Forme\IzmeniRacun.Designer.cs">
       <DependentUpon>IzmeniRacun.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forme\IzmeniSigurnosnuKontrolu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forme\IzmeniSigurnosnuKontrolu.Designer.cs">
+      <DependentUpon>IzmeniSigurnosnuKontrolu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forme\IzmeniTransakciju.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -263,6 +275,12 @@
     </Compile>
     <Compile Include="Forme\RacuniPregled.Designer.cs">
       <DependentUpon>RacuniPregled.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forme\SigurnosneKontrolePregled.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forme\SigurnosneKontrolePregled.Designer.cs">
+      <DependentUpon>SigurnosneKontrolePregled.cs</DependentUpon>
     </Compile>
     <Compile Include="Forme\TransakcijePregled.cs">
       <SubType>Form</SubType>
@@ -319,6 +337,9 @@
     <EmbeddedResource Include="Forme\DodajRacun.resx">
       <DependentUpon>DodajRacun.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forme\DodajSigurnosnuKontrolu.resx">
+      <DependentUpon>DodajSigurnosnuKontrolu.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forme\DodajTransakciju.resx">
       <DependentUpon>DodajTransakciju.cs</DependentUpon>
     </EmbeddedResource>
@@ -340,6 +361,9 @@
     <EmbeddedResource Include="Forme\IzmeniRacun.resx">
       <DependentUpon>IzmeniRacun.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forme\IzmeniSigurnosnuKontrolu.resx">
+      <DependentUpon>IzmeniSigurnosnuKontrolu.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forme\IzmeniTransakciju.resx">
       <DependentUpon>IzmeniTransakciju.cs</DependentUpon>
     </EmbeddedResource>
@@ -354,6 +378,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forme\RacuniPregled.resx">
       <DependentUpon>RacuniPregled.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forme\SigurnosneKontrolePregled.resx">
+      <DependentUpon>SigurnosneKontrolePregled.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forme\TransakcijePregled.resx">
       <DependentUpon>TransakcijePregled.cs</DependentUpon>
