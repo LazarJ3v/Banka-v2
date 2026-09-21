@@ -422,6 +422,47 @@ namespace Banka
             }
         }
 
+        public static RacunBasic VratiRacun(string brojRacuna)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                Racun r = session.Query<Racun>()
+                    .Where(x => x.BrojRacuna == brojRacuna)
+                    .FirstOrDefault();
+
+                return new RacunBasic
+                {
+                    Id = r.Id,
+                    BrojRacuna = r.BrojRacuna,
+                    Valuta = r.Valuta,
+                    TrenutnoStanje = r.TrenutnoStanje,
+                    DatumOtvaranja = r.DatumOtvaranja,
+                    Status = r.Status,
+                    DozvoljeniMinus = r.DozvoljeniMinus,
+                    Komentar = r.Komentar,
+                    TipRacuna = r.TipRacuna,
+                    KamatnaStopa = r.KamatnaStopa,
+
+                    FizickoLice = r.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic
+                        {
+                            Id = r.PripadaFizickomLicu.Id,
+                            Ime = r.PripadaFizickomLicu.Ime,
+                            Prezime = r.PripadaFizickomLicu.Prezime
+                        }
+                        : null,
+
+                    PravnoLice = r.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic
+                        {
+                            Id = r.PripadaPravnomLicu.Id,
+                            NazivFirme = r.PripadaPravnomLicu.NazivFirme
+                        }
+                        : null
+                };
+            }
+        }
+
         public static void ObrisiRacun(int id)
         {
             using (ISession session = DataLayer.GetSession())
@@ -1631,6 +1672,51 @@ namespace Banka
             }
         }
 
+        public static DepozitBasic VratiDepozit(int id)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                Depozit d = session.Load<Depozit>(id);
+
+                return new DepozitBasic
+                {
+                    Id = d.Id,
+                    DatumPocetka = d.DatumPocetka,
+                    PeriodOrocenja = d.PeriodOrocenja,
+                    DatumIsteka = d.DatumIsteka,
+                    StatusDepozita = d.StatusDepozita,
+                    Valuta = d.Valuta,
+                    Iznos = d.Iznos,
+                    KamatnaStopa = d.KamatnaStopa,
+                    Komentar = d.Komentar,
+
+                    FizickoLice = d.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic
+                        {
+                            Id = d.PripadaFizickomLicu.Id,
+                            Ime = d.PripadaFizickomLicu.Ime,
+                            Prezime = d.PripadaFizickomLicu.Prezime
+                        }
+                        : null,
+
+                    PravnoLice = d.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic
+                        {
+                            Id = d.PripadaPravnomLicu.Id,
+                            NazivFirme = d.PripadaPravnomLicu.NazivFirme
+                        }
+                        : null,
+                    Racun = d.PripadaRacunu != null
+                        ? new RacunBasic
+                        {
+                            Id = d.PripadaRacunu.Id,
+                            BrojRacuna = d.PripadaRacunu.BrojRacuna
+                        }
+                        : null
+                };
+            }
+        }
+
         public static void IzmeniDepozit(DepozitBasic db)
         {
             using (ISession session = DataLayer.GetSession())
@@ -1733,6 +1819,53 @@ namespace Banka
                     transaction.Rollback();
                     throw new InvalidOperationException("Greška pri dodavanju kredita", ex);
                 }
+            }
+        }
+
+        public static KreditBasic VratiKredit(int id)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                Kredit k = session.Load<Kredit>(id);
+
+                return new KreditBasic
+                {
+                    Id = k.Id,
+                    DatumDospeca = k.DatumDospeca,
+                    DatumOdobrenja = k.DatumOdobrenja,
+                    Iznos = k.Iznos,
+                    Valuta = k.Valuta,
+                    StatusKredita = k.StatusKredita,
+                    MesecnaRata = k.MesecnaRata,
+                    RokOtplate = k.RokOtplate,
+                    Namena = k.Namena,
+                    KamatnaStopa = k.KamatnaStopa,
+                    Komentar = k.Komentar,
+
+                    FizickoLice = k.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic
+                        {
+                            Id = k.PripadaFizickomLicu.Id,
+                            Ime = k.PripadaFizickomLicu.Ime,
+                            Prezime = k.PripadaFizickomLicu.Prezime
+                        }
+                        : null,
+
+                    PravnoLice = k.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic
+                        {
+                            Id = k.PripadaPravnomLicu.Id,
+                            NazivFirme = k.PripadaPravnomLicu.NazivFirme
+                        }
+                        : null,
+                    Racun = k.PripadaRacunu != null
+                        ? new RacunBasic
+                        {
+                            Id = k.PripadaRacunu.Id,
+                            BrojRacuna = k.PripadaRacunu.BrojRacuna
+                        }
+                        : null
+                };
             }
         }
 

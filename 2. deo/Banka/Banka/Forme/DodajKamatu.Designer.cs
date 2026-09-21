@@ -33,10 +33,8 @@
             this.tbBrojRacuna = new System.Windows.Forms.TextBox();
             this.rbKamataNaKredit = new System.Windows.Forms.RadioButton();
             this.lblIdKredita = new System.Windows.Forms.Label();
-            this.tbKamataNaKredit = new System.Windows.Forms.TextBox();
             this.rbKamataNaDepozit = new System.Windows.Forms.RadioButton();
             this.lblIdDepozita = new System.Windows.Forms.Label();
-            this.tbKamataNaDepozit = new System.Windows.Forms.TextBox();
             this.lblDatumObracuna = new System.Windows.Forms.Label();
             this.dtpDatumObracuna = new System.Windows.Forms.DateTimePicker();
             this.lblPeriodObracuna = new System.Windows.Forms.Label();
@@ -48,7 +46,11 @@
             this.nudIznos = new System.Windows.Forms.NumericUpDown();
             this.lblIznos = new System.Windows.Forms.Label();
             this.btnSacuvaj = new System.Windows.Forms.Button();
+            this.nudIdKredita = new System.Windows.Forms.NumericUpDown();
+            this.nudIdDepozita = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.nudIznos)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudIdKredita)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudIdDepozita)).BeginInit();
             this.SuspendLayout();
             // 
             // rbKamataNaRacun
@@ -102,13 +104,6 @@
             this.lblIdKredita.TabIndex = 4;
             this.lblIdKredita.Text = "ID kredita:";
             // 
-            // tbKamataNaKredit
-            // 
-            this.tbKamataNaKredit.Location = new System.Drawing.Point(409, 64);
-            this.tbKamataNaKredit.Name = "tbKamataNaKredit";
-            this.tbKamataNaKredit.Size = new System.Drawing.Size(200, 31);
-            this.tbKamataNaKredit.TabIndex = 5;
-            // 
             // rbKamataNaDepozit
             // 
             this.rbKamataNaDepozit.AutoSize = true;
@@ -130,13 +125,6 @@
             this.lblIdDepozita.Size = new System.Drawing.Size(108, 25);
             this.lblIdDepozita.TabIndex = 7;
             this.lblIdDepozita.Text = "ID depozita:";
-            // 
-            // tbKamataNaDepozit
-            // 
-            this.tbKamataNaDepozit.Location = new System.Drawing.Point(409, 104);
-            this.tbKamataNaDepozit.Name = "tbKamataNaDepozit";
-            this.tbKamataNaDepozit.Size = new System.Drawing.Size(200, 31);
-            this.tbKamataNaDepozit.TabIndex = 8;
             // 
             // lblDatumObracuna
             // 
@@ -231,11 +219,27 @@
             this.btnSacuvaj.UseVisualStyleBackColor = true;
             this.btnSacuvaj.Click += new System.EventHandler(this.btnSacuvaj_Click);
             // 
+            // nudIdKredita
+            // 
+            this.nudIdKredita.Location = new System.Drawing.Point(409, 65);
+            this.nudIdKredita.Name = "nudIdKredita";
+            this.nudIdKredita.Size = new System.Drawing.Size(200, 31);
+            this.nudIdKredita.TabIndex = 20;
+            // 
+            // nudIdDepozita
+            // 
+            this.nudIdDepozita.Location = new System.Drawing.Point(409, 105);
+            this.nudIdDepozita.Name = "nudIdDepozita";
+            this.nudIdDepozita.Size = new System.Drawing.Size(200, 31);
+            this.nudIdDepozita.TabIndex = 21;
+            // 
             // DodajKamatu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(685, 410);
+            this.Controls.Add(this.nudIdDepozita);
+            this.Controls.Add(this.nudIdKredita);
             this.Controls.Add(this.btnSacuvaj);
             this.Controls.Add(this.lblIznos);
             this.Controls.Add(this.nudIznos);
@@ -247,10 +251,8 @@
             this.Controls.Add(this.lblPeriodObracuna);
             this.Controls.Add(this.dtpDatumObracuna);
             this.Controls.Add(this.lblDatumObracuna);
-            this.Controls.Add(this.tbKamataNaDepozit);
             this.Controls.Add(this.lblIdDepozita);
             this.Controls.Add(this.rbKamataNaDepozit);
-            this.Controls.Add(this.tbKamataNaKredit);
             this.Controls.Add(this.lblIdKredita);
             this.Controls.Add(this.rbKamataNaKredit);
             this.Controls.Add(this.tbBrojRacuna);
@@ -259,6 +261,8 @@
             this.Name = "DodajKamatu";
             this.Text = "DodajKamatu";
             ((System.ComponentModel.ISupportInitialize)(this.nudIznos)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudIdKredita)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudIdDepozita)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -271,10 +275,8 @@
         private System.Windows.Forms.TextBox tbBrojRacuna;
         private System.Windows.Forms.RadioButton rbKamataNaKredit;
         private System.Windows.Forms.Label lblIdKredita;
-        private System.Windows.Forms.TextBox tbKamataNaKredit;
         private System.Windows.Forms.RadioButton rbKamataNaDepozit;
         private System.Windows.Forms.Label lblIdDepozita;
-        private System.Windows.Forms.TextBox tbKamataNaDepozit;
         private System.Windows.Forms.Label lblDatumObracuna;
         private System.Windows.Forms.DateTimePicker dtpDatumObracuna;
         private System.Windows.Forms.Label lblPeriodObracuna;
@@ -286,5 +288,7 @@
         private System.Windows.Forms.NumericUpDown nudIznos;
         private System.Windows.Forms.Label lblIznos;
         private System.Windows.Forms.Button btnSacuvaj;
+        private System.Windows.Forms.NumericUpDown nudIdKredita;
+        private System.Windows.Forms.NumericUpDown nudIdDepozita;
     }
 }
