@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,12 +9,10 @@ namespace Banka.Enumi
 {
     public enum TipDogadjaja
     {
-        OtvaranjeRacuna = 1,
-        ZatvaranjeRacuna = 2,
-        Uplata = 3,
-        Isplata = 4,
-        IzmenaPodataka = 5,
-        Blokiranje = 6,
-        Odblokiranje = 7
+        [Description("LOGIN")] Login,
+        [Description("NEUSPELA_AUTENTIFIKACIJA")] NeuspelaAutentifikacija,
+        [Description("PROMENA_PINA")] PromenaPina,
+        [Description("BLOKADA_RAČUNA")] BlokadaRacuna,
+        [Description("SUMNJIVA_TRANSAKCIJA")] SumnjivaTransakcija
     }
 }

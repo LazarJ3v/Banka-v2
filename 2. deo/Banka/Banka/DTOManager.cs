@@ -1924,20 +1924,20 @@ namespace Banka
 
         #region Kamata
 
-        public static void DodajKamatu(KamataBasic kmb, int? kreditId, int? depozitId, int? racunId)
+        public static void DodajKamatu(KamataBasic kmb)
         {
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
                 try
                 {
-                    if (kreditId == null && depozitId == null && racunId == null)
+                    if (kmb.Kredit == null && kmb.Depozit == null && kmb.Racun == null)
                         throw new InvalidOperationException(
                             "Kamata mora biti vezana za kredit, depozit ili račun.");
 
-                    Kredit k = kreditId.HasValue ? session.Load<Kredit>(kreditId.Value) : null;
-                    Depozit d = depozitId.HasValue ? session.Load<Depozit>(depozitId.Value) : null;
-                    Racun r = racunId.HasValue ? session.Load<Racun>(racunId.Value) : null;
+                    Kredit k = kmb.Kredit != null ? session.Load<Kredit>(kmb.Kredit.Id) : null;
+                    Depozit d = kmb.Depozit != null ? session.Load<Depozit>(kmb.Depozit.Id) : null;
+                    Racun r = kmb.Racun != null ? session.Load<Racun>(kmb.Racun.Id) : null;
 
                     Kamata kam = new Kamata
                     {
@@ -1963,6 +1963,83 @@ namespace Banka
                     transaction.Rollback();
                     throw new InvalidOperationException("Greška pri dodavanju kamate", ex);
                 }
+            }
+        }
+
+        public static KamataBasic VratiKamatu(int id)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                var kamata = session.Load<Kamata>(id);
+
+                return new KamataBasic
+                {
+                    Id = kamata.Id,
+                    DatumObracuna = kamata.DatumObracuna,
+                    PeriodObracuna = kamata.PeriodObracuna,
+                    TipKamate = kamata.TipKamate,
+                    StatusKamate = kamata.StatusKamate,
+                    Iznos = kamata.Iznos,
+
+                    Kredit = kamata.PripadaKreditu != null ?
+                    new KreditBasic
+                    {
+                        Id = kamata.PripadaKreditu.Id,
+                    } : null,
+
+                    Depozit = kamata.PripadaDepozitu != null ?
+                    new DepozitBasic
+                    {
+                        Id = kamata.PripadaDepozitu.Id
+                    } : null,
+
+                    Racun = kamata.PripadaRacunu != null ?
+                    new RacunBasic
+                    {
+                        Id = kamata.PripadaRacunu.Id,
+                        BrojRacuna = kamata.PripadaRacunu.BrojRacuna
+                    } : null
+                };
+            }
+        }
+
+        public static List<KamataBasic> VratiKamate(int brojPoStrani, int strana = 1)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                List<Kamata> entiteti = session.Query<Kamata>()
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                return entiteti.Select(x => new KamataBasic
+                {
+                    Id = x.Id,
+                    DatumObracuna = x.DatumObracuna,
+                    PeriodObracuna = x.PeriodObracuna,
+                    TipKamate = x.TipKamate,
+                    StatusKamate = x.StatusKamate,
+                    Iznos = x.Iznos,
+
+                    Kredit = x.PripadaKreditu != null ?
+                    new KreditBasic
+                    {
+                        Id = x.PripadaKreditu.Id,
+                    } : null,
+
+                    Depozit = x.PripadaDepozitu != null ?
+                    new DepozitBasic
+                    {
+                        Id = x.PripadaDepozitu.Id
+                    } : null,
+
+                    Racun = x.PripadaRacunu != null ?
+                    new RacunBasic
+                    {
+                        Id = x.PripadaRacunu.Id,
+                        BrojRacuna = x.PripadaRacunu.BrojRacuna
+                    } : null
+                }).ToList();
             }
         }
 

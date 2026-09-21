@@ -136,9 +136,13 @@
     <Compile Include="Enumi\EnumExtensions.cs" />
     <Compile Include="Enumi\FrekvencijaKapitalizacijeKamate.cs" />
     <Compile Include="Enumi\RacunValuta.cs" />
+    <Compile Include="Enumi\StatusDepozita.cs" />
     <Compile Include="Enumi\StatusDogadjaja.cs" />
+    <Compile Include="Enumi\StatusKamate.cs" />
+    <Compile Include="Enumi\StatusKredita.cs" />
     <Compile Include="Enumi\StatusRacuna.cs" />
     <Compile Include="Enumi\TipDogadjaja.cs" />
+    <Compile Include="Enumi\TipKamate.cs" />
     <Compile Include="Enumi\TipRacuna.cs" />
     <Compile Include="Enumi\KorisnikStatus.cs" />
     <Compile Include="Enumi\TipTransakcije.cs" />

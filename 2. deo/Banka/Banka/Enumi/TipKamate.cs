@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Banka.Enumi
 {
-    public enum StatusDogadjaja
+    public enum TipKamate
     {
-        [Description("Uspešno")] Uspesno,
-        [Description("Neuspešno")] Neuspesno
+        [Description("Redovna")] Redovna,
+        [Description("Zatezna")] Zatezna
     }
 }

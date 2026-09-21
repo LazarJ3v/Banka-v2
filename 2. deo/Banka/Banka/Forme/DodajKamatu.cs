@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Banka.Entiteti;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -49,34 +50,33 @@ namespace Banka.Forme
             var kamata = new KamataBasic
             {
                 DatumObracuna = dtpDatumObracuna.Value,
-                PeriodObracuna = cbPeriodObracuna.ToString(),
-                TipKamate = cbTip.ToString(),
-                StatusKamate = cbStatus.ToString(),
-                Iznos = nudIznos.Value
+                PeriodObracuna = cbPeriodObracuna.Text,
+                TipKamate = cbTip.Text,
+                StatusKamate = cbStatus.Text,
+                Iznos = nudIznos.Value,
+
+                Racun = null,
+                Kredit = null,
+                Depozit = null
             };
 
             if (rbKamataNaRacun.Checked)
             {
                 var racun = DTOManager.VratiRacun(tbBrojRacuna.Text.Trim());
                 kamata.Racun = racun;
-                kamata.Kredit = null;
-                kamata.Depozit = null;
             }
             else if(rbKamataNaKredit.Checked)
             {
                 var kredit = DTOManager.VratiKredit((int)nudIdKredita.Value);
-                kamata.Racun = null;
                 kamata.Kredit = kredit;
-                kamata.Depozit = null;
+
             }
             else if (rbKamataNaDepozit.Checked)
             {
                 var depozit = DTOManager.VratiDepozit((int)nudIdDepozita.Value);
-                kamata.Racun = null;
-                kamata.Kredit = null;
                 kamata.Depozit = depozit;
             }
-            DTOManager.DodajKamatu(kamata, kamata.Kredit.Id, kamata.Depozit.Id, kamata.Racun.Id);
+            DTOManager.DodajKamatu(kamata);
             MessageBox.Show(
                         "Kamata uspešno dodata!",
                         "Uspeh",

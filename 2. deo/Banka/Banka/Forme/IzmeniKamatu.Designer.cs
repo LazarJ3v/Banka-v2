@@ -47,7 +47,7 @@
             this.lblDatumObracuna.AutoSize = true;
             this.lblDatumObracuna.Location = new System.Drawing.Point(66, 32);
             this.lblDatumObracuna.Name = "lblDatumObracuna";
-            this.lblDatumObracuna.Size = new System.Drawing.Size(140, 25);
+            this.lblDatumObracuna.Size = new System.Drawing.Size(164, 23);
             this.lblDatumObracuna.TabIndex = 0;
             this.lblDatumObracuna.Text = "Datum obrčuna:";
             // 
@@ -63,7 +63,7 @@
             this.lblPeriodObracuna.AutoSize = true;
             this.lblPeriodObracuna.Location = new System.Drawing.Point(61, 69);
             this.lblPeriodObracuna.Name = "lblPeriodObracuna";
-            this.lblPeriodObracuna.Size = new System.Drawing.Size(145, 25);
+            this.lblPeriodObracuna.Size = new System.Drawing.Size(186, 23);
             this.lblPeriodObracuna.TabIndex = 2;
             this.lblPeriodObracuna.Text = "Period obračuna:";
             // 
@@ -72,7 +72,7 @@
             this.lblTipKamate.AutoSize = true;
             this.lblTipKamate.Location = new System.Drawing.Point(166, 109);
             this.lblTipKamate.Name = "lblTipKamate";
-            this.lblTipKamate.Size = new System.Drawing.Size(40, 25);
+            this.lblTipKamate.Size = new System.Drawing.Size(54, 23);
             this.lblTipKamate.TabIndex = 4;
             this.lblTipKamate.Text = "Tip:";
             // 
@@ -81,7 +81,7 @@
             this.cbTip.FormattingEnabled = true;
             this.cbTip.Location = new System.Drawing.Point(237, 106);
             this.cbTip.Name = "cbTip";
-            this.cbTip.Size = new System.Drawing.Size(200, 33);
+            this.cbTip.Size = new System.Drawing.Size(200, 31);
             this.cbTip.TabIndex = 5;
             // 
             // lblStatus
@@ -89,7 +89,7 @@
             this.lblStatus.AutoSize = true;
             this.lblStatus.Location = new System.Drawing.Point(142, 149);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(64, 25);
+            this.lblStatus.Size = new System.Drawing.Size(87, 23);
             this.lblStatus.TabIndex = 6;
             this.lblStatus.Text = "Status:";
             // 
@@ -98,7 +98,7 @@
             this.cbStatus.FormattingEnabled = true;
             this.cbStatus.Location = new System.Drawing.Point(237, 146);
             this.cbStatus.Name = "cbStatus";
-            this.cbStatus.Size = new System.Drawing.Size(200, 33);
+            this.cbStatus.Size = new System.Drawing.Size(200, 31);
             this.cbStatus.TabIndex = 7;
             // 
             // nudIznos
@@ -113,7 +113,7 @@
             this.lblIznos.AutoSize = true;
             this.lblIznos.Location = new System.Drawing.Point(148, 187);
             this.lblIznos.Name = "lblIznos";
-            this.lblIznos.Size = new System.Drawing.Size(58, 25);
+            this.lblIznos.Size = new System.Drawing.Size(76, 23);
             this.lblIznos.TabIndex = 9;
             this.lblIznos.Text = "Iznos:";
             // 
@@ -132,12 +132,12 @@
             this.cbPeriodObracuna.FormattingEnabled = true;
             this.cbPeriodObracuna.Location = new System.Drawing.Point(237, 66);
             this.cbPeriodObracuna.Name = "cbPeriodObracuna";
-            this.cbPeriodObracuna.Size = new System.Drawing.Size(200, 33);
+            this.cbPeriodObracuna.Size = new System.Drawing.Size(200, 31);
             this.cbPeriodObracuna.TabIndex = 11;
             // 
             // IzmeniKamatu
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(685, 300);
             this.Controls.Add(this.cbPeriodObracuna);
@@ -153,6 +153,7 @@
             this.Controls.Add(this.lblDatumObracuna);
             this.Name = "IzmeniKamatu";
             this.Text = "IzmeniKamatu";
+            this.Load += new System.EventHandler(this.IzmeniKamatu_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nudIznos)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

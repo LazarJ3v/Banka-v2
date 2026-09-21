@@ -89,7 +89,7 @@
             // 
             // KamatePregled
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1019, 475);
             this.Controls.Add(this.btnObrisi);
@@ -98,6 +98,7 @@
             this.Controls.Add(this.gbKamate);
             this.Name = "KamatePregled";
             this.Text = "KamatePregled";
+            this.Load += new System.EventHandler(this.KamatePregled_Load);
             this.gbKamate.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvKamate)).EndInit();
             this.ResumeLayout(false);

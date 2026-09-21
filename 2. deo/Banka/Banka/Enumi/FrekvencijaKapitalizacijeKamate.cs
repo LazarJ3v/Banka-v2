@@ -9,15 +9,15 @@ namespace Banka.Enumi
 {
     public enum FrekvencijaKapitalizacijeKamate
     {
-        [Description("Dnevno")]
+        [Description("Dnevna")]
         Dnevno = 365,
-        [Description("Mesečno")]
+        [Description("Mesečna")]
         Mesecno = 12,
-        [Description("Kvartalno")]
+        [Description("Kvartalna")]
         Kvartalno = 4,
-        [Description("Polugodišnje")]
+        [Description("Polugodišnja")]
         Polugodisnje = 2,
-        [Description("Godišnje")]
+        [Description("Godišnja")]
         Godisnje = 1
     }
 }
