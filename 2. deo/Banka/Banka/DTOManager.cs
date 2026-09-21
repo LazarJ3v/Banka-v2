@@ -407,7 +407,8 @@ namespace Banka
                         {
                             Id = r.PripadaFizickomLicu.Id,
                             Ime = r.PripadaFizickomLicu.Ime,
-                            Prezime = r.PripadaFizickomLicu.Prezime
+                            Prezime = r.PripadaFizickomLicu.Prezime,
+                            Jmbg = r.PripadaFizickomLicu.Jmbg
                         }
                         : null,
 
@@ -415,7 +416,8 @@ namespace Banka
                         ? new PravnoLiceBasic
                         {
                             Id = r.PripadaPravnomLicu.Id,
-                            NazivFirme = r.PripadaPravnomLicu.NazivFirme
+                            NazivFirme = r.PripadaPravnomLicu.NazivFirme,
+                            Pib = r.PripadaPravnomLicu.Pib
                         }
                         : null
                 };
@@ -448,7 +450,8 @@ namespace Banka
                         {
                             Id = r.PripadaFizickomLicu.Id,
                             Ime = r.PripadaFizickomLicu.Ime,
-                            Prezime = r.PripadaFizickomLicu.Prezime
+                            Prezime = r.PripadaFizickomLicu.Prezime,
+                            Jmbg = r.PripadaFizickomLicu.Jmbg
                         }
                         : null,
 
@@ -456,7 +459,8 @@ namespace Banka
                         ? new PravnoLiceBasic
                         {
                             Id = r.PripadaPravnomLicu.Id,
-                            NazivFirme = r.PripadaPravnomLicu.NazivFirme
+                            NazivFirme = r.PripadaPravnomLicu.NazivFirme,
+                            Pib = r.PripadaPravnomLicu.Pib
                         }
                         : null
                 };
@@ -1717,6 +1721,88 @@ namespace Banka
             }
         }
 
+        public static List<DepozitBasic> VratiDepozite(int brojPoStrani, int strana = 1)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                List<Depozit> entiteti = session.Query<Depozit>()
+                    .OrderByDescending(x => x.DatumPocetka)
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                return entiteti.Select(x => new DepozitBasic
+                {
+                    Id = x.Id,
+                    DatumPocetka = x.DatumPocetka,
+                    PeriodOrocenja = x.PeriodOrocenja,
+                    DatumIsteka = x.DatumIsteka,
+                    StatusDepozita = x.StatusDepozita,
+                    Valuta = x.Valuta,
+                    Iznos = x.Iznos,
+                    KamatnaStopa = x.KamatnaStopa,
+                    Komentar = x.Komentar,
+                    OcekivanaKamata = x.OcekivanaKamata,
+
+                    FizickoLice = x.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic
+                        {
+                            Id = x.PripadaFizickomLicu.Id,
+                            Ime = x.PripadaFizickomLicu.Ime,
+                            Prezime = x.PripadaFizickomLicu.Prezime
+                        }
+                        : null,
+
+                    PravnoLice = x.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic
+                        {
+                            Id = x.PripadaPravnomLicu.Id,
+                            NazivFirme = x.PripadaPravnomLicu.NazivFirme
+                        }
+                        : null,
+
+                    Racun = x.PripadaRacunu != null
+                        ? new RacunBasic
+                        {
+                            Id = x.PripadaRacunu.Id,
+                            BrojRacuna = x.PripadaRacunu.BrojRacuna
+                        }
+                        : null
+                }).ToList();
+            }
+        }
+
+        public static List<DepozitBasic> VratiDepoziteZaRacun(int racunId, int brojPoStrani, int strana = 1)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                List<Depozit> entiteti = session.Query<Depozit>()
+                    .Where(x => x.PripadaRacunu.Id == racunId)
+                    .OrderByDescending(x => x.DatumPocetka)
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                return entiteti.Select(x => new DepozitBasic
+                {
+                    Id = x.Id,
+                    DatumPocetka = x.DatumPocetka,
+                    PeriodOrocenja = x.PeriodOrocenja,
+                    DatumIsteka = x.DatumIsteka,
+                    StatusDepozita = x.StatusDepozita,
+                    Valuta = x.Valuta,
+                    Iznos = x.Iznos,
+                    KamatnaStopa = x.KamatnaStopa,
+                    Komentar = x.Komentar,
+                    OcekivanaKamata = x.OcekivanaKamata,
+
+                    Racun = x.PripadaRacunu != null
+                        ? new RacunBasic { Id = x.PripadaRacunu.Id, BrojRacuna = x.PripadaRacunu.BrojRacuna }
+                        : null
+                }).ToList();
+            }
+        }
+
         public static void IzmeniDepozit(DepozitBasic db)
         {
             using (ISession session = DataLayer.GetSession())
@@ -1866,6 +1952,90 @@ namespace Banka
                         }
                         : null
                 };
+            }
+        }
+
+        public static List<KreditBasic> VratiKredite(int brojPoStrani, int strana = 1)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                List<Kredit> entiteti = session.Query<Kredit>()
+                    .OrderByDescending(x => x.DatumOdobrenja)
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                return entiteti.Select(x => new KreditBasic
+                {
+                    Id = x.Id,
+                    DatumDospeca = x.DatumDospeca,
+                    DatumOdobrenja = x.DatumOdobrenja,
+                    Iznos = x.Iznos,
+                    Valuta = x.Valuta,
+                    StatusKredita = x.StatusKredita,
+                    MesecnaRata = x.MesecnaRata,
+                    RokOtplate = x.RokOtplate,
+                    Namena = x.Namena,
+                    KamatnaStopa = x.KamatnaStopa,
+                    Komentar = x.Komentar,
+
+                    FizickoLice = x.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic
+                        {
+                            Id = x.PripadaFizickomLicu.Id,
+                            Ime = x.PripadaFizickomLicu.Ime,
+                            Prezime = x.PripadaFizickomLicu.Prezime
+                        }
+                        : null,
+
+                    PravnoLice = x.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic
+                        {
+                            Id = x.PripadaPravnomLicu.Id,
+                            NazivFirme = x.PripadaPravnomLicu.NazivFirme
+                        }
+                        : null,
+
+                    Racun = x.PripadaRacunu != null
+                        ? new RacunBasic
+                        {
+                            Id = x.PripadaRacunu.Id,
+                            BrojRacuna = x.PripadaRacunu.BrojRacuna
+                        }
+                        : null
+                }).ToList();
+            }
+        }
+
+        public static List<KreditBasic> VratiKrediteZaRacun(int racunId, int brojPoStrani, int strana = 1)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                List<Kredit> entiteti = session.Query<Kredit>()
+                    .Where(x => x.PripadaRacunu.Id == racunId)
+                    .OrderByDescending(x => x.DatumOdobrenja)
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                return entiteti.Select(x => new KreditBasic
+                {
+                    Id = x.Id,
+                    DatumDospeca = x.DatumDospeca,
+                    DatumOdobrenja = x.DatumOdobrenja,
+                    Iznos = x.Iznos,
+                    Valuta = x.Valuta,
+                    StatusKredita = x.StatusKredita,
+                    MesecnaRata = x.MesecnaRata,
+                    RokOtplate = x.RokOtplate,
+                    Namena = x.Namena,
+                    KamatnaStopa = x.KamatnaStopa,
+                    Komentar = x.Komentar,
+
+                    Racun = x.PripadaRacunu != null
+                        ? new RacunBasic { Id = x.PripadaRacunu.Id, BrojRacuna = x.PripadaRacunu.BrojRacuna }
+                        : null
+                }).ToList();
             }
         }
 

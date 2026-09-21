@@ -29,17 +29,17 @@
         private void InitializeComponent()
         {
             this.gbKredit = new System.Windows.Forms.GroupBox();
-            this.dgvKredit = new System.Windows.Forms.DataGridView();
+            this.dgvKrediti = new System.Windows.Forms.DataGridView();
             this.btnObrisi = new System.Windows.Forms.Button();
             this.btnIzmeni = new System.Windows.Forms.Button();
             this.btnDodaj = new System.Windows.Forms.Button();
             this.gbKredit.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvKredit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvKrediti)).BeginInit();
             this.SuspendLayout();
             // 
             // gbKredit
             // 
-            this.gbKredit.Controls.Add(this.dgvKredit);
+            this.gbKredit.Controls.Add(this.dgvKrediti);
             this.gbKredit.Location = new System.Drawing.Point(12, 12);
             this.gbKredit.Name = "gbKredit";
             this.gbKredit.Size = new System.Drawing.Size(756, 451);
@@ -47,15 +47,15 @@
             this.gbKredit.TabStop = false;
             this.gbKredit.Text = "Krediti";
             // 
-            // dgvKredit
+            // dgvKrediti
             // 
-            this.dgvKredit.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvKredit.Location = new System.Drawing.Point(6, 25);
-            this.dgvKredit.Name = "dgvKredit";
-            this.dgvKredit.RowHeadersWidth = 62;
-            this.dgvKredit.RowTemplate.Height = 28;
-            this.dgvKredit.Size = new System.Drawing.Size(744, 420);
-            this.dgvKredit.TabIndex = 0;
+            this.dgvKrediti.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvKrediti.Location = new System.Drawing.Point(6, 25);
+            this.dgvKrediti.Name = "dgvKrediti";
+            this.dgvKrediti.RowHeadersWidth = 62;
+            this.dgvKrediti.RowTemplate.Height = 28;
+            this.dgvKrediti.Size = new System.Drawing.Size(744, 420);
+            this.dgvKrediti.TabIndex = 0;
             // 
             // btnObrisi
             // 
@@ -98,8 +98,9 @@
             this.Controls.Add(this.btnDodaj);
             this.Name = "KreditiPregled";
             this.Text = "Krediti Pregled";
+            this.Load += new System.EventHandler(this.KreditiPregled_Load);
             this.gbKredit.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvKredit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvKrediti)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -107,7 +108,7 @@
         #endregion
 
         private System.Windows.Forms.GroupBox gbKredit;
-        private System.Windows.Forms.DataGridView dgvKredit;
+        private System.Windows.Forms.DataGridView dgvKrediti;
         private System.Windows.Forms.Button btnObrisi;
         private System.Windows.Forms.Button btnIzmeni;
         private System.Windows.Forms.Button btnDodaj;

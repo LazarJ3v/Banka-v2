@@ -31,7 +31,7 @@
             this.btnSacuvaj = new System.Windows.Forms.Button();
             this.rtbKomentar = new System.Windows.Forms.RichTextBox();
             this.nudKamatnaStopa = new System.Windows.Forms.NumericUpDown();
-            this.tbNapomena = new System.Windows.Forms.TextBox();
+            this.tbNamena = new System.Windows.Forms.TextBox();
             this.nudRokOtplate = new System.Windows.Forms.NumericUpDown();
             this.nudMesecnaRata = new System.Windows.Forms.NumericUpDown();
             this.cbStatus = new System.Windows.Forms.ComboBox();
@@ -63,6 +63,7 @@
             this.btnSacuvaj.TabIndex = 41;
             this.btnSacuvaj.Text = "Sačuvaj";
             this.btnSacuvaj.UseVisualStyleBackColor = true;
+            this.btnSacuvaj.Click += new System.EventHandler(this.btnSacuvaj_Click);
             // 
             // rtbKomentar
             // 
@@ -75,20 +76,30 @@
             // nudKamatnaStopa
             // 
             this.nudKamatnaStopa.Location = new System.Drawing.Point(237, 346);
+            this.nudKamatnaStopa.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.nudKamatnaStopa.Name = "nudKamatnaStopa";
             this.nudKamatnaStopa.Size = new System.Drawing.Size(200, 31);
             this.nudKamatnaStopa.TabIndex = 39;
             // 
-            // tbNapomena
+            // tbNamena
             // 
-            this.tbNapomena.Location = new System.Drawing.Point(237, 306);
-            this.tbNapomena.Name = "tbNapomena";
-            this.tbNapomena.Size = new System.Drawing.Size(200, 31);
-            this.tbNapomena.TabIndex = 38;
+            this.tbNamena.Location = new System.Drawing.Point(237, 306);
+            this.tbNamena.Name = "tbNamena";
+            this.tbNamena.Size = new System.Drawing.Size(200, 31);
+            this.tbNamena.TabIndex = 38;
             // 
             // nudRokOtplate
             // 
             this.nudRokOtplate.Location = new System.Drawing.Point(237, 266);
+            this.nudRokOtplate.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.nudRokOtplate.Name = "nudRokOtplate";
             this.nudRokOtplate.Size = new System.Drawing.Size(200, 31);
             this.nudRokOtplate.TabIndex = 37;
@@ -96,6 +107,11 @@
             // nudMesecnaRata
             // 
             this.nudMesecnaRata.Location = new System.Drawing.Point(237, 226);
+            this.nudMesecnaRata.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
             this.nudMesecnaRata.Name = "nudMesecnaRata";
             this.nudMesecnaRata.Size = new System.Drawing.Size(200, 31);
             this.nudMesecnaRata.TabIndex = 36;
@@ -105,7 +121,7 @@
             this.cbStatus.FormattingEnabled = true;
             this.cbStatus.Location = new System.Drawing.Point(237, 186);
             this.cbStatus.Name = "cbStatus";
-            this.cbStatus.Size = new System.Drawing.Size(200, 33);
+            this.cbStatus.Size = new System.Drawing.Size(200, 31);
             this.cbStatus.TabIndex = 35;
             // 
             // cbValuta
@@ -113,12 +129,17 @@
             this.cbValuta.FormattingEnabled = true;
             this.cbValuta.Location = new System.Drawing.Point(237, 146);
             this.cbValuta.Name = "cbValuta";
-            this.cbValuta.Size = new System.Drawing.Size(200, 33);
+            this.cbValuta.Size = new System.Drawing.Size(200, 31);
             this.cbValuta.TabIndex = 34;
             // 
             // nudIznos
             // 
             this.nudIznos.Location = new System.Drawing.Point(237, 106);
+            this.nudIznos.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
             this.nudIznos.Name = "nudIznos";
             this.nudIznos.Size = new System.Drawing.Size(200, 31);
             this.nudIznos.TabIndex = 33;
@@ -142,7 +163,7 @@
             this.lblKomentar.AutoSize = true;
             this.lblKomentar.Location = new System.Drawing.Point(122, 389);
             this.lblKomentar.Name = "lblKomentar";
-            this.lblKomentar.Size = new System.Drawing.Size(93, 25);
+            this.lblKomentar.Size = new System.Drawing.Size(109, 23);
             this.lblKomentar.TabIndex = 30;
             this.lblKomentar.Text = "Komentar:";
             // 
@@ -151,7 +172,7 @@
             this.lblKamatnaStopa.AutoSize = true;
             this.lblKamatnaStopa.Location = new System.Drawing.Point(67, 348);
             this.lblKamatnaStopa.Name = "lblKamatnaStopa";
-            this.lblKamatnaStopa.Size = new System.Drawing.Size(135, 25);
+            this.lblKamatnaStopa.Size = new System.Drawing.Size(164, 23);
             this.lblKamatnaStopa.TabIndex = 29;
             this.lblKamatnaStopa.Text = "Kamatna stopa:";
             // 
@@ -160,7 +181,7 @@
             this.lblNamena.AutoSize = true;
             this.lblNamena.Location = new System.Drawing.Point(144, 309);
             this.lblNamena.Name = "lblNamena";
-            this.lblNamena.Size = new System.Drawing.Size(82, 25);
+            this.lblNamena.Size = new System.Drawing.Size(87, 23);
             this.lblNamena.TabIndex = 28;
             this.lblNamena.Text = "Namena:";
             // 
@@ -169,7 +190,7 @@
             this.lblRokOtplate.AutoSize = true;
             this.lblRokOtplate.Location = new System.Drawing.Point(89, 268);
             this.lblRokOtplate.Name = "lblRokOtplate";
-            this.lblRokOtplate.Size = new System.Drawing.Size(107, 25);
+            this.lblRokOtplate.Size = new System.Drawing.Size(142, 23);
             this.lblRokOtplate.TabIndex = 27;
             this.lblRokOtplate.Text = "Rok otplate:";
             // 
@@ -178,7 +199,7 @@
             this.lblMesecnaRata.AutoSize = true;
             this.lblMesecnaRata.Location = new System.Drawing.Point(78, 228);
             this.lblMesecnaRata.Name = "lblMesecnaRata";
-            this.lblMesecnaRata.Size = new System.Drawing.Size(120, 25);
+            this.lblMesecnaRata.Size = new System.Drawing.Size(153, 23);
             this.lblMesecnaRata.TabIndex = 26;
             this.lblMesecnaRata.Text = "Mesečna rata:";
             // 
@@ -187,7 +208,7 @@
             this.lblStatus.AutoSize = true;
             this.lblStatus.Location = new System.Drawing.Point(56, 189);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(123, 25);
+            this.lblStatus.Size = new System.Drawing.Size(175, 23);
             this.lblStatus.TabIndex = 25;
             this.lblStatus.Text = "Status kredita:";
             // 
@@ -196,7 +217,7 @@
             this.lblValuta.AutoSize = true;
             this.lblValuta.Location = new System.Drawing.Point(144, 149);
             this.lblValuta.Name = "lblValuta";
-            this.lblValuta.Size = new System.Drawing.Size(64, 25);
+            this.lblValuta.Size = new System.Drawing.Size(87, 23);
             this.lblValuta.TabIndex = 24;
             this.lblValuta.Text = "Valuta:";
             // 
@@ -205,7 +226,7 @@
             this.lblIznos.AutoSize = true;
             this.lblIznos.Location = new System.Drawing.Point(155, 108);
             this.lblIznos.Name = "lblIznos";
-            this.lblIznos.Size = new System.Drawing.Size(58, 25);
+            this.lblIznos.Size = new System.Drawing.Size(76, 23);
             this.lblIznos.TabIndex = 23;
             this.lblIznos.Text = "Iznos:";
             // 
@@ -214,7 +235,7 @@
             this.lblDatumOdobrenja.AutoSize = true;
             this.lblDatumOdobrenja.Location = new System.Drawing.Point(45, 72);
             this.lblDatumOdobrenja.Name = "lblDatumOdobrenja";
-            this.lblDatumOdobrenja.Size = new System.Drawing.Size(157, 25);
+            this.lblDatumOdobrenja.Size = new System.Drawing.Size(186, 23);
             this.lblDatumOdobrenja.TabIndex = 22;
             this.lblDatumOdobrenja.Text = "Datum odobrenja:";
             // 
@@ -223,19 +244,19 @@
             this.lblDatumDospeca.AutoSize = true;
             this.lblDatumDospeca.Location = new System.Drawing.Point(67, 32);
             this.lblDatumDospeca.Name = "lblDatumDospeca";
-            this.lblDatumDospeca.Size = new System.Drawing.Size(142, 25);
+            this.lblDatumDospeca.Size = new System.Drawing.Size(164, 23);
             this.lblDatumDospeca.TabIndex = 21;
             this.lblDatumDospeca.Text = "Datum dospeća:";
             // 
             // IzmeniKredit
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(685, 562);
             this.Controls.Add(this.btnSacuvaj);
             this.Controls.Add(this.rtbKomentar);
             this.Controls.Add(this.nudKamatnaStopa);
-            this.Controls.Add(this.tbNapomena);
+            this.Controls.Add(this.tbNamena);
             this.Controls.Add(this.nudRokOtplate);
             this.Controls.Add(this.nudMesecnaRata);
             this.Controls.Add(this.cbStatus);
@@ -270,7 +291,7 @@
         private System.Windows.Forms.Button btnSacuvaj;
         private System.Windows.Forms.RichTextBox rtbKomentar;
         private System.Windows.Forms.NumericUpDown nudKamatnaStopa;
-        private System.Windows.Forms.TextBox tbNapomena;
+        private System.Windows.Forms.TextBox tbNamena;
         private System.Windows.Forms.NumericUpDown nudRokOtplate;
         private System.Windows.Forms.NumericUpDown nudMesecnaRata;
         private System.Windows.Forms.ComboBox cbStatus;
