@@ -48,15 +48,15 @@
             // lblIpAdresa
             // 
             this.lblIpAdresa.AutoSize = true;
-            this.lblIpAdresa.Location = new System.Drawing.Point(112, 61);
+            this.lblIpAdresa.Location = new System.Drawing.Point(115, 93);
             this.lblIpAdresa.Name = "lblIpAdresa";
-            this.lblIpAdresa.Size = new System.Drawing.Size(88, 25);
+            this.lblIpAdresa.Size = new System.Drawing.Size(120, 23);
             this.lblIpAdresa.TabIndex = 0;
             this.lblIpAdresa.Text = "IP adresa:";
             // 
             // tbIpAdresa
             // 
-            this.tbIpAdresa.Location = new System.Drawing.Point(233, 58);
+            this.tbIpAdresa.Location = new System.Drawing.Point(236, 90);
             this.tbIpAdresa.MaxLength = 15;
             this.tbIpAdresa.Name = "tbIpAdresa";
             this.tbIpAdresa.Size = new System.Drawing.Size(200, 31);
@@ -65,15 +65,15 @@
             // lblDatumIVreme
             // 
             this.lblDatumIVreme.AutoSize = true;
-            this.lblDatumIVreme.Location = new System.Drawing.Point(67, 103);
+            this.lblDatumIVreme.Location = new System.Drawing.Point(70, 135);
             this.lblDatumIVreme.Name = "lblDatumIVreme";
-            this.lblDatumIVreme.Size = new System.Drawing.Size(133, 25);
+            this.lblDatumIVreme.Size = new System.Drawing.Size(164, 23);
             this.lblDatumIVreme.TabIndex = 2;
             this.lblDatumIVreme.Text = "Datum i vreme:";
             // 
             // dtpDatumIVreme
             // 
-            this.dtpDatumIVreme.Location = new System.Drawing.Point(233, 98);
+            this.dtpDatumIVreme.Location = new System.Drawing.Point(236, 130);
             this.dtpDatumIVreme.Name = "dtpDatumIVreme";
             this.dtpDatumIVreme.Size = new System.Drawing.Size(200, 31);
             this.dtpDatumIVreme.TabIndex = 3;
@@ -81,49 +81,49 @@
             // lblTipDogaljaja
             // 
             this.lblTipDogaljaja.AutoSize = true;
-            this.lblTipDogaljaja.Location = new System.Drawing.Point(80, 141);
+            this.lblTipDogaljaja.Location = new System.Drawing.Point(83, 173);
             this.lblTipDogaljaja.Name = "lblTipDogaljaja";
-            this.lblTipDogaljaja.Size = new System.Drawing.Size(120, 25);
+            this.lblTipDogaljaja.Size = new System.Drawing.Size(153, 23);
             this.lblTipDogaljaja.TabIndex = 4;
             this.lblTipDogaljaja.Text = "Tip događaja:";
             // 
             // lblStatusDogadjaja
             // 
             this.lblStatusDogadjaja.AutoSize = true;
-            this.lblStatusDogadjaja.Location = new System.Drawing.Point(56, 181);
+            this.lblStatusDogadjaja.Location = new System.Drawing.Point(59, 213);
             this.lblStatusDogadjaja.Name = "lblStatusDogadjaja";
-            this.lblStatusDogadjaja.Size = new System.Drawing.Size(144, 25);
+            this.lblStatusDogadjaja.Size = new System.Drawing.Size(186, 23);
             this.lblStatusDogadjaja.TabIndex = 5;
             this.lblStatusDogadjaja.Text = "Status događaja:";
             // 
             // cbTipDogadjaja
             // 
             this.cbTipDogadjaja.FormattingEnabled = true;
-            this.cbTipDogadjaja.Location = new System.Drawing.Point(233, 138);
+            this.cbTipDogadjaja.Location = new System.Drawing.Point(236, 170);
             this.cbTipDogadjaja.Name = "cbTipDogadjaja";
-            this.cbTipDogadjaja.Size = new System.Drawing.Size(200, 33);
+            this.cbTipDogadjaja.Size = new System.Drawing.Size(200, 31);
             this.cbTipDogadjaja.TabIndex = 6;
             // 
             // cbStatusDogadjaja
             // 
             this.cbStatusDogadjaja.FormattingEnabled = true;
-            this.cbStatusDogadjaja.Location = new System.Drawing.Point(233, 178);
+            this.cbStatusDogadjaja.Location = new System.Drawing.Point(236, 210);
             this.cbStatusDogadjaja.Name = "cbStatusDogadjaja";
-            this.cbStatusDogadjaja.Size = new System.Drawing.Size(200, 33);
+            this.cbStatusDogadjaja.Size = new System.Drawing.Size(200, 31);
             this.cbStatusDogadjaja.TabIndex = 7;
             // 
             // lblPodaciUredjaja
             // 
             this.lblPodaciUredjaja.AutoSize = true;
-            this.lblPodaciUredjaja.Location = new System.Drawing.Point(69, 221);
+            this.lblPodaciUredjaja.Location = new System.Drawing.Point(72, 253);
             this.lblPodaciUredjaja.Name = "lblPodaciUredjaja";
-            this.lblPodaciUredjaja.Size = new System.Drawing.Size(131, 25);
+            this.lblPodaciUredjaja.Size = new System.Drawing.Size(175, 23);
             this.lblPodaciUredjaja.TabIndex = 8;
             this.lblPodaciUredjaja.Text = "Podaci uređaja:";
             // 
             // rtbPodaciUredjaja
             // 
-            this.rtbPodaciUredjaja.Location = new System.Drawing.Point(233, 218);
+            this.rtbPodaciUredjaja.Location = new System.Drawing.Point(236, 250);
             this.rtbPodaciUredjaja.MaxLength = 255;
             this.rtbPodaciUredjaja.Name = "rtbPodaciUredjaja";
             this.rtbPodaciUredjaja.Size = new System.Drawing.Size(200, 62);
@@ -133,15 +133,15 @@
             // lblOpis
             // 
             this.lblOpis.AutoSize = true;
-            this.lblOpis.Location = new System.Drawing.Point(147, 291);
+            this.lblOpis.Location = new System.Drawing.Point(150, 323);
             this.lblOpis.Name = "lblOpis";
-            this.lblOpis.Size = new System.Drawing.Size(53, 25);
+            this.lblOpis.Size = new System.Drawing.Size(65, 23);
             this.lblOpis.TabIndex = 10;
             this.lblOpis.Text = "Opis:";
             // 
             // rtbOpis
             // 
-            this.rtbOpis.Location = new System.Drawing.Point(233, 288);
+            this.rtbOpis.Location = new System.Drawing.Point(236, 320);
             this.rtbOpis.MaxLength = 1000;
             this.rtbOpis.Name = "rtbOpis";
             this.rtbOpis.Size = new System.Drawing.Size(200, 124);
@@ -151,22 +151,22 @@
             // lblBrojRacuna
             // 
             this.lblBrojRacuna.AutoSize = true;
-            this.lblBrojRacuna.Location = new System.Drawing.Point(96, 424);
+            this.lblBrojRacuna.Location = new System.Drawing.Point(94, 53);
             this.lblBrojRacuna.Name = "lblBrojRacuna";
-            this.lblBrojRacuna.Size = new System.Drawing.Size(104, 25);
+            this.lblBrojRacuna.Size = new System.Drawing.Size(142, 23);
             this.lblBrojRacuna.TabIndex = 12;
             this.lblBrojRacuna.Text = "Broj računa:";
             // 
             // tbBrojRacuna
             // 
-            this.tbBrojRacuna.Location = new System.Drawing.Point(233, 421);
+            this.tbBrojRacuna.Location = new System.Drawing.Point(236, 50);
             this.tbBrojRacuna.Name = "tbBrojRacuna";
             this.tbBrojRacuna.Size = new System.Drawing.Size(200, 31);
             this.tbBrojRacuna.TabIndex = 13;
             // 
             // btnSacuvaj
             // 
-            this.btnSacuvaj.Location = new System.Drawing.Point(233, 461);
+            this.btnSacuvaj.Location = new System.Drawing.Point(236, 464);
             this.btnSacuvaj.Name = "btnSacuvaj";
             this.btnSacuvaj.Size = new System.Drawing.Size(200, 31);
             this.btnSacuvaj.TabIndex = 14;
@@ -176,7 +176,7 @@
             // 
             // DodajSigurnosnuKontrolu
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(672, 563);
             this.Controls.Add(this.btnSacuvaj);
@@ -196,6 +196,7 @@
             this.Controls.Add(this.lblIpAdresa);
             this.Name = "DodajSigurnosnuKontrolu";
             this.Text = "DodajSigurnosnuKontrolu";
+            this.Load += new System.EventHandler(this.DodajSigurnosnuKontrolu_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

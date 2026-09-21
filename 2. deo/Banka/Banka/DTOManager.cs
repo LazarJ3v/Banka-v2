@@ -2303,6 +2303,59 @@ namespace Banka
             }
         }
 
+        public static SigurnosnaKontrolaBasic VratiSigurnosnuKontrolu(int id)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                var kontrola = session.Load<SigurnosnaKontrola>(id);
+
+                return new SigurnosnaKontrolaBasic
+                {
+                    Id = kontrola.Id,
+                    IpAdresa = kontrola.IpAdresa,
+                    DatumIVreme = kontrola.DatumIVreme,
+                    TipDogadjaja = kontrola.TipDogadjaja,
+                    StatusDogadjaja = kontrola.StatusDogadjaja,
+                    PodaciUredjaja = kontrola.PodaciUredjaja,
+                    Opis = kontrola.Opis,
+
+                    Racun = new RacunBasic
+                    {
+                        Id = kontrola.PripadaRacunu.Id,
+                        BrojRacuna = kontrola.PripadaRacunu.BrojRacuna
+                    }
+                };
+            }
+        }
+
+        public static List<SigurnosnaKontrolaBasic> VratiSigurnosneKontrole(int brojPoStrani, int strana = 1)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                List<SigurnosnaKontrola> entiteti = session.Query<SigurnosnaKontrola>()
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                return entiteti.Select(x => new SigurnosnaKontrolaBasic
+                {
+                    Id = x.Id,
+                    IpAdresa = x.IpAdresa,
+                    DatumIVreme = x.DatumIVreme,
+                    TipDogadjaja = x.TipDogadjaja,
+                    StatusDogadjaja = x.StatusDogadjaja,
+                    PodaciUredjaja = x.PodaciUredjaja,
+                    Opis = x.Opis,
+
+                    Racun = new RacunBasic
+                    {
+                        Id = x.PripadaRacunu.Id,
+                        BrojRacuna = x.PripadaRacunu.BrojRacuna
+                    }
+                }).ToList();
+            }
+        }
+
         public static void IzmeniSigurnosnuKontrolu(SigurnosnaKontrolaBasic skb)
         {
             using (ISession session = DataLayer.GetSession())
