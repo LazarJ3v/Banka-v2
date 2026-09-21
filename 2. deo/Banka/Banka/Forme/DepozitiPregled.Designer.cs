@@ -29,17 +29,17 @@
         private void InitializeComponent()
         {
             this.gbDepozit = new System.Windows.Forms.GroupBox();
-            this.dgvDepozit = new System.Windows.Forms.DataGridView();
+            this.dgvDepoziti = new System.Windows.Forms.DataGridView();
             this.btnDodaj = new System.Windows.Forms.Button();
             this.btnIzmeni = new System.Windows.Forms.Button();
             this.btnObrisi = new System.Windows.Forms.Button();
             this.gbDepozit.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvDepozit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDepoziti)).BeginInit();
             this.SuspendLayout();
             // 
             // gbDepozit
             // 
-            this.gbDepozit.Controls.Add(this.dgvDepozit);
+            this.gbDepozit.Controls.Add(this.dgvDepoziti);
             this.gbDepozit.Location = new System.Drawing.Point(12, 12);
             this.gbDepozit.Name = "gbDepozit";
             this.gbDepozit.Size = new System.Drawing.Size(756, 451);
@@ -47,15 +47,15 @@
             this.gbDepozit.TabStop = false;
             this.gbDepozit.Text = "Depoziti";
             // 
-            // dgvDepozit
+            // dgvDepoziti
             // 
-            this.dgvDepozit.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDepozit.Location = new System.Drawing.Point(6, 25);
-            this.dgvDepozit.Name = "dgvDepozit";
-            this.dgvDepozit.RowHeadersWidth = 62;
-            this.dgvDepozit.RowTemplate.Height = 28;
-            this.dgvDepozit.Size = new System.Drawing.Size(744, 420);
-            this.dgvDepozit.TabIndex = 0;
+            this.dgvDepoziti.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvDepoziti.Location = new System.Drawing.Point(6, 25);
+            this.dgvDepoziti.Name = "dgvDepoziti";
+            this.dgvDepoziti.RowHeadersWidth = 62;
+            this.dgvDepoziti.RowTemplate.Height = 28;
+            this.dgvDepoziti.Size = new System.Drawing.Size(744, 420);
+            this.dgvDepoziti.TabIndex = 0;
             // 
             // btnDodaj
             // 
@@ -98,8 +98,9 @@
             this.Controls.Add(this.gbDepozit);
             this.Name = "DepozitiPregled";
             this.Text = "Depoziti Pregled";
+            this.Load += new System.EventHandler(this.DepozitiPregled_Load);
             this.gbDepozit.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvDepozit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDepoziti)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -107,7 +108,7 @@
         #endregion
 
         private System.Windows.Forms.GroupBox gbDepozit;
-        private System.Windows.Forms.DataGridView dgvDepozit;
+        private System.Windows.Forms.DataGridView dgvDepoziti;
         private System.Windows.Forms.Button btnDodaj;
         private System.Windows.Forms.Button btnIzmeni;
         private System.Windows.Forms.Button btnObrisi;

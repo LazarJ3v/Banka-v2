@@ -45,6 +45,8 @@
             this.nudPeriodOrocenja = new System.Windows.Forms.NumericUpDown();
             this.dtpDatumIsteka = new System.Windows.Forms.DateTimePicker();
             this.dtpDatumPocetka = new System.Windows.Forms.DateTimePicker();
+            this.lblBrRacuna = new System.Windows.Forms.Label();
+            this.tbBrRacuna = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudKamatnaStopa)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudIznos)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudPeriodOrocenja)).BeginInit();
@@ -52,16 +54,17 @@
             // 
             // btnSacuvaj
             // 
-            this.btnSacuvaj.Location = new System.Drawing.Point(218, 395);
+            this.btnSacuvaj.Location = new System.Drawing.Point(230, 445);
             this.btnSacuvaj.Name = "btnSacuvaj";
             this.btnSacuvaj.Size = new System.Drawing.Size(200, 37);
             this.btnSacuvaj.TabIndex = 16;
             this.btnSacuvaj.Text = "Sačuvaj";
             this.btnSacuvaj.UseVisualStyleBackColor = true;
+            this.btnSacuvaj.Click += new System.EventHandler(this.btnSacuvaj_Click);
             // 
             // rtbKomentar
             // 
-            this.rtbKomentar.Location = new System.Drawing.Point(218, 283);
+            this.rtbKomentar.Location = new System.Drawing.Point(230, 333);
             this.rtbKomentar.Name = "rtbKomentar";
             this.rtbKomentar.Size = new System.Drawing.Size(200, 96);
             this.rtbKomentar.TabIndex = 15;
@@ -70,7 +73,7 @@
             // lblKomentar
             // 
             this.lblKomentar.AutoSize = true;
-            this.lblKomentar.Location = new System.Drawing.Point(103, 286);
+            this.lblKomentar.Location = new System.Drawing.Point(115, 336);
             this.lblKomentar.Name = "lblKomentar";
             this.lblKomentar.Size = new System.Drawing.Size(109, 23);
             this.lblKomentar.TabIndex = 14;
@@ -79,7 +82,7 @@
             // lblKamatnaStopa
             // 
             this.lblKamatnaStopa.AutoSize = true;
-            this.lblKamatnaStopa.Location = new System.Drawing.Point(48, 248);
+            this.lblKamatnaStopa.Location = new System.Drawing.Point(60, 298);
             this.lblKamatnaStopa.Name = "lblKamatnaStopa";
             this.lblKamatnaStopa.Size = new System.Drawing.Size(164, 23);
             this.lblKamatnaStopa.TabIndex = 13;
@@ -87,14 +90,25 @@
             // 
             // nudKamatnaStopa
             // 
-            this.nudKamatnaStopa.Location = new System.Drawing.Point(218, 246);
+            this.nudKamatnaStopa.DecimalPlaces = 2;
+            this.nudKamatnaStopa.Location = new System.Drawing.Point(230, 296);
+            this.nudKamatnaStopa.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.nudKamatnaStopa.Name = "nudKamatnaStopa";
             this.nudKamatnaStopa.Size = new System.Drawing.Size(200, 31);
             this.nudKamatnaStopa.TabIndex = 12;
             // 
             // nudIznos
             // 
-            this.nudIznos.Location = new System.Drawing.Point(218, 209);
+            this.nudIznos.Location = new System.Drawing.Point(230, 259);
+            this.nudIznos.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
             this.nudIznos.Name = "nudIznos";
             this.nudIznos.Size = new System.Drawing.Size(200, 31);
             this.nudIznos.TabIndex = 11;
@@ -102,7 +116,7 @@
             // lblIznos
             // 
             this.lblIznos.AutoSize = true;
-            this.lblIznos.Location = new System.Drawing.Point(136, 211);
+            this.lblIznos.Location = new System.Drawing.Point(148, 261);
             this.lblIznos.Name = "lblIznos";
             this.lblIznos.Size = new System.Drawing.Size(76, 23);
             this.lblIznos.TabIndex = 10;
@@ -111,7 +125,7 @@
             // lblValuta
             // 
             this.lblValuta.AutoSize = true;
-            this.lblValuta.Location = new System.Drawing.Point(125, 175);
+            this.lblValuta.Location = new System.Drawing.Point(137, 225);
             this.lblValuta.Name = "lblValuta";
             this.lblValuta.Size = new System.Drawing.Size(87, 23);
             this.lblValuta.TabIndex = 9;
@@ -120,7 +134,7 @@
             // cbValuta
             // 
             this.cbValuta.FormattingEnabled = true;
-            this.cbValuta.Location = new System.Drawing.Point(218, 172);
+            this.cbValuta.Location = new System.Drawing.Point(230, 222);
             this.cbValuta.Name = "cbValuta";
             this.cbValuta.Size = new System.Drawing.Size(200, 31);
             this.cbValuta.TabIndex = 8;
@@ -128,7 +142,7 @@
             // cbStatusDepozita
             // 
             this.cbStatusDepozita.FormattingEnabled = true;
-            this.cbStatusDepozita.Location = new System.Drawing.Point(218, 135);
+            this.cbStatusDepozita.Location = new System.Drawing.Point(230, 185);
             this.cbStatusDepozita.Name = "cbStatusDepozita";
             this.cbStatusDepozita.Size = new System.Drawing.Size(200, 31);
             this.cbStatusDepozita.TabIndex = 7;
@@ -136,7 +150,7 @@
             // lblStatusDepozita
             // 
             this.lblStatusDepozita.AutoSize = true;
-            this.lblStatusDepozita.Location = new System.Drawing.Point(26, 138);
+            this.lblStatusDepozita.Location = new System.Drawing.Point(38, 188);
             this.lblStatusDepozita.Name = "lblStatusDepozita";
             this.lblStatusDepozita.Size = new System.Drawing.Size(186, 23);
             this.lblStatusDepozita.TabIndex = 6;
@@ -145,7 +159,7 @@
             // lblPeriodOrocenja
             // 
             this.lblPeriodOrocenja.AutoSize = true;
-            this.lblPeriodOrocenja.Location = new System.Drawing.Point(26, 100);
+            this.lblPeriodOrocenja.Location = new System.Drawing.Point(38, 150);
             this.lblPeriodOrocenja.Name = "lblPeriodOrocenja";
             this.lblPeriodOrocenja.Size = new System.Drawing.Size(186, 23);
             this.lblPeriodOrocenja.TabIndex = 5;
@@ -154,7 +168,7 @@
             // lblDatumIsteka
             // 
             this.lblDatumIsteka.AutoSize = true;
-            this.lblDatumIsteka.Location = new System.Drawing.Point(59, 67);
+            this.lblDatumIsteka.Location = new System.Drawing.Point(71, 117);
             this.lblDatumIsteka.Name = "lblDatumIsteka";
             this.lblDatumIsteka.Size = new System.Drawing.Size(153, 23);
             this.lblDatumIsteka.TabIndex = 4;
@@ -163,7 +177,7 @@
             // lblDatumPocetka
             // 
             this.lblDatumPocetka.AutoSize = true;
-            this.lblDatumPocetka.Location = new System.Drawing.Point(48, 30);
+            this.lblDatumPocetka.Location = new System.Drawing.Point(60, 80);
             this.lblDatumPocetka.Name = "lblDatumPocetka";
             this.lblDatumPocetka.Size = new System.Drawing.Size(164, 23);
             this.lblDatumPocetka.TabIndex = 3;
@@ -171,30 +185,53 @@
             // 
             // nudPeriodOrocenja
             // 
-            this.nudPeriodOrocenja.Location = new System.Drawing.Point(218, 98);
+            this.nudPeriodOrocenja.Location = new System.Drawing.Point(230, 148);
+            this.nudPeriodOrocenja.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.nudPeriodOrocenja.Name = "nudPeriodOrocenja";
             this.nudPeriodOrocenja.Size = new System.Drawing.Size(200, 31);
             this.nudPeriodOrocenja.TabIndex = 2;
             // 
             // dtpDatumIsteka
             // 
-            this.dtpDatumIsteka.Location = new System.Drawing.Point(218, 61);
+            this.dtpDatumIsteka.Location = new System.Drawing.Point(230, 111);
             this.dtpDatumIsteka.Name = "dtpDatumIsteka";
             this.dtpDatumIsteka.Size = new System.Drawing.Size(200, 31);
             this.dtpDatumIsteka.TabIndex = 1;
             // 
             // dtpDatumPocetka
             // 
-            this.dtpDatumPocetka.Location = new System.Drawing.Point(218, 24);
+            this.dtpDatumPocetka.Location = new System.Drawing.Point(230, 74);
             this.dtpDatumPocetka.Name = "dtpDatumPocetka";
             this.dtpDatumPocetka.Size = new System.Drawing.Size(200, 31);
             this.dtpDatumPocetka.TabIndex = 0;
+            // 
+            // lblBrRacuna
+            // 
+            this.lblBrRacuna.AutoSize = true;
+            this.lblBrRacuna.Location = new System.Drawing.Point(82, 37);
+            this.lblBrRacuna.Name = "lblBrRacuna";
+            this.lblBrRacuna.Size = new System.Drawing.Size(142, 23);
+            this.lblBrRacuna.TabIndex = 17;
+            this.lblBrRacuna.Text = "Broj računa:";
+            // 
+            // tbBrRacuna
+            // 
+            this.tbBrRacuna.Location = new System.Drawing.Point(230, 34);
+            this.tbBrRacuna.Name = "tbBrRacuna";
+            this.tbBrRacuna.Size = new System.Drawing.Size(200, 31);
+            this.tbBrRacuna.TabIndex = 18;
             // 
             // DodajDepozit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(660, 504);
+            this.Controls.Add(this.tbBrRacuna);
+            this.Controls.Add(this.lblBrRacuna);
             this.Controls.Add(this.btnSacuvaj);
             this.Controls.Add(this.rtbKomentar);
             this.Controls.Add(this.lblKomentar);
@@ -242,5 +279,7 @@
         private System.Windows.Forms.Label lblKomentar;
         private System.Windows.Forms.RichTextBox rtbKomentar;
         private System.Windows.Forms.Button btnSacuvaj;
+        private System.Windows.Forms.Label lblBrRacuna;
+        private System.Windows.Forms.TextBox tbBrRacuna;
     }
 }

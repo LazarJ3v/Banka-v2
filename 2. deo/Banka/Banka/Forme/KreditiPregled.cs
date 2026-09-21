@@ -66,6 +66,7 @@ namespace Banka.Forme
 
             var prikazKrediti = sviKrediti.Select(x => new
             {
+                Id = x.Id,
                 DatumDospeca = x.DatumDospeca,
                 DatumOdobrenja = x.DatumOdobrenja,
                 Iznos = x.Iznos,

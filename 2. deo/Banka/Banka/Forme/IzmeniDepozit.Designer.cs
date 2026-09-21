@@ -58,6 +58,7 @@
             this.btnSacuvaj.TabIndex = 33;
             this.btnSacuvaj.Text = "Sačuvaj";
             this.btnSacuvaj.UseVisualStyleBackColor = true;
+            this.btnSacuvaj.Click += new System.EventHandler(this.btnSacuvaj_Click);
             // 
             // rtbKomentar
             // 
@@ -87,6 +88,7 @@
             // 
             // nudKamatnaStopa
             // 
+            this.nudKamatnaStopa.DecimalPlaces = 2;
             this.nudKamatnaStopa.Location = new System.Drawing.Point(239, 266);
             this.nudKamatnaStopa.Name = "nudKamatnaStopa";
             this.nudKamatnaStopa.Size = new System.Drawing.Size(200, 31);

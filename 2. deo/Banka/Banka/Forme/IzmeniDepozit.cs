@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Banka.Enumi;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -38,7 +39,49 @@ namespace Banka.Forme
 
         private void IzmeniDepozit_Load(object sender, EventArgs e)
         {
+            foreach (StatusDepozita status in Enum.GetValues(typeof(StatusDepozita)))
+            {
+                cbStatusDepozita.Items.Add(status.GetDescription());
+            }
+            cbStatusDepozita.SelectedIndex = cbStatusDepozita.Items.IndexOf(depozit.StatusDepozita);
 
+            foreach (RacunValuta valuta in Enum.GetValues(typeof(RacunValuta)))
+            {
+                cbValuta.Items.Add(valuta.GetDescription());
+            }
+            cbValuta.SelectedIndex = cbValuta.Items.IndexOf(depozit.Valuta);
+
+            dtpDatumPocetka.Value = depozit.DatumPocetka;
+            dtpDatumIsteka.Value = depozit.DatumIsteka;
+            nudPeriodOrocenja.Value = depozit.PeriodOrocenja;
+            nudIznos.Value = depozit.Iznos;
+            nudKamatnaStopa.Value = depozit.KamatnaStopa;
+            rtbKomentar.Text = depozit.Komentar;
+        }
+
+        private void btnSacuvaj_Click(object sender, EventArgs e)
+        {
+            var dto = new DepozitBasic
+            {
+                Id = depozit.Id,
+                DatumPocetka = dtpDatumPocetka.Value,
+                DatumIsteka = dtpDatumIsteka.Value,
+                PeriodOrocenja = (int)nudPeriodOrocenja.Value,
+                StatusDepozita = cbStatusDepozita.Text,
+                Valuta = cbValuta.Text,
+                Iznos = nudIznos.Value,
+                KamatnaStopa = nudKamatnaStopa.Value,
+                Komentar = rtbKomentar.Text
+            };
+
+            DTOManager.IzmeniDepozit(dto);
+            MessageBox.Show(
+                        "Depozit uspešno izmenjen!",
+                        "Uspeh",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+            DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }
