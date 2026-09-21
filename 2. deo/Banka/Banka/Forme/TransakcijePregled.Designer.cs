@@ -98,6 +98,7 @@
             this.Controls.Add(this.gbTransakcije);
             this.Name = "TransakcijePregled";
             this.Text = "Transakcije Pregled";
+            this.Load += new System.EventHandler(this.TransakcijePregled_Load);
             this.gbTransakcije.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvTransakcije)).EndInit();
             this.ResumeLayout(false);

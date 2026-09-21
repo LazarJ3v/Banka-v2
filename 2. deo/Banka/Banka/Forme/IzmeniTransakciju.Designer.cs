@@ -32,7 +32,6 @@
             this.btnSacuvaj = new System.Windows.Forms.Button();
             this.rtbKomentar = new System.Windows.Forms.RichTextBox();
             this.tbOpis = new System.Windows.Forms.TextBox();
-            this.tbIznos = new System.Windows.Forms.TextBox();
             this.lblKomentar = new System.Windows.Forms.Label();
             this.lblOpis = new System.Windows.Forms.Label();
             this.lblIznos = new System.Windows.Forms.Label();
@@ -45,6 +44,8 @@
             this.lblStatus = new System.Windows.Forms.Label();
             this.cbTip = new System.Windows.Forms.ComboBox();
             this.lblTip = new System.Windows.Forms.Label();
+            this.nudIznos = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.nudIznos)).BeginInit();
             this.SuspendLayout();
             // 
             // cbStatus
@@ -63,6 +64,7 @@
             this.btnSacuvaj.TabIndex = 32;
             this.btnSacuvaj.Text = "Sačuvaj";
             this.btnSacuvaj.UseVisualStyleBackColor = true;
+            this.btnSacuvaj.Click += new System.EventHandler(this.btnSacuvaj_Click);
             // 
             // rtbKomentar
             // 
@@ -78,13 +80,6 @@
             this.tbOpis.Name = "tbOpis";
             this.tbOpis.Size = new System.Drawing.Size(204, 31);
             this.tbOpis.TabIndex = 30;
-            // 
-            // tbIznos
-            // 
-            this.tbIznos.Location = new System.Drawing.Point(299, 272);
-            this.tbIznos.Name = "tbIznos";
-            this.tbIznos.Size = new System.Drawing.Size(204, 31);
-            this.tbIznos.TabIndex = 29;
             // 
             // lblKomentar
             // 
@@ -189,16 +184,23 @@
             this.lblTip.TabIndex = 17;
             this.lblTip.Text = "Tip transakcije:";
             // 
+            // nudIznos
+            // 
+            this.nudIznos.Location = new System.Drawing.Point(299, 272);
+            this.nudIznos.Name = "nudIznos";
+            this.nudIznos.Size = new System.Drawing.Size(204, 31);
+            this.nudIznos.TabIndex = 34;
+            // 
             // IzmeniTransakciju
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 518);
+            this.Controls.Add(this.nudIznos);
             this.Controls.Add(this.cbStatus);
             this.Controls.Add(this.btnSacuvaj);
             this.Controls.Add(this.rtbKomentar);
             this.Controls.Add(this.tbOpis);
-            this.Controls.Add(this.tbIznos);
             this.Controls.Add(this.lblKomentar);
             this.Controls.Add(this.lblOpis);
             this.Controls.Add(this.lblIznos);
@@ -214,6 +216,7 @@
             this.Name = "IzmeniTransakciju";
             this.Text = "IzmeniTransakciju";
             this.Load += new System.EventHandler(this.IzmeniTransakciju_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.nudIznos)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -225,7 +228,6 @@
         private System.Windows.Forms.Button btnSacuvaj;
         private System.Windows.Forms.RichTextBox rtbKomentar;
         private System.Windows.Forms.TextBox tbOpis;
-        private System.Windows.Forms.TextBox tbIznos;
         private System.Windows.Forms.Label lblKomentar;
         private System.Windows.Forms.Label lblOpis;
         private System.Windows.Forms.Label lblIznos;
@@ -238,5 +240,6 @@
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.ComboBox cbTip;
         private System.Windows.Forms.Label lblTip;
+        private System.Windows.Forms.NumericUpDown nudIznos;
     }
 }

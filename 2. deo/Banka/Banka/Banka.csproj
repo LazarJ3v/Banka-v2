@@ -141,6 +141,7 @@
     <Compile Include="Enumi\StatusKamate.cs" />
     <Compile Include="Enumi\StatusKredita.cs" />
     <Compile Include="Enumi\StatusRacuna.cs" />
+    <Compile Include="Enumi\StatusTransakcije.cs" />
     <Compile Include="Enumi\TipDogadjaja.cs" />
     <Compile Include="Enumi\TipKamate.cs" />
     <Compile Include="Enumi\TipRacuna.cs" />

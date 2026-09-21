@@ -40,11 +40,14 @@
             this.lblIznos = new System.Windows.Forms.Label();
             this.lblOpis = new System.Windows.Forms.Label();
             this.lblKomentar = new System.Windows.Forms.Label();
-            this.tbIznos = new System.Windows.Forms.TextBox();
             this.tbOpis = new System.Windows.Forms.TextBox();
             this.rtbKomentar = new System.Windows.Forms.RichTextBox();
             this.btnSacuvaj = new System.Windows.Forms.Button();
             this.cbStatus = new System.Windows.Forms.ComboBox();
+            this.lblBrRacuna = new System.Windows.Forms.Label();
+            this.tbBrRacuna = new System.Windows.Forms.TextBox();
+            this.nudIznos = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.nudIznos)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTip
@@ -150,13 +153,6 @@
             this.lblKomentar.TabIndex = 11;
             this.lblKomentar.Text = "Komentar:";
             // 
-            // tbIznos
-            // 
-            this.tbIznos.Location = new System.Drawing.Point(233, 308);
-            this.tbIznos.Name = "tbIznos";
-            this.tbIznos.Size = new System.Drawing.Size(204, 31);
-            this.tbIznos.TabIndex = 12;
-            // 
             // tbOpis
             // 
             this.tbOpis.Location = new System.Drawing.Point(233, 345);
@@ -180,6 +176,7 @@
             this.btnSacuvaj.TabIndex = 15;
             this.btnSacuvaj.Text = "Sačuvaj";
             this.btnSacuvaj.UseVisualStyleBackColor = true;
+            this.btnSacuvaj.Click += new System.EventHandler(this.btnSacuvaj_Click);
             // 
             // cbStatus
             // 
@@ -189,16 +186,41 @@
             this.cbStatus.Size = new System.Drawing.Size(204, 31);
             this.cbStatus.TabIndex = 16;
             // 
+            // lblBrRacuna
+            // 
+            this.lblBrRacuna.AutoSize = true;
+            this.lblBrRacuna.Location = new System.Drawing.Point(85, 24);
+            this.lblBrRacuna.Name = "lblBrRacuna";
+            this.lblBrRacuna.Size = new System.Drawing.Size(142, 23);
+            this.lblBrRacuna.TabIndex = 17;
+            this.lblBrRacuna.Text = "Broj računa:";
+            // 
+            // tbBrRacuna
+            // 
+            this.tbBrRacuna.Location = new System.Drawing.Point(233, 21);
+            this.tbBrRacuna.Name = "tbBrRacuna";
+            this.tbBrRacuna.Size = new System.Drawing.Size(204, 31);
+            this.tbBrRacuna.TabIndex = 18;
+            // 
+            // nudIznos
+            // 
+            this.nudIznos.Location = new System.Drawing.Point(233, 308);
+            this.nudIznos.Name = "nudIznos";
+            this.nudIznos.Size = new System.Drawing.Size(204, 31);
+            this.nudIznos.TabIndex = 19;
+            // 
             // DodajTransakciju
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(672, 563);
+            this.Controls.Add(this.nudIznos);
+            this.Controls.Add(this.tbBrRacuna);
+            this.Controls.Add(this.lblBrRacuna);
             this.Controls.Add(this.cbStatus);
             this.Controls.Add(this.btnSacuvaj);
             this.Controls.Add(this.rtbKomentar);
             this.Controls.Add(this.tbOpis);
-            this.Controls.Add(this.tbIznos);
             this.Controls.Add(this.lblKomentar);
             this.Controls.Add(this.lblOpis);
             this.Controls.Add(this.lblIznos);
@@ -213,6 +235,8 @@
             this.Controls.Add(this.lblTip);
             this.Name = "DodajTransakciju";
             this.Text = "Dodaj Transakciju";
+            this.Load += new System.EventHandler(this.DodajTransakciju_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.nudIznos)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -232,10 +256,12 @@
         private System.Windows.Forms.Label lblIznos;
         private System.Windows.Forms.Label lblOpis;
         private System.Windows.Forms.Label lblKomentar;
-        private System.Windows.Forms.TextBox tbIznos;
         private System.Windows.Forms.TextBox tbOpis;
         private System.Windows.Forms.RichTextBox rtbKomentar;
         private System.Windows.Forms.Button btnSacuvaj;
         private System.Windows.Forms.ComboBox cbStatus;
+        private System.Windows.Forms.Label lblBrRacuna;
+        private System.Windows.Forms.TextBox tbBrRacuna;
+        private System.Windows.Forms.NumericUpDown nudIznos;
     }
 }
