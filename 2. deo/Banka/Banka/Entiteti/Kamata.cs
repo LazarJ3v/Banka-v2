@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Banka.Entiteti
 {
-    class Kamata
+    public class Kamata
     {
         public virtual int Id { get; set; }
         public virtual DateTime DatumObracuna { get; set; }

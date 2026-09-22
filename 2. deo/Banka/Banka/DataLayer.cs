@@ -39,8 +39,8 @@ namespace Banka
                 var cfg = OracleManagedDataClientConfiguration.Oracle10
                 .ShowSql()
                 .ConnectionString(c =>
-                    //c.Is("Data Source=gislab-oracle.elfak.ni.ac.rs:1521/SBP_PDB;User Id=S19658;Password=AleksaSBP26_"));
-                    c.Is("Data Source=localhost:1521/FREEPDB1;User Id=aleksa;Password=aleksa"));
+                    c.Is("Data Source=gislab-oracle.elfak.ni.ac.rs:1521/SBP_PDB;User Id=S19658;Password=AleksaSBP26_"));
+                    //c.Is("Data Source=localhost:1521/FREEPDB1;User Id=aleksa;Password=aleksa"));
 
                 return Fluently.Configure()
                     .Database(cfg)

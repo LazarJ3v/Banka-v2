@@ -18,7 +18,12 @@ namespace Banka.Forme
 {
     public partial class IzmeniRacun : BaseForm
     {
-        private RacunBasic racun;
+        private TekuciBasic tekuci = null;
+        private DevizniBasic devizni = null;
+        private StedniBasic stedni = null;
+        private ZiroBasic ziro = null;
+        private RacunBasic racun = null;
+
         private TipRacuna tip;
         public IzmeniRacun() : base()
         {
@@ -143,7 +148,7 @@ namespace Banka.Forme
 
         public IzmeniRacun(TekuciBasic tekuci) : this()
         {
-            racun = tekuci;
+            this.tekuci = tekuci;
             tip = TipRacuna.Tekuci;
             PopuniZajednickaPolja(tekuci);
             PopuniTekuci(tekuci);
@@ -152,7 +157,7 @@ namespace Banka.Forme
 
         public IzmeniRacun(DevizniBasic devizni) : this()
         {
-            racun = devizni;
+            this.devizni = devizni;
             tip = TipRacuna.Devizni;
             PopuniZajednickaPolja(devizni);
             PopuniDevizni(devizni);
@@ -161,7 +166,7 @@ namespace Banka.Forme
 
         public IzmeniRacun(StedniBasic stedni) : this()
         {
-            racun = stedni;
+            this.stedni = stedni;
             tip = TipRacuna.Stedni;
             PopuniZajednickaPolja(stedni);
             PopuniStedni(stedni);
@@ -170,7 +175,7 @@ namespace Banka.Forme
 
         public IzmeniRacun(ZiroBasic ziro) : this()
         {
-            racun = ziro;
+            this.ziro = ziro;
             tip = TipRacuna.Ziro;
             PopuniZajednickaPolja(ziro);
             PopuniZiro(ziro);
@@ -195,7 +200,7 @@ namespace Banka.Forme
             {
                 cbValuta.Items.Add(valuta.ToString());
             }
-            cbValuta.SelectedItem = cbValuta.Items[cbValuta.Items.IndexOf(r.Valuta)];
+            cbValuta.SelectedIndex = cbValuta.Items.IndexOf(r.Valuta);
 
             nudTrenutnoStanje.Value = r.TrenutnoStanje;
             dtpDatumOtvaranja.Value = r.DatumOtvaranja;
@@ -205,7 +210,7 @@ namespace Banka.Forme
             {
                 cbStatus.Items.Add(status.ToString());
             }
-            cbStatus.SelectedItem = cbStatus.Items[cbStatus.Items.IndexOf(r.Status)];
+            cbStatus.SelectedIndex = cbStatus.Items.IndexOf(r.Status);
 
             nudDozvoljeniMinus.Value = r.DozvoljeniMinus;
             nudKamatnaStopa.Value = r.KamatnaStopa ?? 0;
@@ -255,12 +260,19 @@ namespace Banka.Forme
         {
             nudMinimalniIznosOtvaranja.Value = s.MinimalniIznosOtvaranja ?? 0;
 
-            cbFrekvKapitalizacijaKamate.Items.Clear();
-            foreach (FrekvencijaKapitalizacijeKamate fkk in Enum.GetValues(typeof(FrekvencijaKapitalizacijeKamate)))
-            {
-                cbFrekvKapitalizacijaKamate.Items.Add(fkk);
-            }
-            cbFrekvKapitalizacijaKamate.SelectedItem = (FrekvencijaKapitalizacijeKamate)s.FrekvKapitalizKamate;
+            cbFrekvKapitalizacijaKamate.DrawMode = DrawMode.Normal;
+            cbFrekvKapitalizacijaKamate.DataSource =
+                Enum.GetValues(typeof(FrekvencijaKapitalizacijeKamate))
+                .Cast<FrekvencijaKapitalizacijeKamate>()
+                .Select(x => new
+                {
+                    Value = (int)x,
+                    Description = x.GetDescription()
+                }).ToList();
+
+            cbFrekvKapitalizacijaKamate.DisplayMember = "Description";
+            cbFrekvKapitalizacijaKamate.ValueMember = "Value";
+            cbFrekvKapitalizacijaKamate.SelectedIndex = 0;
 
             var prikazBonusi = s.StedniBonusi.Select(x => new
             {
@@ -311,9 +323,107 @@ namespace Banka.Forme
             }
         }
 
-        private void IzmeniRacun_Load(object sender, EventArgs e)
+        private void btnIzmeni_Click(object sender, EventArgs e)
         {
+            switch(tip)
+            {
+                case TipRacuna.Tekuci:
+                    var tekuci = new TekuciBasic
+                    {
+                        Id = this.tekuci.Id,
+                        BrojRacuna = tbBrojRacuna.Text,
+                        Valuta = cbValuta.Text,
+                        TrenutnoStanje = nudTrenutnoStanje.Value,
+                        DatumOtvaranja = dtpDatumOtvaranja.Value,
+                        Status = cbStatus.Text,
+                        DozvoljeniMinus = nudDozvoljeniMinus.Value,
+                        Komentar = rtbKomentar.Text,
 
+                        PlatnaKartica = chbPlatnaKartica.Checked,
+                        MesecniLimit = nudMesecniLimit.Value
+                    };
+
+                    DTOManager.IzmeniTekuci(tekuci);
+                    break;
+                case TipRacuna.Devizni:
+                    var devizni = new DevizniBasic
+                    {
+                        Id = this.devizni.Id,
+                        BrojRacuna = tbBrojRacuna.Text,
+                        Valuta = cbValuta.Text,
+                        TrenutnoStanje = nudTrenutnoStanje.Value,
+                        DatumOtvaranja = dtpDatumOtvaranja.Value,
+                        Status = cbStatus.Text,
+                        DozvoljeniMinus = nudDozvoljeniMinus.Value,
+                        Komentar = rtbKomentar.Text,
+
+                        Namena = cbNamenaDevizni.Text,
+                        KursnaRazlika = nudKursnaRazlika.Value
+                    };
+
+                    DTOManager.IzmeniDevizni(devizni);
+                    break;
+                case TipRacuna.Stedni:
+                    var stedni = new StedniBasic
+                    {
+                        Id = this.stedni.Id,
+                        BrojRacuna = tbBrojRacuna.Text,
+                        Valuta = cbValuta.Text,
+                        TrenutnoStanje = nudTrenutnoStanje.Value,
+                        DatumOtvaranja = dtpDatumOtvaranja.Value,
+                        Status = cbStatus.Text,
+                        DozvoljeniMinus = nudDozvoljeniMinus.Value,
+                        Komentar = rtbKomentar.Text,
+
+                        MinimalniIznosOtvaranja = nudMinimalniIznosOtvaranja.Value,
+                        FrekvKapitalizKamate = (int)cbFrekvKapitalizacijaKamate.SelectedValue
+                    };
+
+                    DTOManager.IzmeniStedni(stedni);
+                    break;
+                case TipRacuna.Ziro:
+                    var ziro = new ZiroBasic
+                    {
+                        Id = this.ziro.Id,
+                        BrojRacuna = tbBrojRacuna.Text,
+                        Valuta = cbValuta.Text,
+                        TrenutnoStanje = nudTrenutnoStanje.Value,
+                        DatumOtvaranja = dtpDatumOtvaranja.Value,
+                        Status = cbStatus.Text,
+                        DozvoljeniMinus = nudDozvoljeniMinus.Value,
+                        Komentar = rtbKomentar.Text,
+
+                        Namena = tbNamenaZiro.Text,
+                        ElektronskoBankarstvo = chbElektronskoBankarstvo.Checked,
+                        LimitZaMasovnaPlacanja = nudLimitZaMasovnaPlacanja.Value,
+                        IntegracijaSaSistemima = rtbIntegracijaSaSistemima.Text
+                    };
+
+                    DTOManager.IzmeniZiro(ziro);
+                    break;
+                default:
+                    var racun = new RacunBasic
+                    {
+                        Id = this.racun.Id,
+                        BrojRacuna = tbBrojRacuna.Text,
+                        Valuta = cbValuta.Text,
+                        TrenutnoStanje = nudTrenutnoStanje.Value,
+                        DatumOtvaranja = dtpDatumOtvaranja.Value,
+                        Status = cbStatus.Text,
+                        DozvoljeniMinus = nudDozvoljeniMinus.Value,
+                        Komentar = rtbKomentar.Text,
+                    };
+
+                    //DTOManager.IzmeniRacun(racun);
+                    break;
+            }
+            MessageBox.Show(
+                        "Racun uspešno izmenjen!",
+                        "Uspeh",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+            DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }

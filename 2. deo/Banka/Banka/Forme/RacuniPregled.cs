@@ -143,22 +143,30 @@ namespace Banka.Forme
 
         private void btnObrisi_Click(object sender, EventArgs e)
         {
-            if (dgvRacuni.SelectedRows.Count == 0)
+            try
             {
-                MessageBox.Show("Selektujte zapis!");
-                return;
-            }
+                if (dgvRacuni.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Selektujte zapis!");
+                    return;
+                }
 
-            if (dgvRacuni.SelectedRows.Count > 0)
+                if (dgvRacuni.SelectedRows.Count > 0)
+                {
+                    int index = dgvRacuni.SelectedRows[0].Index;
+                    int id = sviRacuni[index].Id;
+                    DTOManager.ObrisiRacun(id);
+                    RacuniPregled_Load(null, null);
+
+                    MessageBox.Show("Račun uspešno obrisan!", "Uspeh",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch(Exception ex)
             {
-                int index = dgvRacuni.SelectedRows[0].Index;
-                int id = sviRacuni[index].Id;
-                DTOManager.ObrisiRacun(id);
-                RacuniPregled_Load(null, null);
-
-                MessageBox.Show("Račun uspešno obrisan!", "Uspeh",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(ex.Message);
             }
+            
         }
 
         private void btnIzmeni_Click(object sender, EventArgs e)

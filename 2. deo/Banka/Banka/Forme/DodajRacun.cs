@@ -218,18 +218,36 @@ namespace Banka.Forme
             }
             cbNamenaDevizni.SelectedItem = cbNamenaDevizni.Items[0];
 
-            var frekvencijeIzbor = new Dictionary<string, int>
-            {
-                { "Dnevno", (int)FrekvencijaKapitalizacijeKamate.Dnevno },
-                { "Mesečno", (int)FrekvencijaKapitalizacijeKamate.Mesecno },
-                { "Kvartalno", (int)FrekvencijaKapitalizacijeKamate.Kvartalno },
-                { "Polugodišnje", (int)FrekvencijaKapitalizacijeKamate.Polugodisnje },
-                { "Godišnje", (int)FrekvencijaKapitalizacijeKamate.Godisnje }
-            };
+            //var frekvencijeIzbor = new Dictionary<string, int>
+            //{
+            //    { "Dnevno", (int)FrekvencijaKapitalizacijeKamate.Dnevno },
+            //    { "Mesečno", (int)FrekvencijaKapitalizacijeKamate.Mesecno },
+            //    { "Kvartalno", (int)FrekvencijaKapitalizacijeKamate.Kvartalno },
+            //    { "Polugodišnje", (int)FrekvencijaKapitalizacijeKamate.Polugodisnje },
+            //    { "Godišnje", (int)FrekvencijaKapitalizacijeKamate.Godisnje }
+            //};
 
-            cbFrekvKapitalizKamate.DataSource = new BindingSource(frekvencijeIzbor, null);
-            cbFrekvKapitalizKamate.DisplayMember = "Key";
+            //cbFrekvKapitalizKamate.DataSource = new BindingSource(frekvencijeIzbor, null);
+            //cbFrekvKapitalizKamate.DisplayMember = "Key";
+            //cbFrekvKapitalizKamate.ValueMember = "Value";
+
+            //foreach (FrekvencijaKapitalizacijeKamate fkk in Enum.GetValues(typeof(FrekvencijaKapitalizacijeKamate)))
+            //{
+            //    cbFrekvKapitalizKamate.Items.Add(fkk);
+            //}
+            cbFrekvKapitalizKamate.DrawMode = DrawMode.Normal;
+            cbFrekvKapitalizKamate.DataSource = 
+                Enum.GetValues(typeof(FrekvencijaKapitalizacijeKamate))
+                .Cast<FrekvencijaKapitalizacijeKamate>()
+                .Select(x => new
+                {
+                    Value = (int)x,
+                    Description = x.GetDescription()
+                }).ToList();
+
+            cbFrekvKapitalizKamate.DisplayMember = "Description";
             cbFrekvKapitalizKamate.ValueMember = "Value";
+            cbFrekvKapitalizKamate.SelectedIndex = 0;
 
             dgvPaketi.ClearSelection();
 

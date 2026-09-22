@@ -19,9 +19,13 @@ namespace Banka.Entiteti
         public virtual string Komentar { get; set; }
 
         public virtual IList<Racun> Racuni { get; set; }
+        public virtual IList<Depozit> Depoziti { get; set; }
+        public virtual IList<Kredit> Krediti { get; set; }
         public PravnoLice()
         {
             Racuni = new List<Racun>();
+            Depoziti = new List<Depozit>();
+            Krediti = new List<Kredit>();
         }
     }
 }

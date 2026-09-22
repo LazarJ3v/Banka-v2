@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using NHibernate;
 using System.Windows.Forms;
 using Banka.Enumi;
+using FluentNHibernate.Conventions;
 
 namespace Banka
 {
@@ -475,6 +476,15 @@ namespace Banka
                 try
                 {
                     Racun r = session.Load<Racun>(id);
+
+                    if (!r.Transakcije.IsEmpty() ||
+                        !r.Depoziti.IsEmpty() ||
+                        !r.Krediti.IsEmpty() ||
+                        !r.Kamate.IsEmpty() ||
+                        !r.SigurnosneKontrole.IsEmpty())
+                    {
+                        throw new InvalidOperationException("Račun ima poslovne zapise i ne može biti obrisan");
+                    }
                     session.Delete(r);
 
                     transaction.Commit();
@@ -482,7 +492,7 @@ namespace Banka
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri brisanju računa", ex);
+                    throw new InvalidOperationException("Greška pri brisanju računa: " + ex.Message, ex);
                 }
             }
         }

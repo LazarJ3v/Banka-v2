@@ -32,6 +32,22 @@ namespace Banka.Mapiranja
             HasMany(x => x.Transakcije)
                 .KeyColumn("RACUNID")
                 .Inverse();
+
+            HasMany(x => x.Depoziti)
+                .KeyColumn("RACUNID")
+                .Inverse();
+
+            HasMany(x => x.Krediti)
+                .KeyColumn("RACUNID")
+                .Inverse();
+
+            HasMany(x => x.Kamate)
+                .KeyColumn("RACUNID")
+                .Inverse();
+
+            HasMany(x => x.SigurnosneKontrole)
+                .KeyColumn("RACUNID")
+                .Inverse();
         }
     }
 }

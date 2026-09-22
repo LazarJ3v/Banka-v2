@@ -24,7 +24,18 @@ namespace Banka.Mapiranja
             Map(x => x.Status).Column("STATUS");
             Map(x => x.Komentar).Column("KOMENTAR");
 
-            HasMany(x => x.Racuni).KeyColumn("PRAVNOLICEID").Cascade.All().Inverse();
+            HasMany(x => x.Racuni)
+                .KeyColumn("PRAVNOLICEID")
+                .Cascade.All()
+                .Inverse();
+
+            HasMany(x => x.Depoziti)
+                .KeyColumn("RACUNID")
+                .Inverse();
+
+            HasMany(x => x.Krediti)
+                .KeyColumn("RACUNID")
+                .Inverse();
         }
     }
 }
