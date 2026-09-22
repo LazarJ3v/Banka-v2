@@ -237,7 +237,7 @@ namespace Banka.Forme
             {
                 cbNamenaDevizni.Items.Add(namena.GetDescription());
             }
-            cbNamenaDevizni.SelectedItem = cbNamenaDevizni.Items[cbNamenaDevizni.Items.IndexOf(d.Namena)];
+            cbNamenaDevizni.SelectedIndex = cbNamenaDevizni.Items.IndexOf(d.Namena);
 
             nudKursnaRazlika.Value = d.KursnaRazlika ?? 0;
 
@@ -414,7 +414,7 @@ namespace Banka.Forme
                         Komentar = rtbKomentar.Text,
                     };
 
-                    //DTOManager.IzmeniRacun(racun);
+                    DTOManager.IzmeniRacun(racun);
                     break;
             }
             MessageBox.Show(

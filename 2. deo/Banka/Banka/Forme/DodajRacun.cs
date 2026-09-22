@@ -427,15 +427,28 @@ namespace Banka.Forme
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
                 }
-                else
+                else if (rbDrugi.Checked)
                 {
-                    MessageBox.Show(
-                        "Izaberite tip računa.",
-                        "Upozorenje",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    var dto = new RacunBasic
+                    {
+                        BrojRacuna = tbBrojRacuna.Text.Trim(),
+                        Valuta = cbValuta.Text,
+                        TrenutnoStanje = nudTrenutnoStanje.Value,
+                        DatumOtvaranja = DateTime.Now,
+                        Status = StatusRacuna.Aktivan.GetDescription(),
+                        DozvoljeniMinus = nudDozvoljeniMinus.Value,
+                        Komentar = rtbKomentar.Text.Trim(),
+                        TipRacuna = TipRacuna.Ostali.GetDescription(),
+                        KamatnaStopa = nudKamatnaStopa.Value
+                    };
 
-                    return;
+                    DTOManager.DodajRacun(dto, tbJmbg.Text.Trim(), tbPib.Text.Trim());
+
+                    MessageBox.Show(
+                        "Račun uspešno dodat!",
+                        "Uspeh",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
                 }
 
                 DialogResult = DialogResult.OK;

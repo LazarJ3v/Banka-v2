@@ -1,4 +1,5 @@
 ﻿using Banka.Entiteti;
+using Banka.Enumi;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -105,6 +106,18 @@ namespace Banka.Forme
             tbBrojRacuna.Enabled = rbKamataNaRacun.Checked;
             nudIdDepozita.Enabled = rbKamataNaDepozit.Checked;
             nudIdKredita.Enabled = rbKamataNaKredit.Checked;
+        }
+
+        private void DodajKamatu_Load(object sender, EventArgs e)
+        {
+            cbPeriodObracuna.DataSource = Enum.GetValues(typeof(FrekvencijaKapitalizacijeKamate));
+            cbTip.DataSource = Enum.GetValues(typeof(TipKamate));
+            var statusi = Enum.GetValues(typeof(StatusKamate));
+            foreach(StatusKamate s in statusi)
+            {
+                cbStatus.Items.Add(s.GetDescription());
+            }
+            cbStatus.SelectedIndex = 0;
         }
     }
 }

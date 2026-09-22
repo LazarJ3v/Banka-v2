@@ -32,6 +32,10 @@ namespace Banka.Mapiranja
             References(x => x.PripadaPravnomLicu).Column("PRAVNOLICEID").LazyLoad();
 
             References(x => x.PripadaRacunu).Column("RACUNID").Not.Nullable().LazyLoad();
+
+            HasMany(x => x.Kamate)
+                .KeyColumn("DEPOZITID")
+                .Inverse();
         }
     }
 }

@@ -52,6 +52,10 @@ namespace Banka.Forme
         {
             dgv.ReadOnly = true;
 
+            var normalFont = new Font("Segoe UI", 9, FontStyle.Regular);
+
+            dgv.Font = normalFont;
+
             dgv.BackgroundColor = BojaSvetlija;
             dgv.BorderStyle = BorderStyle.None;
             dgv.GridColor = BojaNajsvetlija;
@@ -88,6 +92,7 @@ namespace Banka.Forme
 
             dgv.RowTemplate.Height = 28;
             dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgv.RowTemplate.DefaultCellStyle.Font = normalFont;
         }
 
         // ==========================================

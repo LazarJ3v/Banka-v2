@@ -43,8 +43,6 @@
             this.btnDodaj = new System.Windows.Forms.Button();
             this.btnIzmeni = new System.Windows.Forms.Button();
             this.btnObrisi = new System.Windows.Forms.Button();
-            this.lblBrojKlijenata = new System.Windows.Forms.Label();
-            this.lblBroj = new System.Windows.Forms.Label();
             this.gbFizickaLica.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFizickaLica)).BeginInit();
             this.gbPravnaLica.SuspendLayout();
@@ -214,33 +212,11 @@
             this.btnObrisi.UseVisualStyleBackColor = true;
             this.btnObrisi.Click += new System.EventHandler(this.btnObrisi_Click);
             // 
-            // lblBrojKlijenata
-            // 
-            this.lblBrojKlijenata.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblBrojKlijenata.AutoSize = true;
-            this.lblBrojKlijenata.Location = new System.Drawing.Point(13, 486);
-            this.lblBrojKlijenata.Name = "lblBrojKlijenata";
-            this.lblBrojKlijenata.Size = new System.Drawing.Size(175, 23);
-            this.lblBrojKlijenata.TabIndex = 6;
-            this.lblBrojKlijenata.Text = "Broj klijenata:";
-            // 
-            // lblBroj
-            // 
-            this.lblBroj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblBroj.AutoSize = true;
-            this.lblBroj.Location = new System.Drawing.Point(194, 486);
-            this.lblBroj.Name = "lblBroj";
-            this.lblBroj.Size = new System.Drawing.Size(54, 23);
-            this.lblBroj.TabIndex = 7;
-            this.lblBroj.Text = "Broj";
-            // 
             // KlijentiPregled
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1258, 519);
-            this.Controls.Add(this.lblBroj);
-            this.Controls.Add(this.lblBrojKlijenata);
             this.Controls.Add(this.btnObrisi);
             this.Controls.Add(this.btnIzmeni);
             this.Controls.Add(this.btnDodaj);
@@ -259,7 +235,6 @@
             this.gbPretraga.ResumeLayout(false);
             this.gbPretraga.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -280,7 +255,5 @@
         private System.Windows.Forms.Button btnDodaj;
         private System.Windows.Forms.Button btnIzmeni;
         private System.Windows.Forms.Button btnObrisi;
-        private System.Windows.Forms.Label lblBrojKlijenata;
-        private System.Windows.Forms.Label lblBroj;
     }
 }

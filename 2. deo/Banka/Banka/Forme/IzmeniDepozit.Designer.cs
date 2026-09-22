@@ -90,6 +90,11 @@
             // 
             this.nudKamatnaStopa.DecimalPlaces = 2;
             this.nudKamatnaStopa.Location = new System.Drawing.Point(239, 266);
+            this.nudKamatnaStopa.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.nudKamatnaStopa.Name = "nudKamatnaStopa";
             this.nudKamatnaStopa.Size = new System.Drawing.Size(200, 31);
             this.nudKamatnaStopa.TabIndex = 29;
@@ -97,6 +102,11 @@
             // nudIznos
             // 
             this.nudIznos.Location = new System.Drawing.Point(239, 229);
+            this.nudIznos.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
             this.nudIznos.Name = "nudIznos";
             this.nudIznos.Size = new System.Drawing.Size(200, 31);
             this.nudIznos.TabIndex = 28;
@@ -174,6 +184,11 @@
             // nudPeriodOrocenja
             // 
             this.nudPeriodOrocenja.Location = new System.Drawing.Point(239, 118);
+            this.nudPeriodOrocenja.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.nudPeriodOrocenja.Name = "nudPeriodOrocenja";
             this.nudPeriodOrocenja.Size = new System.Drawing.Size(200, 31);
             this.nudPeriodOrocenja.TabIndex = 19;

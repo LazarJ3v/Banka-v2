@@ -9,9 +9,9 @@ namespace Banka.Enumi
 {
     public enum StatusRacuna
     {
-        [Description("AKTIVAN")]
+        [Description("Aktivan")]
         Aktivan,
-        [Description("NEAKTIVAN")]
+        [Description("Neaktivan")]
         Neaktivan
     }
 }

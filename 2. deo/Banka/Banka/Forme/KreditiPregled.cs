@@ -50,17 +50,24 @@ namespace Banka.Forme
 
         private void btnObrisi_Click(object sender, EventArgs e)
         {
-            if (dgvKrediti.SelectedRows.Count == 0)
+            try
             {
-                MessageBox.Show("Selektujte zapis!");
-                return;
-            }
+                if (dgvKrediti.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Selektujte zapis!");
+                    return;
+                }
 
-            if (dgvKrediti.SelectedRows.Count > 0)
+                if (dgvKrediti.SelectedRows.Count > 0)
+                {
+                    var index = dgvKrediti.SelectedRows[0].Index;
+                    DTOManager.ObrisiKredit(sviKrediti[index].Id);
+                    KreditiPregled_Load(null, null);
+                }
+            }
+            catch(Exception ex)
             {
-                var index = dgvKrediti.SelectedRows[0].Index;
-                DTOManager.ObrisiKredit(sviKrediti[index].Id);        
-                KreditiPregled_Load(null, null);
+                MessageBox.Show(ex.Message);
             }
         }
 

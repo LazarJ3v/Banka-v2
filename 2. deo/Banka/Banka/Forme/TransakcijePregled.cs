@@ -37,7 +37,6 @@ namespace Banka.Forme
 
         private void btnIzmeni_Click(object sender, EventArgs e)
         {
-            // TODO: Izvuci transakciju iz data grid view-a
             if (dgvTransakcije.SelectedRows.Count == 0)
             {
                 MessageBox.Show("Selektujte zapis!");

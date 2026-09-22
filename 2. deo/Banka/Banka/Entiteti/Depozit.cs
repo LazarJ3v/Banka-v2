@@ -22,6 +22,8 @@ namespace Banka.Entiteti
         public virtual PravnoLice PripadaPravnomLicu { get; set; }
         public virtual Racun PripadaRacunu { get; set; }
 
+        public virtual IList<Kamata> Kamate { get; set; }
+
         // Izvedeni atribut - NIJE mapiran u bazi (baza ga ne skladišti,
         // vidi napomenu u "1. deo/Baza podataka - BANKA.txt").
         // Formula: Iznos * (KamatnaStopa/100) * (PeriodOrocenja/12)
@@ -30,7 +32,7 @@ namespace Banka.Entiteti
 
         public Depozit()
         {
-
+            Kamate = new List<Kamata>();
         }
     }
 }

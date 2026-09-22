@@ -53,18 +53,25 @@ namespace Banka.Forme
 
         private void btnObrisi_Click(object sender, EventArgs e)
         {
-            if (dgvDepoziti.SelectedRows.Count == 0)
+            try
             {
-                MessageBox.Show("Selektujte zapis!");
-                return;
+                if (dgvDepoziti.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Selektujte zapis!");
+                    return;
+                }
+
+                if (dgvDepoziti.SelectedRows.Count > 0)
+                {
+                    var index = dgvDepoziti.SelectedRows[0].Index;
+
+                    DTOManager.ObrisiDepozit(sviDepoziti[index].Id);
+                    DepozitiPregled_Load(null, null);
+                }
             }
-
-            if (dgvDepoziti.SelectedRows.Count > 0)
+            catch(Exception ex)
             {
-                var index = dgvDepoziti.SelectedRows[0].Index;
-
-                DTOManager.ObrisiDepozit(sviDepoziti[index].Id);
-                DepozitiPregled_Load(null, null);
+                MessageBox.Show(ex.Message);
             }
         }
 

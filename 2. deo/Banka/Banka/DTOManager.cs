@@ -137,6 +137,10 @@ namespace Banka
                     if (fizickoLice == null)
                         return;
 
+                    if (!fizickoLice.Racuni.IsEmpty())
+                        throw new InvalidOperationException(
+                            "Ne možete obrisati fizičko lice koje poseduje račune.");
+
                     session.Delete(fizickoLice);
 
                     transaction.Commit();
@@ -146,7 +150,7 @@ namespace Banka
                     transaction.Rollback();
 
                     throw new InvalidOperationException(
-                        "Greška pri brisanju fizičkog lica.", ex);
+                        "Greška pri brisanju fizičkog lica: " + ex.Message, ex);
                 }
             }
         }
@@ -293,6 +297,10 @@ namespace Banka
                     if (pravnoLice == null)
                         return;
 
+                    if (!pravnoLice.Racuni.IsEmpty())
+                        throw new InvalidOperationException(
+                            "Ne možete obrisati pravno lice koje poseduje račune.");
+
                     session.Delete(pravnoLice);
 
                     transaction.Commit();
@@ -302,7 +310,7 @@ namespace Banka
                     transaction.Rollback();
 
                     throw new InvalidOperationException(
-                        "Greška pri brisanju pravnog lica.", ex);
+                        "Greška pri brisanju pravnog lica: " + ex.Message, ex);
                 }
             }
         }
@@ -335,7 +343,7 @@ namespace Banka
 
         #region Racun
         // TODO: Proveriti metodu DodajRacun (dodaje tip racuna koji nije podrazumevani)
-        public static void DodajRacun(RacunBasic r)
+        public static void DodajRacun(RacunBasic r, string jmbg, string pib)
         {
             if (r == null)
                 throw new ArgumentNullException(nameof(r));
@@ -345,13 +353,20 @@ namespace Banka
             {
                 try
                 {
-                    FizickoLice fl = r.FizickoLice != null
-                ? session.Load<FizickoLice>(r.FizickoLice.Id)
-                : null;
+                    FizickoLice fl = new FizickoLice();
+                    PravnoLice pl = new PravnoLice();
 
-                    PravnoLice pl = r.PravnoLice != null
-                        ? session.Load<PravnoLice>(r.PravnoLice.Id)
-                        : null;
+                    fl = session.Query<FizickoLice>()
+                        .Where(x => x.Jmbg == jmbg)
+                        .FirstOrDefault();
+                    pl = session.Query<PravnoLice>()
+                        .Where(x => x.Pib == pib)
+                        .FirstOrDefault();
+
+                    if (fl == null && pl == null)
+                    {
+                        throw new InvalidOperationException("Nema pravnog ili fizickog lica");
+                    }
 
                     Racun racun = new Racun
                     {
@@ -363,7 +378,7 @@ namespace Banka
                         DozvoljeniMinus = r.DozvoljeniMinus,
                         Komentar = r.Komentar?.Trim(),
                         TipRacuna = string.IsNullOrWhiteSpace(r.TipRacuna)
-                            ? "Drugi"
+                            ? TipRacuna.Ostali.GetDescription()
                             : r.TipRacuna.Trim(),
                         KamatnaStopa = r.KamatnaStopa,
 
@@ -379,7 +394,7 @@ namespace Banka
                 catch(Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri dodavanju računa", ex);
+                    throw new InvalidOperationException("Greška pri dodavanju računa: " + ex.Message, ex);
                 }
             }
         }
@@ -465,6 +480,38 @@ namespace Banka
                         }
                         : null
                 };
+            }
+        }
+
+        public static void IzmeniRacun(RacunBasic r)
+        {
+            if (r == null)
+                throw new ArgumentNullException(nameof(r));
+
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
+            {
+                try
+                {
+                    var racun = session.Load<Racun>(r.Id);
+
+                    racun.BrojRacuna = r.BrojRacuna?.Trim();
+                    racun.Valuta = r.Valuta?.Trim();
+                    racun.TrenutnoStanje = r.TrenutnoStanje;
+                    racun.DatumOtvaranja = r.DatumOtvaranja;
+                    racun.Status = r.Status;
+                    racun.DozvoljeniMinus = r.DozvoljeniMinus;
+                    racun.Komentar = r.Komentar?.Trim();
+                    racun.KamatnaStopa = r.KamatnaStopa;
+
+                    session.Update(racun);
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri izmeni računa", ex);
+                }
             }
         }
 
@@ -600,7 +647,7 @@ namespace Banka
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri dodavanju fizičkog lica", ex);
+                    throw new InvalidOperationException("Greška pri dodavanju tekućeg računa: " + ex.Message, ex);
                 }
             }
         }
@@ -805,7 +852,7 @@ namespace Banka
                 {
                     transaction.Rollback();
                     throw new InvalidOperationException(
-                        "Greška pri dodavanju deviznog računa", ex);
+                        "Greška pri dodavanju deviznog računa: " + ex.Message, ex);
                 }
             }
         }
@@ -1051,7 +1098,7 @@ namespace Banka
                 {
                     transaction.Rollback();
                     throw new InvalidOperationException(
-                        "Greška pri dodavanju fizičkog lica", ex);
+                        "Greška pri dodavanju štednog računa: " + ex.Message, ex);
                 }
             }
         }
@@ -1280,7 +1327,7 @@ namespace Banka
                 {
                     transaction.Rollback();
                     throw new InvalidOperationException(
-                        "Greška pri dodavanju fizičkog lica", ex);
+                        "Greška pri dodavanju žiro računa: " + ex.Message, ex);
                 }
             }
         }
@@ -1850,6 +1897,14 @@ namespace Banka
                 try
                 {
                     Depozit d = session.Load<Depozit>(id);
+
+                    if (d == null)
+                        return;
+
+                    if (!d.Kamate.IsEmpty())
+                    {
+                        throw new InvalidOperationException("Depozit poseduje kamate.");
+                    }
                     session.Delete(d);
 
                     transaction.Commit();
@@ -1857,7 +1912,7 @@ namespace Banka
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri brisanju depozita", ex);
+                    throw new InvalidOperationException("Greška pri brisanju depozita: " + ex.Message, ex);
                 }
             }
         }
@@ -2088,6 +2143,15 @@ namespace Banka
                 try
                 {
                     Kredit k = session.Load<Kredit>(id);
+
+                    if (k == null)
+                        return;
+
+                    if (!k.Kamate.IsEmpty())
+                    {
+                        throw new InvalidOperationException("Kredit poseduje kamate.");
+                    }
+                    
                     session.Delete(k);
 
                     transaction.Commit();
@@ -2095,7 +2159,7 @@ namespace Banka
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri brisanju kredita", ex);
+                    throw new InvalidOperationException("Greška pri brisanju kredita: " + ex.Message, ex);
                 }
             }
         }
