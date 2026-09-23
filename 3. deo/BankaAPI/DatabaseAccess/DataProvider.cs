@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Banka;
+using Banka.Entiteti;
+using NHibernate;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +11,3472 @@ namespace DatabaseAccess
 {
     public static class DataProvider
     {
+        #region FizickaLica
 
+        public static Result<int, ErrorMessage> DodajFizickoLice(FizickoLiceBasic fl)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+            int id = default;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                var fizickoLice = new FizickoLice
+                {
+                    Ime = fl.Ime?.Trim(),
+                    Prezime = fl.Prezime?.Trim(),
+                    Jmbg = fl.Jmbg?.Trim(),
+                    BrojLicneKarte = fl.BrojLicneKarte?.Trim(),
+                    DatumRodjenja = fl.DatumRodjenja,
+                    Adresa = fl.Adresa?.Trim(),
+                    Grad = fl.Grad?.Trim(),
+                    Telefon = fl.Telefon?.Trim(),
+                    Email = fl.Email?.Trim(),
+                    Status = fl.Status,
+                    Komentar = fl.Komentar?.Trim()
+                };
+
+                s.Save(fizickoLice);
+                t.Commit();
+
+                fl.Id = fizickoLice.Id;
+                id = fizickoLice.Id;
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri dodavanju fizičkog lica.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return id;
+        }
+
+        public static Result<FizickoLiceBasic, ErrorMessage> VratiFizickoLice(int id)
+        {
+            ISession? s = null;
+            FizickoLiceBasic dto = default!;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                var fizickoLice = s.Get<FizickoLice>(id);
+
+                if (fizickoLice == null)
+                {
+                    return "Fizičko lice sa zadatim ID-jem ne postoji.".ToError(404);
+                }
+
+                dto = new FizickoLiceBasic
+                {
+                    Id = fizickoLice.Id,
+                    Ime = fizickoLice.Ime,
+                    Prezime = fizickoLice.Prezime,
+                    Jmbg = fizickoLice.Jmbg,
+                    BrojLicneKarte = fizickoLice.BrojLicneKarte,
+                    DatumRodjenja = fizickoLice.DatumRodjenja,
+                    Adresa = fizickoLice.Adresa,
+                    Grad = fizickoLice.Grad,
+                    Telefon = fizickoLice.Telefon,
+                    Email = fizickoLice.Email,
+                    Status = fizickoLice.Status,
+                    Komentar = fizickoLice.Komentar
+                };
+            }
+            catch (Exception)
+            {
+                return "Greška pri učitavanju fizičkog lica.".ToError(400);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return dto;
+        }
+
+        public static Result<FizickoLiceBasic, ErrorMessage> IzmeniFizickoLice(FizickoLiceBasic fl)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                var fizickoLice = s.Get<FizickoLice>(fl.Id);
+
+                if (fizickoLice == null)
+                {
+                    return "Fizičko lice sa zadatim ID-jem ne postoji.".ToError(404);
+                }
+
+                fizickoLice.Ime = fl.Ime?.Trim();
+                fizickoLice.Prezime = fl.Prezime?.Trim();
+                fizickoLice.Jmbg = fl.Jmbg?.Trim();
+                fizickoLice.BrojLicneKarte = fl.BrojLicneKarte?.Trim();
+                fizickoLice.DatumRodjenja = fl.DatumRodjenja;
+                fizickoLice.Adresa = fl.Adresa?.Trim();
+                fizickoLice.Grad = fl.Grad?.Trim();
+                fizickoLice.Telefon = fl.Telefon?.Trim();
+                fizickoLice.Email = fl.Email?.Trim();
+                fizickoLice.Status = fl.Status;
+                fizickoLice.Komentar = fl.Komentar?.Trim();
+
+                s.Update(fizickoLice);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri izmeni fizičkog lica.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return fl;
+        }
+
+        public static Result<bool, ErrorMessage> ObrisiFizickoLice(int id)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                var fizickoLice = s.Get<FizickoLice>(id);
+
+                if (fizickoLice == null)
+                {
+                    return "Fizičko lice sa zadatim ID-jem ne postoji.".ToError(404);
+                }
+
+                if (!fizickoLice.Racuni.IsEmpty())
+                {
+                    return "Ne možete obrisati fizičko lice koje poseduje račune.".ToError(409);
+                }
+
+                s.Delete(fizickoLice);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri brisanju fizičkog lica.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        public static Result<List<FizickoLiceBasic>, ErrorMessage> VratiFizickaLica(int brojPoStrani, int strana = 1)
+        {
+            ISession? s = null;
+            List<FizickoLiceBasic> lista = new();
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                List<FizickoLice> entiteti = s.Query<FizickoLice>()
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                lista = entiteti.Select(x => new FizickoLiceBasic
+                {
+                    Id = x.Id,
+                    Ime = x.Ime,
+                    Prezime = x.Prezime,
+                    Jmbg = x.Jmbg,
+                    BrojLicneKarte = x.BrojLicneKarte,
+                    DatumRodjenja = x.DatumRodjenja,
+                    Adresa = x.Adresa,
+                    Grad = x.Grad,
+                    Telefon = x.Telefon,
+                    Email = x.Email,
+                    Status = x.Status,
+                    Komentar = x.Komentar
+                }).ToList();
+            }
+            catch (Exception)
+            {
+                return "Greška pri učitavanju fizičkih lica.".ToError(400);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return lista;
+        }
+
+        #endregion
+
+        #region PravnaLica
+
+        public static Result<int, ErrorMessage> DodajPravnoLice(PravnoLiceBasic pl)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+            int id = default;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                var pravnoLice = new PravnoLice
+                {
+                    NazivFirme = pl.NazivFirme?.Trim(),
+                    Pib = pl.Pib?.Trim(),
+                    Adresa = pl.Adresa?.Trim(),
+                    Grad = pl.Grad?.Trim(),
+                    Telefon = pl.Telefon?.Trim(),
+                    Email = pl.Email?.Trim(),
+                    Status = pl.Status?.Trim(),
+                    Komentar = pl.Komentar?.Trim()
+                };
+
+                s.Save(pravnoLice);
+                t.Commit();
+
+                pl.Id = pravnoLice.Id;
+                id = pravnoLice.Id;
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri dodavanju pravnog lica.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return id;
+        }
+
+        public static Result<PravnoLiceBasic, ErrorMessage> VratiPravnoLice(int id)
+        {
+            ISession? s = null;
+            PravnoLiceBasic dto = default!;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                var pravnoLice = s.Load<PravnoLice>(id);
+
+                if (pravnoLice == null)
+                {
+                    return "Pravno lice sa zadatim ID-jem ne postoji.".ToError(404);
+                }
+
+                dto = new PravnoLiceBasic
+                {
+                    Id = pravnoLice.Id,
+                    NazivFirme = pravnoLice.NazivFirme,
+                    Pib = pravnoLice.Pib,
+                    Adresa = pravnoLice.Adresa,
+                    Grad = pravnoLice.Grad,
+                    Telefon = pravnoLice.Telefon,
+                    Email = pravnoLice.Email,
+                    Status = pravnoLice.Status,
+                    Komentar = pravnoLice.Komentar
+                };
+            }
+            catch (Exception)
+            {
+                return "Greška pri učitavanju pravnog lica.".ToError(400);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return dto;
+        }
+
+        public static Result<PravnoLiceBasic, ErrorMessage> IzmeniPravnoLice(PravnoLiceBasic pl)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                var pravnoLice = s.Load<PravnoLice>(pl.Id);
+
+                pravnoLice.NazivFirme = pl.NazivFirme;
+                pravnoLice.Pib = pl.Pib;
+                pravnoLice.Adresa = pl.Adresa;
+                pravnoLice.Grad = pl.Grad;
+                pravnoLice.Telefon = pl.Telefon;
+                pravnoLice.Email = pl.Email;
+                pravnoLice.Status = pl.Status;
+                pravnoLice.Komentar = pl.Komentar;
+
+                s.Update(pravnoLice);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri izmeni pravnog lica.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return pl;
+        }
+
+        public static Result<bool, ErrorMessage> ObrisiPravnoLice(int id)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                var pravnoLice = s.Get<PravnoLice>(id);
+
+                if (pravnoLice == null)
+                {
+                    return "Pravno lice sa zadatim ID-jem ne postoji.".ToError(404);
+                }
+
+                if (!pravnoLice.Racuni.IsEmpty())
+                {
+                    return "Ne možete obrisati pravno lice koje poseduje račune.".ToError(409);
+                }
+
+                s.Delete(pravnoLice);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri brisanju pravnog lica.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        public static Result<List<PravnoLiceBasic>, ErrorMessage> VratiPravnaLica(int brojPoStrani, int strana = 1)
+        {
+            ISession? s = null;
+            List<PravnoLiceBasic> lista = new();
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                List<PravnoLice> entiteti = s.Query<PravnoLice>()
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                lista = entiteti.Select(x => new PravnoLiceBasic
+                {
+                    Id = x.Id,
+                    NazivFirme = x.NazivFirme,
+                    Pib = x.Pib,
+                    Adresa = x.Adresa,
+                    Grad = x.Grad,
+                    Telefon = x.Telefon,
+                    Email = x.Email,
+                    Status = x.Status,
+                    Komentar = x.Komentar
+                }).ToList();
+            }
+            catch (Exception)
+            {
+                return "Greška pri učitavanju pravnih lica.".ToError(400);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return lista;
+        }
+
+        #endregion
+
+        #region Racun
+        // TODO: Proveriti metodu DodajRacun (dodaje tip racuna koji nije podrazumevani)
+        public static Result<int, ErrorMessage> DodajRacun(RacunBasic r, string jmbg, string pib)
+        {
+            if (r == null)
+            {
+                return "Račun ne sme biti null.".ToError(400);
+            }
+
+            ISession? s = null;
+            ITransaction? t = null;
+            int id = default;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                FizickoLice fl = s.Query<FizickoLice>()
+                    .Where(x => x.Jmbg == jmbg)
+                    .FirstOrDefault();
+                PravnoLice pl = s.Query<PravnoLice>()
+                    .Where(x => x.Pib == pib)
+                    .FirstOrDefault();
+
+                if (fl == null && pl == null)
+                {
+                    return "Nema pravnog ili fizičkog lica.".ToError(404);
+                }
+
+                Racun racun = new Racun
+                {
+                    BrojRacuna = r.BrojRacuna?.Trim(),
+                    Valuta = r.Valuta?.Trim(),
+                    TrenutnoStanje = r.TrenutnoStanje,
+                    DatumOtvaranja = r.DatumOtvaranja,
+                    Status = r.Status,
+                    DozvoljeniMinus = r.DozvoljeniMinus,
+                    Komentar = r.Komentar?.Trim(),
+                    TipRacuna = string.IsNullOrWhiteSpace(r.TipRacuna)
+                        ? TipRacuna.Ostali.GetDescription()
+                        : r.TipRacuna.Trim(),
+                    KamatnaStopa = r.KamatnaStopa,
+
+                    PripadaFizickomLicu = fl,
+                    PripadaPravnomLicu = pl
+                };
+
+                s.Save(racun);
+                t.Commit();
+
+                r.Id = racun.Id;
+                id = racun.Id;
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri dodavanju računa.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return id;
+        }
+
+        public static Result<RacunBasic, ErrorMessage> VratiRacun(int id)
+        {
+            ISession? s = null;
+            RacunBasic dto = default!;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                Racun r = s.Load<Racun>(id);
+
+                dto = new RacunBasic
+                {
+                    Id = r.Id,
+                    BrojRacuna = r.BrojRacuna,
+                    Valuta = r.Valuta,
+                    TrenutnoStanje = r.TrenutnoStanje,
+                    DatumOtvaranja = r.DatumOtvaranja,
+                    Status = r.Status,
+                    DozvoljeniMinus = r.DozvoljeniMinus,
+                    Komentar = r.Komentar,
+                    TipRacuna = r.TipRacuna,
+                    KamatnaStopa = r.KamatnaStopa,
+
+                    FizickoLice = r.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic
+                        {
+                            Id = r.PripadaFizickomLicu.Id,
+                            Ime = r.PripadaFizickomLicu.Ime,
+                            Prezime = r.PripadaFizickomLicu.Prezime,
+                            Jmbg = r.PripadaFizickomLicu.Jmbg
+                        }
+                        : null,
+
+                    PravnoLice = r.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic
+                        {
+                            Id = r.PripadaPravnomLicu.Id,
+                            NazivFirme = r.PripadaPravnomLicu.NazivFirme,
+                            Pib = r.PripadaPravnomLicu.Pib
+                        }
+                        : null
+                };
+            }
+            catch (Exception)
+            {
+                return "Nemoguće pronaći račun sa zadatim ID-jem.".ToError(404);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return dto;
+        }
+
+        public static Result<RacunBasic, ErrorMessage> VratiRacun(string brojRacuna)
+        {
+            ISession? s = null;
+            RacunBasic dto = default!;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                Racun r = s.Query<Racun>()
+                    .Where(x => x.BrojRacuna == brojRacuna)
+                    .FirstOrDefault();
+
+                if (r == null)
+                {
+                    return "Nemoguće pronaći račun sa zadatim brojem računa.".ToError(404);
+                }
+
+                dto = new RacunBasic
+                {
+                    Id = r.Id,
+                    BrojRacuna = r.BrojRacuna,
+                    Valuta = r.Valuta,
+                    TrenutnoStanje = r.TrenutnoStanje,
+                    DatumOtvaranja = r.DatumOtvaranja,
+                    Status = r.Status,
+                    DozvoljeniMinus = r.DozvoljeniMinus,
+                    Komentar = r.Komentar,
+                    TipRacuna = r.TipRacuna,
+                    KamatnaStopa = r.KamatnaStopa,
+
+                    FizickoLice = r.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic
+                        {
+                            Id = r.PripadaFizickomLicu.Id,
+                            Ime = r.PripadaFizickomLicu.Ime,
+                            Prezime = r.PripadaFizickomLicu.Prezime,
+                            Jmbg = r.PripadaFizickomLicu.Jmbg
+                        }
+                        : null,
+
+                    PravnoLice = r.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic
+                        {
+                            Id = r.PripadaPravnomLicu.Id,
+                            NazivFirme = r.PripadaPravnomLicu.NazivFirme,
+                            Pib = r.PripadaPravnomLicu.Pib
+                        }
+                        : null
+                };
+            }
+            catch (Exception)
+            {
+                return "Greška pri učitavanju računa.".ToError(400);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return dto;
+        }
+
+        public static Result<bool, ErrorMessage> IzmeniRacun(RacunBasic r)
+        {
+            if (r == null)
+            {
+                return "Račun ne sme biti null.".ToError(400);
+            }
+
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                var racun = s.Load<Racun>(r.Id);
+
+                racun.BrojRacuna = r.BrojRacuna?.Trim();
+                racun.Valuta = r.Valuta?.Trim();
+                racun.TrenutnoStanje = r.TrenutnoStanje;
+                racun.DatumOtvaranja = r.DatumOtvaranja;
+                racun.Status = r.Status;
+                racun.DozvoljeniMinus = r.DozvoljeniMinus;
+                racun.Komentar = r.Komentar?.Trim();
+                racun.KamatnaStopa = r.KamatnaStopa;
+
+                s.Update(racun);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri izmeni računa.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        public static Result<bool, ErrorMessage> ObrisiRacun(int id)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                Racun r = s.Load<Racun>(id);
+
+                if (!r.Transakcije.IsEmpty() ||
+                    !r.Depoziti.IsEmpty() ||
+                    !r.Krediti.IsEmpty() ||
+                    !r.Kamate.IsEmpty() ||
+                    !r.SigurnosneKontrole.IsEmpty())
+                {
+                    return "Račun ima poslovne zapise i ne može biti obrisan.".ToError(409);
+                }
+
+                s.Delete(r);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri brisanju računa.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        public static Result<List<RacunBasic>, ErrorMessage> VratiRacune(int brojPoStrani, int strana = 1)
+        {
+            ISession? s = null;
+            List<RacunBasic> lista = new();
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                List<Racun> entiteti = s.Query<Racun>()
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                lista = entiteti.Select(x => new RacunBasic
+                {
+                    Id = x.Id,
+                    BrojRacuna = x.BrojRacuna,
+                    Valuta = x.Valuta,
+                    TrenutnoStanje = x.TrenutnoStanje,
+                    DatumOtvaranja = x.DatumOtvaranja,
+                    Status = x.Status,
+                    DozvoljeniMinus = x.DozvoljeniMinus,
+                    Komentar = x.Komentar,
+                    KamatnaStopa = x.KamatnaStopa,
+                    TipRacuna = x.TipRacuna,
+                    FizickoLice = x.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic
+                        {
+                            Id = x.PripadaFizickomLicu.Id,
+                            Ime = x.PripadaFizickomLicu.Ime,
+                            Prezime = x.PripadaFizickomLicu.Prezime
+                        }
+                        : null,
+
+                    PravnoLice = x.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic
+                        {
+                            Id = x.PripadaPravnomLicu.Id,
+                            NazivFirme = x.PripadaPravnomLicu.NazivFirme
+                        }
+                        : null
+                }).ToList();
+            }
+            catch (Exception)
+            {
+                return "Greška pri učitavanju računa.".ToError(400);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return lista;
+        }
+
+        #region Tekuci
+
+        public static Result<int, ErrorMessage> DodajTekuci(TekuciBasic tb, string jmbg, string pib)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+            int id = default;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                FizickoLice fl = s.Query<FizickoLice>()
+                    .Where(x => x.Jmbg == jmbg)
+                    .FirstOrDefault();
+                PravnoLice pl = s.Query<PravnoLice>()
+                    .Where(x => x.Pib == pib)
+                    .FirstOrDefault();
+
+                if (fl == null && pl == null)
+                {
+                    return "Nema pravnog ili fizičkog lica.".ToError(404);
+                }
+
+                Tekuci tk = new Tekuci
+                {
+                    BrojRacuna = tb.BrojRacuna?.Trim(),
+                    Valuta = tb.Valuta?.Trim(),
+                    TrenutnoStanje = tb.TrenutnoStanje,
+                    DatumOtvaranja = tb.DatumOtvaranja,
+                    Status = tb.Status?.Trim(),
+                    DozvoljeniMinus = tb.DozvoljeniMinus,
+                    Komentar = tb.Komentar?.Trim(),
+                    TipRacuna = tb.TipRacuna?.Trim(),
+                    KamatnaStopa = tb.KamatnaStopa,
+
+                    PlatnaKartica = tb.PlatnaKartica,
+                    MesecniLimit = tb.MesecniLimit ?? 0,
+
+                    PripadaFizickomLicu = fl,
+                    PripadaPravnomLicu = pl
+                };
+
+                foreach (TekuciPaketBasic paket in tb.TekuciPaketi)
+                {
+                    TekuciPaket tp = new TekuciPaket
+                    {
+                        Paket = paket.Paket,
+                        PripadaTekucem = tk
+                    };
+                    tk.Paketi.Add(tp);
+                }
+
+                s.Save(tk);
+                t.Commit();
+
+                tb.Id = tk.Id;
+                id = tk.Id;
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri dodavanju tekućeg računa.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return id;
+        }
+
+        public static Result<TekuciBasic, ErrorMessage> VratiTekuci(int id)
+        {
+            ISession? s = null;
+            TekuciBasic dto = default!;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                var tekuci = s.Load<Tekuci>(id);
+
+                dto = new TekuciBasic
+                {
+                    Id = tekuci.Id,
+                    BrojRacuna = tekuci.BrojRacuna,
+                    Valuta = tekuci.Valuta,
+                    TrenutnoStanje = tekuci.TrenutnoStanje,
+                    DatumOtvaranja = tekuci.DatumOtvaranja,
+                    Status = tekuci.Status,
+                    DozvoljeniMinus = tekuci.DozvoljeniMinus,
+                    Komentar = tekuci.Komentar,
+                    TipRacuna = tekuci.TipRacuna,
+                    KamatnaStopa = tekuci.KamatnaStopa,
+
+                    PlatnaKartica = tekuci.PlatnaKartica,
+                    MesecniLimit = tekuci.MesecniLimit,
+
+                    FizickoLice = tekuci.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic { Id = tekuci.PripadaFizickomLicu.Id, Ime = tekuci.PripadaFizickomLicu.Ime, Prezime = tekuci.PripadaFizickomLicu.Prezime }
+                        : null,
+                    PravnoLice = tekuci.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic { Id = tekuci.PripadaPravnomLicu.Id, NazivFirme = tekuci.PripadaPravnomLicu.NazivFirme }
+                        : null
+                };
+
+                dto.TekuciPaketi = tekuci.Paketi.Select(p => new TekuciPaketBasic
+                {
+                    Id = p.Id,
+                    Paket = p.Paket
+                }).ToList();
+            }
+            catch (Exception)
+            {
+                return "Nemoguće pronaći tekući račun sa zadatim ID-jem.".ToError(404);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return dto;
+        }
+
+        // TODO: Testirati metodu IzmeniTekuci
+        public static Result<bool, ErrorMessage> IzmeniTekuci(TekuciBasic tb)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                var tekuci = s.Load<Tekuci>(tb.Id);
+
+                tekuci.BrojRacuna = tb.BrojRacuna?.Trim();
+                tekuci.Valuta = tb.Valuta?.Trim();
+                tekuci.TrenutnoStanje = tb.TrenutnoStanje;
+                tekuci.Status = tb.Status?.Trim();
+                tekuci.DozvoljeniMinus = tb.DozvoljeniMinus;
+                tekuci.Komentar = tb.Komentar?.Trim();
+                tekuci.KamatnaStopa = tb.KamatnaStopa;
+
+                tekuci.PlatnaKartica = tb.PlatnaKartica;
+                tekuci.MesecniLimit = tb.MesecniLimit ?? 0;
+
+                SinhronizujPakete(tekuci, tb.TekuciPaketi);
+
+                s.Update(tekuci);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri izmeni tekućeg računa.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        private static void SinhronizujPakete(Tekuci tekuci, IList<TekuciPaketBasic> noviPaketi)
+        {
+            // Zaštita od null liste
+            if (noviPaketi == null)
+            {
+                noviPaketi = new List<TekuciPaketBasic>();
+            }
+
+            // 1. Postojeći paketi iz baze, indeksirani po Id-u
+            var postojeciPoId = tekuci.Paketi
+                .ToDictionary(p => p.Id);
+
+            // 2. Id-evi koji treba da ostanu (iz DTO-a, samo oni sa Id != 0)
+            var noviIdjevi = new HashSet<int>(
+                noviPaketi.Where(p => p.Id != 0).Select(p => p.Id));
+
+            // 3. Obriši orphan-ove (postojeći u bazi, ali ih nema u DTO listi)
+            //    Pošto je Cascade.AllDeleteOrphan, dovoljno ih je ukloniti iz kolekcije.
+            var zaBrisanje = tekuci.Paketi
+                .Where(p => !noviIdjevi.Contains(p.Id))
+                .ToList();
+
+            foreach (var paket in zaBrisanje)
+            {
+                tekuci.Paketi.Remove(paket);
+            }
+
+            // 4. Ažuriraj postojeće i dodaj nove
+            foreach (var dto in noviPaketi)
+            {
+                if (dto.Id != 0 && postojeciPoId.TryGetValue(dto.Id, out var postojeci))
+                {
+                    // Postojeći — ažuriraj vrednost ako se promenila
+                    if (postojeci.Paket != dto.Paket)
+                    {
+                        postojeci.Paket = dto.Paket;
+                    }
+                }
+                else
+                {
+                    // Novi — dodaj u kolekciju, NHibernate će ga upisati na Commit
+                    tekuci.Paketi.Add(new TekuciPaket
+                    {
+                        Paket = dto.Paket,
+                        PripadaTekucem = tekuci
+                    });
+                }
+            }
+        }
+
+        #endregion
+
+        #region Devizni
+
+        public static Result<int, ErrorMessage> DodajDevizni(DevizniBasic db, string jmbg, string pib)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+            int id = default;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                FizickoLice fl = s.Query<FizickoLice>()
+                    .Where(x => x.Jmbg == jmbg)
+                    .FirstOrDefault();
+                PravnoLice pl = s.Query<PravnoLice>()
+                    .Where(x => x.Pib == pib)
+                    .FirstOrDefault();
+
+                if (fl == null && pl == null)
+                {
+                    return "Nema pravnog ili fizičkog lica.".ToError(404);
+                }
+
+                Devizni d = new Devizni
+                {
+                    BrojRacuna = db.BrojRacuna?.Trim(),
+                    Valuta = db.Valuta?.Trim(),
+                    TrenutnoStanje = db.TrenutnoStanje,
+                    DatumOtvaranja = db.DatumOtvaranja,
+                    Status = db.Status?.Trim(),
+                    DozvoljeniMinus = db.DozvoljeniMinus,
+                    Komentar = db.Komentar?.Trim(),
+                    TipRacuna = db.TipRacuna?.Trim(),
+                    KamatnaStopa = db.KamatnaStopa,
+
+                    Namena = db.Namena?.Trim(),
+                    KursnaRazlika = db.KursnaRazlika ?? 0,
+
+                    PripadaFizickomLicu = fl,
+                    PripadaPravnomLicu = pl
+                };
+
+                foreach (DevizniOgranicenjeBasic ogranicenje in db.DevizniOgranicenja)
+                {
+                    DevizniOgranicenje o = new DevizniOgranicenje
+                    {
+                        Ogranicenje = ogranicenje.Ogranicenje,
+                        PripadaDeviznom = d
+                    };
+                    d.Ogranicanja.Add(o);
+                }
+
+                foreach (DevizniValutaBasic valuta in db.DevizniValute)
+                {
+                    Entiteti.DevizniValuta v = new Entiteti.DevizniValuta
+                    {
+                        DozvoljenaValuta = valuta.DozvoljenaValuta,
+                        PripadaDeviznom = d
+                    };
+                    d.Valute.Add(v);
+                }
+
+                s.Save(d);
+                t.Commit();
+
+                db.Id = d.Id;
+                id = d.Id;
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri dodavanju deviznog računa.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return id;
+        }
+
+        public static Result<DevizniBasic, ErrorMessage> VratiDevizni(int id)
+        {
+            ISession? s = null;
+            DevizniBasic dto = default!;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                Devizni d = s.Load<Devizni>(id);
+
+                dto = new DevizniBasic
+                {
+                    Id = d.Id,
+                    BrojRacuna = d.BrojRacuna,
+                    Valuta = d.Valuta,
+                    TrenutnoStanje = d.TrenutnoStanje,
+                    DatumOtvaranja = d.DatumOtvaranja,
+                    Status = d.Status,
+                    DozvoljeniMinus = d.DozvoljeniMinus,
+                    Komentar = d.Komentar,
+                    TipRacuna = d.TipRacuna,
+                    KamatnaStopa = d.KamatnaStopa,
+
+                    Namena = d.Namena,
+                    KursnaRazlika = d.KursnaRazlika,
+
+                    FizickoLice = d.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic { Id = d.PripadaFizickomLicu.Id, Ime = d.PripadaFizickomLicu.Ime, Prezime = d.PripadaFizickomLicu.Prezime }
+                        : null,
+                    PravnoLice = d.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic { Id = d.PripadaPravnomLicu.Id, NazivFirme = d.PripadaPravnomLicu.NazivFirme }
+                        : null
+                };
+
+                dto.DevizniOgranicenja = d.Ogranicanja.Select(o => new DevizniOgranicenjeBasic
+                {
+                    Id = o.Id,
+                    Ogranicenje = o.Ogranicenje
+                }).ToList();
+
+                dto.DevizniValute = d.Valute.Select(v => new DevizniValutaBasic
+                {
+                    Id = v.Id,
+                    DozvoljenaValuta = v.DozvoljenaValuta
+                }).ToList();
+            }
+            catch (Exception)
+            {
+                return "Nemoguće pronaći devizni račun sa zadatim ID-jem.".ToError(404);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return dto;
+        }
+
+        // TODO: Testirati metodu IzmeniDevizni
+        public static Result<bool, ErrorMessage> IzmeniDevizni(DevizniBasic db)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                Devizni d = s.Load<Devizni>(db.Id);
+
+                d.BrojRacuna = db.BrojRacuna?.Trim();
+                d.Valuta = db.Valuta?.Trim();
+                d.TrenutnoStanje = db.TrenutnoStanje;
+                d.Status = db.Status?.Trim();
+                d.DozvoljeniMinus = db.DozvoljeniMinus;
+                d.Komentar = db.Komentar?.Trim();
+                d.KamatnaStopa = db.KamatnaStopa;
+
+                d.Namena = db.Namena?.Trim();
+                d.KursnaRazlika = db.KursnaRazlika ?? 0;
+
+                SinhronizujOgranicenja(d, db.DevizniOgranicenja);
+                SinhronizujValute(d, db.DevizniValute);
+
+                s.Update(d);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri izmeni deviznog računa.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        private static void SinhronizujOgranicenja(Devizni devizni, IList<DevizniOgranicenjeBasic> novi)
+        {
+            if (novi == null)
+            {
+                novi = new List<DevizniOgranicenjeBasic>();
+            }
+
+            // 1. Postojeći iz baze, indeksirani po Id-u
+            var postojeciPoId = devizni.Ogranicanja.ToDictionary(o => o.Id);
+
+            // 2. Id-evi koji treba da ostanu
+            var noviIdjevi = new HashSet<int>(
+                novi.Where(o => o.Id != 0).Select(o => o.Id));
+
+            // 3. Ukloni orphan-ove (cascade će ih obrisati iz DEVIZNI_OGRANICENJE)
+            var zaBrisanje = devizni.Ogranicanja
+                .Where(o => !noviIdjevi.Contains(o.Id))
+                .ToList();
+
+            foreach (var o in zaBrisanje)
+            {
+                devizni.Ogranicanja.Remove(o);
+            }
+
+            // 4. Ažuriraj postojeće i dodaj nove
+            foreach (var dto in novi)
+            {
+                if (dto.Id != 0 && postojeciPoId.TryGetValue(dto.Id, out var postojeci))
+                {
+                    if (postojeci.Ogranicenje != dto.Ogranicenje)
+                    {
+                        postojeci.Ogranicenje = dto.Ogranicenje;
+                    }
+                }
+                else
+                {
+                    devizni.Ogranicanja.Add(new DevizniOgranicenje
+                    {
+                        Ogranicenje = dto.Ogranicenje,
+                        PripadaDeviznom = devizni
+                    });
+                }
+            }
+        }
+
+        private static void SinhronizujValute(Devizni devizni, IList<DevizniValutaBasic> novi)
+        {
+            if (novi == null)
+            {
+                novi = new List<DevizniValutaBasic>();
+            }
+
+            var postojeciPoId = devizni.Valute.ToDictionary(v => v.Id);
+
+            var noviIdjevi = new HashSet<int>(
+                novi.Where(v => v.Id != 0).Select(v => v.Id));
+
+            var zaBrisanje = devizni.Valute
+                .Where(v => !noviIdjevi.Contains(v.Id))
+                .ToList();
+
+            foreach (var v in zaBrisanje)
+            {
+                devizni.Valute.Remove(v);
+            }
+
+            foreach (var dto in novi)
+            {
+                if (dto.Id != 0 && postojeciPoId.TryGetValue(dto.Id, out var postojeci))
+                {
+                    if (postojeci.DozvoljenaValuta != dto.DozvoljenaValuta)
+                    {
+                        postojeci.DozvoljenaValuta = dto.DozvoljenaValuta;
+                    }
+                }
+                else
+                {
+                    devizni.Valute.Add(new Entiteti.DevizniValuta
+                    {
+                        DozvoljenaValuta = dto.DozvoljenaValuta,
+                        PripadaDeviznom = devizni
+                    });
+                }
+            }
+        }
+
+        #endregion
+
+        #region Stedni
+
+        public static Result<int, ErrorMessage> DodajStedni(StedniBasic sb, string jmbg, string pib)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+            int id = default;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                FizickoLice fl = s.Query<FizickoLice>()
+                    .Where(x => x.Jmbg == jmbg)
+                    .FirstOrDefault();
+                PravnoLice pl = s.Query<PravnoLice>()
+                    .Where(x => x.Pib == pib)
+                    .FirstOrDefault();
+
+                if (fl == null && pl == null)
+                {
+                    return "Nema pravnog ili fizičkog lica.".ToError(404);
+                }
+
+                Stedni st = new Stedni
+                {
+                    BrojRacuna = sb.BrojRacuna?.Trim(),
+                    Valuta = sb.Valuta?.Trim(),
+                    TrenutnoStanje = sb.TrenutnoStanje,
+                    DatumOtvaranja = sb.DatumOtvaranja,
+                    Status = sb.Status?.Trim(),
+                    DozvoljeniMinus = sb.DozvoljeniMinus,
+                    Komentar = sb.Komentar?.Trim(),
+                    TipRacuna = sb.TipRacuna?.Trim(),
+                    KamatnaStopa = sb.KamatnaStopa,
+
+                    MinimalniIznosOtvaranja = sb.MinimalniIznosOtvaranja ?? 0,
+                    FrekvKapitKamate = sb.FrekvKapitalizKamate,
+
+                    PripadaFizickomLicu = fl,
+                    PripadaPravnomLicu = pl
+                };
+
+                foreach (StedniBonusBasic bonus in sb.StedniBonusi)
+                {
+                    StedniBonus sbonus = new StedniBonus
+                    {
+                        Bonus = bonus.Bonus,
+                        PripadaStednom = st
+                    };
+                    st.Bonusi.Add(sbonus);
+                }
+
+                foreach (StedniUsloviPodizanjaBasic su in sb.StedniUsloviPodizanja)
+                {
+                    StedniUslovPodizanja uslov = new StedniUslovPodizanja
+                    {
+                        UslovPodizanja = su.UslovPodizanja,
+                        PripadaStednom = st
+                    };
+                    st.UsloviPodizanja.Add(uslov);
+                }
+
+                s.Save(st);
+                t.Commit();
+
+                sb.Id = st.Id;
+                id = st.Id;
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri dodavanju štednog računa.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return id;
+        }
+
+        public static Result<StedniBasic, ErrorMessage> VratiStedni(int id)
+        {
+            ISession? s = null;
+            StedniBasic dto = default!;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                Stedni st = s.Load<Stedni>(id);
+
+                dto = new StedniBasic
+                {
+                    Id = st.Id,
+                    BrojRacuna = st.BrojRacuna,
+                    Valuta = st.Valuta,
+                    TrenutnoStanje = st.TrenutnoStanje,
+                    DatumOtvaranja = st.DatumOtvaranja,
+                    Status = st.Status,
+                    DozvoljeniMinus = st.DozvoljeniMinus,
+                    Komentar = st.Komentar,
+                    TipRacuna = st.TipRacuna,
+                    KamatnaStopa = st.KamatnaStopa,
+
+                    MinimalniIznosOtvaranja = st.MinimalniIznosOtvaranja,
+                    FrekvKapitalizKamate = st.FrekvKapitKamate,
+
+                    FizickoLice = st.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic { Id = st.PripadaFizickomLicu.Id, Ime = st.PripadaFizickomLicu.Ime, Prezime = st.PripadaFizickomLicu.Prezime }
+                        : null,
+                    PravnoLice = st.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic { Id = st.PripadaPravnomLicu.Id, NazivFirme = st.PripadaPravnomLicu.NazivFirme }
+                        : null
+                };
+
+                dto.StedniBonusi = st.Bonusi.Select(b => new StedniBonusBasic
+                {
+                    Id = b.Id,
+                    Bonus = b.Bonus
+                }).ToList();
+
+                dto.StedniUsloviPodizanja = st.UsloviPodizanja.Select(u => new StedniUsloviPodizanjaBasic
+                {
+                    Id = u.Id,
+                    UslovPodizanja = u.UslovPodizanja
+                }).ToList();
+            }
+            catch (Exception)
+            {
+                return "Nemoguće pronaći štedni račun sa zadatim ID-jem.".ToError(404);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return dto;
+        }
+
+        // TODO: Testirati metodu IzmeniStedni
+        public static Result<bool, ErrorMessage> IzmeniStedni(StedniBasic sb)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                Stedni st = s.Load<Stedni>(sb.Id);
+
+                st.BrojRacuna = sb.BrojRacuna?.Trim();
+                st.Valuta = sb.Valuta?.Trim();
+                st.TrenutnoStanje = sb.TrenutnoStanje;
+                st.Status = sb.Status?.Trim();
+                st.DozvoljeniMinus = sb.DozvoljeniMinus;
+                st.Komentar = sb.Komentar?.Trim();
+                st.KamatnaStopa = sb.KamatnaStopa;
+
+                st.MinimalniIznosOtvaranja = sb.MinimalniIznosOtvaranja ?? 0;
+                st.FrekvKapitKamate = sb.FrekvKapitalizKamate;
+
+                SinhronizujBonuse(st, sb.StedniBonusi);
+                SinhronizujUslovePodizanja(st, sb.StedniUsloviPodizanja);
+
+                s.Update(st);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri izmeni štednog računa.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        private static void SinhronizujBonuse(Stedni stedni, IList<StedniBonusBasic> novi)
+        {
+            if (novi == null)
+            {
+                novi = new List<StedniBonusBasic>();
+            }
+
+            // 1. Postojeći iz baze, indeksirani po Id-u
+            var postojeciPoId = stedni.Bonusi.ToDictionary(b => b.Id);
+
+            // 2. Id-evi koji treba da ostanu (samo oni sa Id != 0)
+            var noviIdjevi = new HashSet<int>(
+                novi.Where(b => b.Id != 0).Select(b => b.Id));
+
+            // 3. Ukloni orphan-ove (cascade → DELETE iz STEDNI_BONUS)
+            var zaBrisanje = stedni.Bonusi
+                .Where(b => !noviIdjevi.Contains(b.Id))
+                .ToList();
+
+            foreach (var b in zaBrisanje)
+            {
+                stedni.Bonusi.Remove(b);
+            }
+
+            // 4. Ažuriraj postojeće i dodaj nove
+            foreach (var dto in novi)
+            {
+                if (dto.Id != 0 && postojeciPoId.TryGetValue(dto.Id, out var postojeci))
+                {
+                    if (postojeci.Bonus != dto.Bonus)
+                    {
+                        postojeci.Bonus = dto.Bonus;
+                    }
+                }
+                else
+                {
+                    stedni.Bonusi.Add(new StedniBonus
+                    {
+                        Bonus = dto.Bonus,
+                        PripadaStednom = stedni
+                    });
+                }
+            }
+        }
+
+        private static void SinhronizujUslovePodizanja(Stedni stedni, IList<StedniUsloviPodizanjaBasic> novi)
+        {
+            if (novi == null)
+            {
+                novi = new List<StedniUsloviPodizanjaBasic>();
+            }
+
+            var postojeciPoId = stedni.UsloviPodizanja.ToDictionary(u => u.Id);
+
+            var noviIdjevi = new HashSet<int>(
+                novi.Where(u => u.Id != 0).Select(u => u.Id));
+
+            var zaBrisanje = stedni.UsloviPodizanja
+                .Where(u => !noviIdjevi.Contains(u.Id))
+                .ToList();
+
+            foreach (var u in zaBrisanje)
+            {
+                stedni.UsloviPodizanja.Remove(u);
+            }
+
+            foreach (var dto in novi)
+            {
+                if (dto.Id != 0 && postojeciPoId.TryGetValue(dto.Id, out var postojeci))
+                {
+                    if (postojeci.UslovPodizanja != dto.UslovPodizanja)
+                    {
+                        postojeci.UslovPodizanja = dto.UslovPodizanja;
+                    }
+                }
+                else
+                {
+                    stedni.UsloviPodizanja.Add(new StedniUslovPodizanja
+                    {
+                        UslovPodizanja = dto.UslovPodizanja,
+                        PripadaStednom = stedni
+                    });
+                }
+            }
+        }
+
+        #endregion
+
+        #region Ziro
+
+        public static Result<int, ErrorMessage> DodajZiro(ZiroBasic zb, string jmbg, string pib)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+            int id = default;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                FizickoLice fl = s.Query<FizickoLice>()
+                    .Where(x => x.Jmbg == jmbg)
+                    .FirstOrDefault();
+                PravnoLice pl = s.Query<PravnoLice>()
+                    .Where(x => x.Pib == pib)
+                    .FirstOrDefault();
+
+                if (fl == null && pl == null)
+                {
+                    return "Nema pravnog ili fizičkog lica.".ToError(404);
+                }
+
+                Ziro z = new Ziro
+                {
+                    BrojRacuna = zb.BrojRacuna?.Trim(),
+                    Valuta = zb.Valuta?.Trim(),
+                    TrenutnoStanje = zb.TrenutnoStanje,
+                    DatumOtvaranja = zb.DatumOtvaranja,
+                    Status = zb.Status?.Trim(),
+                    DozvoljeniMinus = zb.DozvoljeniMinus,
+                    Komentar = zb.Komentar?.Trim(),
+                    TipRacuna = zb.TipRacuna?.Trim(),
+                    KamatnaStopa = zb.KamatnaStopa,
+
+                    Namena = zb.Namena?.Trim(),
+                    ElektronskoBankarstvo = zb.ElektronskoBankarstvo,
+                    LimitZaMasovnaPlacanja = zb.LimitZaMasovnaPlacanja ?? 0,
+                    IntegracijaSaSistemima = zb.IntegracijaSaSistemima,
+
+                    PripadaFizickomLicu = fl,
+                    PripadaPravnomLicu = pl
+                };
+
+                s.Save(z);
+                t.Commit();
+
+                zb.Id = z.Id;
+                id = z.Id;
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri dodavanju žiro računa.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return id;
+        }
+
+        public static Result<ZiroBasic, ErrorMessage> VratiZiro(int id)
+        {
+            ISession? s = null;
+            ZiroBasic dto = default!;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                Ziro z = s.Load<Ziro>(id);
+
+                dto = new ZiroBasic
+                {
+                    Id = z.Id,
+                    BrojRacuna = z.BrojRacuna,
+                    Valuta = z.Valuta,
+                    TrenutnoStanje = z.TrenutnoStanje,
+                    DatumOtvaranja = z.DatumOtvaranja,
+                    Status = z.Status,
+                    DozvoljeniMinus = z.DozvoljeniMinus,
+                    Komentar = z.Komentar,
+                    TipRacuna = z.TipRacuna,
+                    KamatnaStopa = z.KamatnaStopa,
+
+                    Namena = z.Namena,
+                    ElektronskoBankarstvo = z.ElektronskoBankarstvo,
+                    LimitZaMasovnaPlacanja = z.LimitZaMasovnaPlacanja,
+                    IntegracijaSaSistemima = z.IntegracijaSaSistemima,
+
+                    FizickoLice = z.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic { Id = z.PripadaFizickomLicu.Id, Ime = z.PripadaFizickomLicu.Ime, Prezime = z.PripadaFizickomLicu.Prezime }
+                        : null,
+                    PravnoLice = z.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic { Id = z.PripadaPravnomLicu.Id, NazivFirme = z.PripadaPravnomLicu.NazivFirme }
+                        : null
+                };
+            }
+            catch (Exception)
+            {
+                return "Nemoguće pronaći žiro račun sa zadatim ID-jem.".ToError(404);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return dto;
+        }
+
+        public static Result<bool, ErrorMessage> IzmeniZiro(ZiroBasic zb)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                Ziro z = s.Load<Ziro>(zb.Id);
+
+                z.BrojRacuna = zb.BrojRacuna?.Trim();
+                z.Valuta = zb.Valuta?.Trim();
+                z.TrenutnoStanje = zb.TrenutnoStanje;
+                z.Status = zb.Status?.Trim();
+                z.DozvoljeniMinus = zb.DozvoljeniMinus;
+                z.Komentar = zb.Komentar?.Trim();
+                z.KamatnaStopa = zb.KamatnaStopa;
+
+                z.Namena = zb.Namena?.Trim();
+                z.ElektronskoBankarstvo = zb.ElektronskoBankarstvo;
+                z.LimitZaMasovnaPlacanja = zb.LimitZaMasovnaPlacanja ?? 0;
+                z.IntegracijaSaSistemima = zb.IntegracijaSaSistemima;
+
+                s.Update(z);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri izmeni žiro računa.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Transakcija
+
+        public static Result<int, ErrorMessage> DodajTransakciju(TransakcijaBasic tb, int racunId)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+            int id = default;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                Racun r = s.Load<Racun>(racunId);
+
+                Transakcija tr = new Transakcija
+                {
+                    DatumIVreme = tb.DatumIVreme,
+                    Tip = tb.TipTransakcije?.Trim(),
+                    Status = tb.StatusTransakcije?.Trim(),
+                    PodaciPrimaoca = tb.PodaciPrimaoca?.Trim(),
+                    Referenca = tb.Referenca?.Trim(),
+                    Valuta = tb.Valuta?.Trim(),
+                    Iznos = tb.Iznos,
+                    Opis = tb.Opis?.Trim(),
+                    Komentar = tb.Komentar?.Trim(),
+
+                    OdvijaSeNaRacun = r
+                };
+
+                s.Save(tr);
+                t.Commit();
+
+                tb.Id = tr.Id;
+                id = tr.Id;
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri dodavanju transakcije.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return id;
+        }
+
+        public static Result<TransakcijaBasic, ErrorMessage> VratiTransakciju(int id)
+        {
+            ISession? s = null;
+            TransakcijaBasic dto = default!;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                Transakcija t = s.Load<Transakcija>(id);
+
+                dto = new TransakcijaBasic
+                {
+                    Id = t.Id,
+                    DatumIVreme = t.DatumIVreme,
+                    TipTransakcije = t.Tip,
+                    StatusTransakcije = t.Status,
+                    PodaciPrimaoca = t.PodaciPrimaoca,
+                    Referenca = t.Referenca,
+                    Valuta = t.Valuta,
+                    Iznos = t.Iznos,
+                    Opis = t.Opis,
+                    Komentar = t.Komentar,
+
+                    Racun = t.OdvijaSeNaRacun != null
+                        ? new RacunBasic
+                        {
+                            Id = t.OdvijaSeNaRacun.Id,
+                            BrojRacuna = t.OdvijaSeNaRacun.BrojRacuna
+                        }
+                        : null
+                };
+            }
+            catch (Exception)
+            {
+                return "Nemoguće pronaći transakciju sa zadatim ID-jem.".ToError(404);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return dto;
+        }
+
+        public static Result<List<TransakcijaBasic>, ErrorMessage> VratiTransakcije(int brojPoStrani, int strana = 1)
+        {
+            ISession? s = null;
+            List<TransakcijaBasic> lista = new();
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                List<Transakcija> entiteti = s.Query<Transakcija>()
+                    .OrderByDescending(x => x.DatumIVreme)
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                lista = entiteti.Select(x => new TransakcijaBasic
+                {
+                    Id = x.Id,
+                    DatumIVreme = x.DatumIVreme,
+                    TipTransakcije = x.Tip,
+                    StatusTransakcije = x.Status,
+                    PodaciPrimaoca = x.PodaciPrimaoca,
+                    Referenca = x.Referenca,
+                    Valuta = x.Valuta,
+                    Iznos = x.Iznos,
+                    Opis = x.Opis,
+                    Komentar = x.Komentar,
+
+                    Racun = x.OdvijaSeNaRacun != null
+                        ? new RacunBasic
+                        {
+                            Id = x.OdvijaSeNaRacun.Id,
+                            BrojRacuna = x.OdvijaSeNaRacun.BrojRacuna
+                        }
+                        : null
+                }).ToList();
+            }
+            catch (Exception)
+            {
+                return "Greška pri učitavanju transakcija.".ToError(400);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return lista;
+        }
+
+        public static Result<List<TransakcijaBasic>, ErrorMessage> VratiTransakcijeZaRacun(int racunId, int brojPoStrani, int strana = 1)
+        {
+            ISession? s = null;
+            List<TransakcijaBasic> lista = new();
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                List<Transakcija> entiteti = s.Query<Transakcija>()
+                    .Where(x => x.OdvijaSeNaRacun.Id == racunId)
+                    .OrderByDescending(x => x.DatumIVreme)
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                lista = entiteti.Select(x => new TransakcijaBasic
+                {
+                    Id = x.Id,
+                    DatumIVreme = x.DatumIVreme,
+                    TipTransakcije = x.Tip,
+                    StatusTransakcije = x.Status,
+                    PodaciPrimaoca = x.PodaciPrimaoca,
+                    Referenca = x.Referenca,
+                    Valuta = x.Valuta,
+                    Iznos = x.Iznos,
+                    Opis = x.Opis,
+                    Komentar = x.Komentar,
+
+                    Racun = x.OdvijaSeNaRacun != null
+                        ? new RacunBasic
+                        {
+                            Id = x.OdvijaSeNaRacun.Id,
+                            BrojRacuna = x.OdvijaSeNaRacun.BrojRacuna
+                        }
+                        : null
+                }).ToList();
+            }
+            catch (Exception)
+            {
+                return "Greška pri učitavanju transakcija za račun.".ToError(400);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return lista;
+        }
+
+        public static Result<bool, ErrorMessage> IzmeniTransakciju(TransakcijaBasic tb)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                Transakcija tr = s.Load<Transakcija>(tb.Id);
+
+                tr.DatumIVreme = tb.DatumIVreme;
+                tr.Tip = tb.TipTransakcije?.Trim();
+                tr.Status = tb.StatusTransakcije?.Trim();
+                tr.PodaciPrimaoca = tb.PodaciPrimaoca?.Trim();
+                tr.Referenca = tb.Referenca?.Trim();
+                tr.Valuta = tb.Valuta?.Trim();
+                tr.Iznos = tb.Iznos;
+                tr.Opis = tb.Opis?.Trim();
+                tr.Komentar = tb.Komentar?.Trim();
+
+                // Napomena: račun na koji se transakcija odnosi se namerno ne menja ovde -
+                // ako zaista treba dozvoliti premeštanje transakcije na drugi račun,
+                // dodati parametar racunId i ponovo učitati Racun kao u DodajTransakciju.
+
+                s.Update(tr);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri izmeni transakcije.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        public static Result<bool, ErrorMessage> ObrisiTransakciju(int id)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                Transakcija tr = s.Load<Transakcija>(id);
+                s.Delete(tr);
+
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri brisanju transakcije.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        public static Result<bool, ErrorMessage> IzvrsiTransferIzmedjuRacuna(
+            int racunPosiljaocaId, int racunPrimaocaId, decimal iznos, string opis, string komentar)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                Racun posiljalac = s.Load<Racun>(racunPosiljaocaId);
+                Racun primalac = s.Load<Racun>(racunPrimaocaId);
+
+                if (posiljalac.TrenutnoStanje - posiljalac.DozvoljeniMinus < iznos)
+                {
+                    return "Nedovoljno sredstava na računu pošiljaoca.".ToError(409);
+                }
+
+                string referenca = "TRF-" + Guid.NewGuid().ToString("N").Substring(0, 10).ToUpper();
+                DateTime datumIVreme = DateTime.Now;
+
+                // Odliv sa računa pošiljaoca
+                Transakcija odliv = new Transakcija
+                {
+                    DatumIVreme = datumIVreme,
+                    Tip = "TRANSFER",
+                    Status = "Izvršena",
+                    PodaciPrimaoca = $"{primalac.BrojRacuna}",
+                    Referenca = referenca,
+                    Valuta = posiljalac.Valuta,
+                    Iznos = iznos,
+                    Opis = opis,
+                    Komentar = komentar,
+                    OdvijaSeNaRacun = posiljalac
+                };
+
+                // Priliv na račun primaoca
+                Transakcija priliv = new Transakcija
+                {
+                    DatumIVreme = datumIVreme,
+                    Tip = "TRANSFER",
+                    Status = "Izvršena",
+                    PodaciPrimaoca = $"{posiljalac.BrojRacuna}",
+                    Referenca = referenca,
+                    Valuta = primalac.Valuta,
+                    Iznos = iznos,
+                    Opis = opis,
+                    Komentar = komentar,
+                    OdvijaSeNaRacun = primalac
+                };
+
+                posiljalac.TrenutnoStanje -= iznos;
+                primalac.TrenutnoStanje += iznos;
+
+                s.Save(odliv);
+                s.Save(priliv);
+                s.Update(posiljalac);
+                s.Update(primalac);
+
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri izvršavanju transfera.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #region Depozit
+
+        public static Result<int, ErrorMessage> DodajDepozit(DepozitBasic db, string jmbg, string pib, int racunId)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+            int id = default;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                FizickoLice fl = s.Query<FizickoLice>()
+                    .Where(x => x.Jmbg == jmbg)
+                    .FirstOrDefault();
+                PravnoLice pl = s.Query<PravnoLice>()
+                    .Where(x => x.Pib == pib)
+                    .FirstOrDefault();
+
+                if (fl == null && pl == null)
+                {
+                    return "Depozit mora biti vezan za fizičko ili pravno lice.".ToError(404);
+                }
+
+                Racun r = s.Load<Racun>(racunId);
+
+                Depozit d = new Depozit
+                {
+                    DatumPocetka = db.DatumPocetka,
+                    PeriodOrocenja = db.PeriodOrocenja,
+                    DatumIsteka = db.DatumIsteka,
+                    StatusDepozita = db.StatusDepozita?.Trim(),
+                    Valuta = db.Valuta?.Trim(),
+                    Iznos = db.Iznos,
+                    KamatnaStopa = db.KamatnaStopa,
+                    Komentar = db.Komentar?.Trim(),
+
+                    PripadaFizickomLicu = fl,
+                    PripadaPravnomLicu = pl,
+                    PripadaRacunu = r
+                };
+
+                s.Save(d);
+                t.Commit();
+
+                db.Id = d.Id;
+                id = d.Id;
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri dodavanju depozita.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return id;
+        }
+
+        public static Result<DepozitBasic, ErrorMessage> VratiDepozit(int id)
+        {
+            ISession? s = null;
+            DepozitBasic dto = default!;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                Depozit d = s.Load<Depozit>(id);
+
+                dto = new DepozitBasic
+                {
+                    Id = d.Id,
+                    DatumPocetka = d.DatumPocetka,
+                    PeriodOrocenja = d.PeriodOrocenja,
+                    DatumIsteka = d.DatumIsteka,
+                    StatusDepozita = d.StatusDepozita,
+                    Valuta = d.Valuta,
+                    Iznos = d.Iznos,
+                    KamatnaStopa = d.KamatnaStopa,
+                    Komentar = d.Komentar,
+
+                    FizickoLice = d.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic
+                        {
+                            Id = d.PripadaFizickomLicu.Id,
+                            Ime = d.PripadaFizickomLicu.Ime,
+                            Prezime = d.PripadaFizickomLicu.Prezime
+                        }
+                        : null,
+
+                    PravnoLice = d.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic
+                        {
+                            Id = d.PripadaPravnomLicu.Id,
+                            NazivFirme = d.PripadaPravnomLicu.NazivFirme
+                        }
+                        : null,
+                    Racun = d.PripadaRacunu != null
+                        ? new RacunBasic
+                        {
+                            Id = d.PripadaRacunu.Id,
+                            BrojRacuna = d.PripadaRacunu.BrojRacuna
+                        }
+                        : null
+                };
+            }
+            catch (Exception)
+            {
+                return "Nemoguće pronaći depozit sa zadatim ID-jem.".ToError(404);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return dto;
+        }
+
+        public static Result<List<DepozitBasic>, ErrorMessage> VratiDepozite(int brojPoStrani, int strana = 1)
+        {
+            ISession? s = null;
+            List<DepozitBasic> lista = new();
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                List<Depozit> entiteti = s.Query<Depozit>()
+                    .OrderByDescending(x => x.DatumPocetka)
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                lista = entiteti.Select(x => new DepozitBasic
+                {
+                    Id = x.Id,
+                    DatumPocetka = x.DatumPocetka,
+                    PeriodOrocenja = x.PeriodOrocenja,
+                    DatumIsteka = x.DatumIsteka,
+                    StatusDepozita = x.StatusDepozita,
+                    Valuta = x.Valuta,
+                    Iznos = x.Iznos,
+                    KamatnaStopa = x.KamatnaStopa,
+                    Komentar = x.Komentar,
+                    OcekivanaKamata = x.OcekivanaKamata,
+
+                    FizickoLice = x.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic
+                        {
+                            Id = x.PripadaFizickomLicu.Id,
+                            Ime = x.PripadaFizickomLicu.Ime,
+                            Prezime = x.PripadaFizickomLicu.Prezime
+                        }
+                        : null,
+
+                    PravnoLice = x.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic
+                        {
+                            Id = x.PripadaPravnomLicu.Id,
+                            NazivFirme = x.PripadaPravnomLicu.NazivFirme
+                        }
+                        : null,
+
+                    Racun = x.PripadaRacunu != null
+                        ? new RacunBasic
+                        {
+                            Id = x.PripadaRacunu.Id,
+                            BrojRacuna = x.PripadaRacunu.BrojRacuna
+                        }
+                        : null
+                }).ToList();
+            }
+            catch (Exception)
+            {
+                return "Greška pri učitavanju depozita.".ToError(400);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return lista;
+        }
+
+        public static Result<List<DepozitBasic>, ErrorMessage> VratiDepoziteZaRacun(int racunId, int brojPoStrani, int strana = 1)
+        {
+            ISession? s = null;
+            List<DepozitBasic> lista = new();
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                List<Depozit> entiteti = s.Query<Depozit>()
+                    .Where(x => x.PripadaRacunu.Id == racunId)
+                    .OrderByDescending(x => x.DatumPocetka)
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                lista = entiteti.Select(x => new DepozitBasic
+                {
+                    Id = x.Id,
+                    DatumPocetka = x.DatumPocetka,
+                    PeriodOrocenja = x.PeriodOrocenja,
+                    DatumIsteka = x.DatumIsteka,
+                    StatusDepozita = x.StatusDepozita,
+                    Valuta = x.Valuta,
+                    Iznos = x.Iznos,
+                    KamatnaStopa = x.KamatnaStopa,
+                    Komentar = x.Komentar,
+                    OcekivanaKamata = x.OcekivanaKamata,
+
+                    Racun = x.PripadaRacunu != null
+                        ? new RacunBasic { Id = x.PripadaRacunu.Id, BrojRacuna = x.PripadaRacunu.BrojRacuna }
+                        : null
+                }).ToList();
+            }
+            catch (Exception)
+            {
+                return "Greška pri učitavanju depozita za račun.".ToError(400);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return lista;
+        }
+
+        public static Result<bool, ErrorMessage> IzmeniDepozit(DepozitBasic db)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                Depozit d = s.Load<Depozit>(db.Id);
+
+                d.DatumPocetka = db.DatumPocetka;
+                d.PeriodOrocenja = db.PeriodOrocenja;
+                d.DatumIsteka = db.DatumIsteka;
+                d.StatusDepozita = db.StatusDepozita?.Trim();
+                d.Valuta = db.Valuta?.Trim();
+                d.Iznos = db.Iznos;
+                d.KamatnaStopa = db.KamatnaStopa;
+                d.Komentar = db.Komentar?.Trim();
+
+                s.Update(d);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri izmeni depozita.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        public static Result<bool, ErrorMessage> ObrisiDepozit(int id)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                Depozit d = s.Load<Depozit>(id);
+
+                if (d == null)
+                {
+                    return "Depozit sa zadatim ID-jem ne postoji.".ToError(404);
+                }
+
+                if (!d.Kamate.IsEmpty())
+                {
+                    return "Depozit poseduje kamate.".ToError(409);
+                }
+
+                s.Delete(d);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri brisanju depozita.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #region Kredit
+
+        public static Result<int, ErrorMessage> DodajKredit(KreditBasic kb, string jmbg, string pib, int racunId)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+            int id = default;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                FizickoLice fl = s.Query<FizickoLice>()
+                    .Where(x => x.Jmbg == jmbg)
+                    .FirstOrDefault();
+                PravnoLice pl = s.Query<PravnoLice>()
+                    .Where(x => x.Pib == pib)
+                    .FirstOrDefault();
+
+                if (fl == null && pl == null)
+                {
+                    return "Kredit mora biti vezan za fizičko ili pravno lice.".ToError(404);
+                }
+
+                Racun r = s.Load<Racun>(racunId);
+
+                Kredit k = new Kredit
+                {
+                    DatumDospeca = kb.DatumDospeca,
+                    DatumOdobrenja = kb.DatumOdobrenja,
+                    Iznos = kb.Iznos,
+                    Valuta = kb.Valuta?.Trim(),
+                    StatusKredita = kb.StatusKredita?.Trim(),
+                    MesecnaRata = kb.MesecnaRata,
+                    RokOtplate = kb.RokOtplate,
+                    Namena = kb.Namena?.Trim(),
+                    KamatnaStopa = kb.KamatnaStopa,
+                    Komentar = kb.Komentar?.Trim(),
+
+                    PripadaFizickomLicu = fl,
+                    PripadaPravnomLicu = pl,
+                    PripadaRacunu = r
+                };
+
+                s.Save(k);
+                t.Commit();
+
+                kb.Id = k.Id;
+                id = k.Id;
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri dodavanju kredita.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return id;
+        }
+
+        public static Result<KreditBasic, ErrorMessage> VratiKredit(int id)
+        {
+            ISession? s = null;
+            KreditBasic dto = default!;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                Kredit k = s.Load<Kredit>(id);
+
+                dto = new KreditBasic
+                {
+                    Id = k.Id,
+                    DatumDospeca = k.DatumDospeca,
+                    DatumOdobrenja = k.DatumOdobrenja,
+                    Iznos = k.Iznos,
+                    Valuta = k.Valuta,
+                    StatusKredita = k.StatusKredita,
+                    MesecnaRata = k.MesecnaRata,
+                    RokOtplate = k.RokOtplate,
+                    Namena = k.Namena,
+                    KamatnaStopa = k.KamatnaStopa,
+                    Komentar = k.Komentar,
+
+                    FizickoLice = k.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic
+                        {
+                            Id = k.PripadaFizickomLicu.Id,
+                            Ime = k.PripadaFizickomLicu.Ime,
+                            Prezime = k.PripadaFizickomLicu.Prezime
+                        }
+                        : null,
+
+                    PravnoLice = k.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic
+                        {
+                            Id = k.PripadaPravnomLicu.Id,
+                            NazivFirme = k.PripadaPravnomLicu.NazivFirme
+                        }
+                        : null,
+                    Racun = k.PripadaRacunu != null
+                        ? new RacunBasic
+                        {
+                            Id = k.PripadaRacunu.Id,
+                            BrojRacuna = k.PripadaRacunu.BrojRacuna
+                        }
+                        : null
+                };
+            }
+            catch (Exception)
+            {
+                return "Nemoguće pronaći kredit sa zadatim ID-jem.".ToError(404);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return dto;
+        }
+
+        public static Result<List<KreditBasic>, ErrorMessage> VratiKredite(int brojPoStrani, int strana = 1)
+        {
+            ISession? s = null;
+            List<KreditBasic> lista = new();
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                List<Kredit> entiteti = s.Query<Kredit>()
+                    .OrderByDescending(x => x.DatumOdobrenja)
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                lista = entiteti.Select(x => new KreditBasic
+                {
+                    Id = x.Id,
+                    DatumDospeca = x.DatumDospeca,
+                    DatumOdobrenja = x.DatumOdobrenja,
+                    Iznos = x.Iznos,
+                    Valuta = x.Valuta,
+                    StatusKredita = x.StatusKredita,
+                    MesecnaRata = x.MesecnaRata,
+                    RokOtplate = x.RokOtplate,
+                    Namena = x.Namena,
+                    KamatnaStopa = x.KamatnaStopa,
+                    Komentar = x.Komentar,
+
+                    FizickoLice = x.PripadaFizickomLicu != null
+                        ? new FizickoLiceBasic
+                        {
+                            Id = x.PripadaFizickomLicu.Id,
+                            Ime = x.PripadaFizickomLicu.Ime,
+                            Prezime = x.PripadaFizickomLicu.Prezime
+                        }
+                        : null,
+
+                    PravnoLice = x.PripadaPravnomLicu != null
+                        ? new PravnoLiceBasic
+                        {
+                            Id = x.PripadaPravnomLicu.Id,
+                            NazivFirme = x.PripadaPravnomLicu.NazivFirme
+                        }
+                        : null,
+
+                    Racun = x.PripadaRacunu != null
+                        ? new RacunBasic
+                        {
+                            Id = x.PripadaRacunu.Id,
+                            BrojRacuna = x.PripadaRacunu.BrojRacuna
+                        }
+                        : null
+                }).ToList();
+            }
+            catch (Exception)
+            {
+                return "Greška pri učitavanju kredita.".ToError(400);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return lista;
+        }
+
+        public static Result<List<KreditBasic>, ErrorMessage> VratiKrediteZaRacun(int racunId, int brojPoStrani, int strana = 1)
+        {
+            ISession? s = null;
+            List<KreditBasic> lista = new();
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                List<Kredit> entiteti = s.Query<Kredit>()
+                    .Where(x => x.PripadaRacunu.Id == racunId)
+                    .OrderByDescending(x => x.DatumOdobrenja)
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                lista = entiteti.Select(x => new KreditBasic
+                {
+                    Id = x.Id,
+                    DatumDospeca = x.DatumDospeca,
+                    DatumOdobrenja = x.DatumOdobrenja,
+                    Iznos = x.Iznos,
+                    Valuta = x.Valuta,
+                    StatusKredita = x.StatusKredita,
+                    MesecnaRata = x.MesecnaRata,
+                    RokOtplate = x.RokOtplate,
+                    Namena = x.Namena,
+                    KamatnaStopa = x.KamatnaStopa,
+                    Komentar = x.Komentar,
+
+                    Racun = x.PripadaRacunu != null
+                        ? new RacunBasic { Id = x.PripadaRacunu.Id, BrojRacuna = x.PripadaRacunu.BrojRacuna }
+                        : null
+                }).ToList();
+            }
+            catch (Exception)
+            {
+                return "Greška pri učitavanju kredita za račun.".ToError(400);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return lista;
+        }
+
+        public static Result<bool, ErrorMessage> IzmeniKredit(KreditBasic kb)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                Kredit k = s.Load<Kredit>(kb.Id);
+
+                k.DatumDospeca = kb.DatumDospeca;
+                k.DatumOdobrenja = kb.DatumOdobrenja;
+                k.Iznos = kb.Iznos;
+                k.Valuta = kb.Valuta?.Trim();
+                k.StatusKredita = kb.StatusKredita?.Trim();
+                k.MesecnaRata = kb.MesecnaRata;
+                k.RokOtplate = kb.RokOtplate;
+                k.Namena = kb.Namena?.Trim();
+                k.KamatnaStopa = kb.KamatnaStopa;
+                k.Komentar = kb.Komentar?.Trim();
+
+                s.Update(k);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri izmeni kredita.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        public static Result<bool, ErrorMessage> ObrisiKredit(int id)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                Kredit k = s.Load<Kredit>(id);
+
+                if (k == null)
+                {
+                    return "Kredit sa zadatim ID-jem ne postoji.".ToError(404);
+                }
+
+                if (!k.Kamate.IsEmpty())
+                {
+                    return "Kredit poseduje kamate.".ToError(409);
+                }
+
+                s.Delete(k);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri brisanju kredita.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #region Kamata
+
+        public static Result<int, ErrorMessage> DodajKamatu(KamataBasic kmb)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+            int id = default;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                if (kmb.Kredit == null && kmb.Depozit == null && kmb.Racun == null)
+                {
+                    return "Kamata mora biti vezana za kredit, depozit ili račun.".ToError(400);
+                }
+
+                Kredit k = kmb.Kredit != null ? s.Load<Kredit>(kmb.Kredit.Id) : null;
+                Depozit d = kmb.Depozit != null ? s.Load<Depozit>(kmb.Depozit.Id) : null;
+                Racun r = kmb.Racun != null ? s.Load<Racun>(kmb.Racun.Id) : null;
+
+                Kamata kam = new Kamata
+                {
+                    DatumObracuna = kmb.DatumObracuna,
+                    PeriodObracuna = kmb.PeriodObracuna?.Trim(),
+                    TipKamate = kmb.TipKamate?.Trim(),
+                    StatusKamate = kmb.StatusKamate?.Trim(),
+                    Iznos = kmb.Iznos,
+
+                    PripadaKreditu = k,
+                    PripadaDepozitu = d,
+                    PripadaRacunu = r
+                };
+
+                s.Save(kam);
+                t.Commit();
+
+                kmb.Id = kam.Id;
+                id = kam.Id;
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri dodavanju kamate.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return id;
+        }
+
+        public static Result<KamataBasic, ErrorMessage> VratiKamatu(int id)
+        {
+            ISession? s = null;
+            KamataBasic dto = default!;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                var kamata = s.Load<Kamata>(id);
+
+                dto = new KamataBasic
+                {
+                    Id = kamata.Id,
+                    DatumObracuna = kamata.DatumObracuna,
+                    PeriodObracuna = kamata.PeriodObracuna,
+                    TipKamate = kamata.TipKamate,
+                    StatusKamate = kamata.StatusKamate,
+                    Iznos = kamata.Iznos,
+
+                    Kredit = kamata.PripadaKreditu != null ?
+                    new KreditBasic
+                    {
+                        Id = kamata.PripadaKreditu.Id,
+                    } : null,
+
+                    Depozit = kamata.PripadaDepozitu != null ?
+                    new DepozitBasic
+                    {
+                        Id = kamata.PripadaDepozitu.Id
+                    } : null,
+
+                    Racun = kamata.PripadaRacunu != null ?
+                    new RacunBasic
+                    {
+                        Id = kamata.PripadaRacunu.Id,
+                        BrojRacuna = kamata.PripadaRacunu.BrojRacuna
+                    } : null
+                };
+            }
+            catch (Exception)
+            {
+                return "Nemoguće pronaći kamatu sa zadatim ID-jem.".ToError(404);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return dto;
+        }
+
+        public static Result<List<KamataBasic>, ErrorMessage> VratiKamate(int brojPoStrani, int strana = 1)
+        {
+            ISession? s = null;
+            List<KamataBasic> lista = new();
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                List<Kamata> entiteti = s.Query<Kamata>()
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                lista = entiteti.Select(x => new KamataBasic
+                {
+                    Id = x.Id,
+                    DatumObracuna = x.DatumObracuna,
+                    PeriodObracuna = x.PeriodObracuna,
+                    TipKamate = x.TipKamate,
+                    StatusKamate = x.StatusKamate,
+                    Iznos = x.Iznos,
+
+                    Kredit = x.PripadaKreditu != null ?
+                    new KreditBasic
+                    {
+                        Id = x.PripadaKreditu.Id,
+                    } : null,
+
+                    Depozit = x.PripadaDepozitu != null ?
+                    new DepozitBasic
+                    {
+                        Id = x.PripadaDepozitu.Id
+                    } : null,
+
+                    Racun = x.PripadaRacunu != null ?
+                    new RacunBasic
+                    {
+                        Id = x.PripadaRacunu.Id,
+                        BrojRacuna = x.PripadaRacunu.BrojRacuna
+                    } : null
+                }).ToList();
+            }
+            catch (Exception)
+            {
+                return "Greška pri učitavanju kamata.".ToError(400);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return lista;
+        }
+
+        public static Result<bool, ErrorMessage> IzmeniKamatu(KamataBasic kmb)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                Kamata kam = s.Load<Kamata>(kmb.Id);
+
+                kam.DatumObracuna = kmb.DatumObracuna;
+                kam.PeriodObracuna = kmb.PeriodObracuna?.Trim();
+                kam.TipKamate = kmb.TipKamate?.Trim();
+                kam.StatusKamate = kmb.StatusKamate?.Trim();
+                kam.Iznos = kmb.Iznos;
+
+                // Napomena: izvor kamate (kredit/depozit/račun) se namerno ne menja
+                // ovde - ako treba i to dozvoliti, proslediti nove ID-jeve kao
+                // parametre i ponovo učitati odgovarajuće entitete kao u DodajKamatu.
+
+                s.Update(kam);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri izmeni kamate.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        public static Result<bool, ErrorMessage> ObrisiKamatu(int id)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                Kamata kam = s.Load<Kamata>(id);
+                s.Delete(kam);
+
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri brisanju kamate.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #region SigurnosnaKontrola
+
+        public static Result<int, ErrorMessage> DodajSigurnosnuKontrolu(SigurnosnaKontrolaBasic skb, int racunId)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+            int id = default;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                Racun r = s.Load<Racun>(racunId);
+
+                SigurnosnaKontrola sk = new SigurnosnaKontrola
+                {
+                    IpAdresa = skb.IpAdresa?.Trim(),
+                    DatumIVreme = skb.DatumIVreme,
+                    TipDogadjaja = skb.TipDogadjaja?.Trim(),
+                    StatusDogadjaja = skb.StatusDogadjaja?.Trim(),
+                    PodaciUredjaja = skb.PodaciUredjaja?.Trim(),
+                    Opis = skb.Opis?.Trim(),
+
+                    PripadaRacunu = r
+                };
+
+                s.Save(sk);
+                t.Commit();
+
+                skb.Id = sk.Id;
+                id = sk.Id;
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri dodavanju sigurnosne kontrole.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return id;
+        }
+
+        public static Result<SigurnosnaKontrolaBasic, ErrorMessage> VratiSigurnosnuKontrolu(int id)
+        {
+            ISession? s = null;
+            SigurnosnaKontrolaBasic dto = default!;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                var kontrola = s.Load<SigurnosnaKontrola>(id);
+
+                dto = new SigurnosnaKontrolaBasic
+                {
+                    Id = kontrola.Id,
+                    IpAdresa = kontrola.IpAdresa,
+                    DatumIVreme = kontrola.DatumIVreme,
+                    TipDogadjaja = kontrola.TipDogadjaja,
+                    StatusDogadjaja = kontrola.StatusDogadjaja,
+                    PodaciUredjaja = kontrola.PodaciUredjaja,
+                    Opis = kontrola.Opis,
+
+                    Racun = new RacunBasic
+                    {
+                        Id = kontrola.PripadaRacunu.Id,
+                        BrojRacuna = kontrola.PripadaRacunu.BrojRacuna
+                    }
+                };
+            }
+            catch (Exception)
+            {
+                return "Nemoguće pronaći sigurnosnu kontrolu sa zadatim ID-jem.".ToError(404);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return dto;
+        }
+
+        public static Result<List<SigurnosnaKontrolaBasic>, ErrorMessage> VratiSigurnosneKontrole(int brojPoStrani, int strana = 1)
+        {
+            ISession? s = null;
+            List<SigurnosnaKontrolaBasic> lista = new();
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                List<SigurnosnaKontrola> entiteti = s.Query<SigurnosnaKontrola>()
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                lista = entiteti.Select(x => new SigurnosnaKontrolaBasic
+                {
+                    Id = x.Id,
+                    IpAdresa = x.IpAdresa,
+                    DatumIVreme = x.DatumIVreme,
+                    TipDogadjaja = x.TipDogadjaja,
+                    StatusDogadjaja = x.StatusDogadjaja,
+                    PodaciUredjaja = x.PodaciUredjaja,
+                    Opis = x.Opis,
+
+                    Racun = new RacunBasic
+                    {
+                        Id = x.PripadaRacunu.Id,
+                        BrojRacuna = x.PripadaRacunu.BrojRacuna
+                    }
+                }).ToList();
+            }
+            catch (Exception)
+            {
+                return "Greška pri učitavanju sigurnosnih kontrola.".ToError(400);
+            }
+            finally
+            {
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return lista;
+        }
+
+        public static Result<bool, ErrorMessage> IzmeniSigurnosnuKontrolu(SigurnosnaKontrolaBasic skb)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                SigurnosnaKontrola sk = s.Load<SigurnosnaKontrola>(skb.Id);
+
+                sk.IpAdresa = skb.IpAdresa?.Trim();
+                sk.DatumIVreme = skb.DatumIVreme;
+                sk.TipDogadjaja = skb.TipDogadjaja?.Trim();
+                sk.StatusDogadjaja = skb.StatusDogadjaja?.Trim();
+                sk.PodaciUredjaja = skb.PodaciUredjaja?.Trim();
+                sk.Opis = skb.Opis?.Trim();
+
+                s.Update(sk);
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri izmeni sigurnosne kontrole.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        public static Result<bool, ErrorMessage> ObrisiSigurnosnuKontrolu(int id)
+        {
+            ISession? s = null;
+            ITransaction? t = null;
+
+            try
+            {
+                s = DataLayer.GetSession();
+
+                if (!(s?.IsConnected ?? false))
+                {
+                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                }
+
+                t = s.BeginTransaction();
+
+                SigurnosnaKontrola sk = s.Load<SigurnosnaKontrola>(id);
+                s.Delete(sk);
+
+                t.Commit();
+            }
+            catch (Exception)
+            {
+                t?.Rollback();
+                return "Greška pri brisanju sigurnosne kontrole.".ToError(400);
+            }
+            finally
+            {
+                t?.Dispose();
+                s?.Close();
+                s?.Dispose();
+            }
+
+            return true;
+        }
+
+        #endregion
     }
+
+}
 }
