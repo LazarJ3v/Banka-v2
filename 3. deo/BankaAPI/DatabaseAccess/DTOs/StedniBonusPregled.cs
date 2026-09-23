@@ -9,8 +9,8 @@ namespace DatabaseAccess.DTOs
     public class StedniBonusPregled
     {
         public int Id;
-        public string? Bonus;
-        public StedniPregled? Stedni;
+        public string Bonus;
+        public StedniPregled Stedni;
 
         public StedniBonusPregled() { }
 

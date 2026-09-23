@@ -8,7 +8,7 @@ namespace DatabaseAccess.DTOs
 {
     public class TekuciPregled : RacunPregled
     {
-        public bool? PlatnaKartica;
+        public bool PlatnaKartica;
         public decimal? MesecniLimit;
 
         public TekuciPregled() { }

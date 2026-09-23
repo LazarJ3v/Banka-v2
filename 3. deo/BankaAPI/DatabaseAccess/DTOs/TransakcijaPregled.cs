@@ -9,16 +9,16 @@ namespace DatabaseAccess.DTOs
     public class TransakcijaPregled
     {
         public int Id;
-        public DateTime? DatumIVreme;
-        public string? TipTransakcije;
-        public string? StatusTransakcije;
-        public string? PodaciPrimaoca;
-        public string? Referenca;
-        public string? Valuta;
-        public decimal? Iznos;
-        public string? Opis;
-        public string? Komentar;
-        public RacunPregled? Racun;
+        public DateTime DatumIVreme;
+        public string TipTransakcije;
+        public string StatusTransakcije;
+        public string PodaciPrimaoca;
+        public string Referenca;
+        public string Valuta;
+        public decimal Iznos;
+        public string Opis;
+        public string Komentar;
+        public RacunPregled Racun;
 
         public TransakcijaPregled() { }
 

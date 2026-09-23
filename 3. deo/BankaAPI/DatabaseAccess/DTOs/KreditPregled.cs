@@ -9,19 +9,19 @@ namespace DatabaseAccess.DTOs
     public class KreditPregled
     {
         public int Id;
-        public DateTime? DatumDospeca;
-        public DateTime? DatumOdobrenja;
-        public decimal? Iznos;
-        public string? Valuta;
-        public string? StatusKredita;
-        public decimal? MesecnaRata;
-        public int? RokOtplate;
-        public string? Namena;
-        public decimal? KamatnaStopa;
-        public string? Komentar;
-        public FizickoLicePregled? FizickoLice;
-        public PravnoLicePregled? PravnoLice;
-        public RacunPregled? Racun;
+        public DateTime DatumDospeca;
+        public DateTime DatumOdobrenja;
+        public decimal Iznos;
+        public string Valuta;
+        public string StatusKredita;
+        public decimal MesecnaRata;
+        public int RokOtplate;
+        public string Namena;
+        public decimal KamatnaStopa;
+        public string Komentar;
+        public FizickoLicePregled FizickoLice;
+        public PravnoLicePregled PravnoLice;
+        public RacunPregled Racun;
 
         public KreditPregled() { }
 

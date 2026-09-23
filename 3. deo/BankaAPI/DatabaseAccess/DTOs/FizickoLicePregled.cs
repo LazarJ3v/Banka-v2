@@ -9,17 +9,17 @@ namespace DatabaseAccess.DTOs
     public class FizickoLicePregled
     {
         public int Id;
-        public string? Ime;
-        public string? Prezime;
-        public string? Jmbg;
-        public string? BrojLicneKarte;
+        public string Ime;
+        public string Prezime;
+        public string Jmbg;
+        public string BrojLicneKarte;
         public DateTime? DatumRodjenja;
-        public string? Adresa;
-        public string? Grad;
-        public string? Telefon;
-        public string? Email;
-        public string? Status;
-        public string? Komentar;
+        public string Adresa;
+        public string Grad;
+        public string Telefon;
+        public string Email;
+        public string Status;
+        public string Komentar;
 
         public FizickoLicePregled() { }
 

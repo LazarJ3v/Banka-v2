@@ -9,8 +9,8 @@ namespace DatabaseAccess.DTOs
     public class StedniUslovPodizanjaPregled
     {
         public int Id;
-        public string? UslovPodizanja;
-        public StedniPregled? Stedni;
+        public string UslovPodizanja;
+        public StedniPregled Stedni;
 
         public StedniUslovPodizanjaPregled() { }
 

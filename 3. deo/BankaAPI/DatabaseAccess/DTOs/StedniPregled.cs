@@ -9,7 +9,7 @@ namespace DatabaseAccess.DTOs
     public class StedniPregled : RacunPregled
     {
         public decimal? MinimalniIznosOtvaranja;
-        public int? FrekvKapitalizKamate;
+        public int FrekvKapitalizKamate;
 
         public StedniPregled() { }
 

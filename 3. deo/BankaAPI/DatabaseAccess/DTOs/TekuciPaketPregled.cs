@@ -9,8 +9,8 @@ namespace DatabaseAccess.DTOs
     public class TekuciPaketPregled
     {
         public int Id;
-        public string? Paket;
-        public TekuciPregled? Tekuci;
+        public string Paket;
+        public TekuciPregled Tekuci;
 
         public TekuciPaketPregled() { }
 

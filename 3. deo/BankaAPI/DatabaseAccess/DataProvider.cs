@@ -1,240 +1,170 @@
-﻿using Banka;
-using Banka.Entiteti;
+﻿using Banka.Entiteti;
+using DatabaseAccess.DTOs;
+using FluentNHibernate.Conventions;
 using NHibernate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace DatabaseAccess
 {
-    public static class DataProvider
+    internal class DataProvider
     {
         #region FizickaLica
 
-        public static Result<int, ErrorMessage> DodajFizickoLice(FizickoLiceBasic fl)
+        public static void DodajFizickoLice(FizickoLicePregled fl)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-            int id = default;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    var fizickoLice = new FizickoLice
+                    {
+                        Ime = fl.Ime?.Trim(),
+                        Prezime = fl.Prezime?.Trim(),
+                        Jmbg = fl.Jmbg?.Trim(),
+                        BrojLicneKarte = fl.BrojLicneKarte?.Trim(),
+                        DatumRodjenja = fl.DatumRodjenja,
+                        Adresa = fl.Adresa?.Trim(),
+                        Grad = fl.Grad?.Trim(),
+                        Telefon = fl.Telefon?.Trim(),
+                        Email = fl.Email?.Trim(),
+                        Status = fl.Status,
+                        Komentar = fl.Komentar?.Trim()
+                    };
+
+                    session.Save(fizickoLice);
+                    transaction.Commit();
+
+                    fl.Id = fizickoLice.Id;
                 }
-
-                t = s.BeginTransaction();
-
-                var fizickoLice = new FizickoLice
+                catch (Exception ex)
                 {
-                    Ime = fl.Ime?.Trim(),
-                    Prezime = fl.Prezime?.Trim(),
-                    Jmbg = fl.Jmbg?.Trim(),
-                    BrojLicneKarte = fl.BrojLicneKarte?.Trim(),
-                    DatumRodjenja = fl.DatumRodjenja,
-                    Adresa = fl.Adresa?.Trim(),
-                    Grad = fl.Grad?.Trim(),
-                    Telefon = fl.Telefon?.Trim(),
-                    Email = fl.Email?.Trim(),
-                    Status = fl.Status,
-                    Komentar = fl.Komentar?.Trim()
-                };
-
-                s.Save(fizickoLice);
-                t.Commit();
-
-                fl.Id = fizickoLice.Id;
-                id = fizickoLice.Id;
+                    transaction.Rollback();
+                    throw new InvalidOperationException(
+                        "Greška pri dodavanju fizičkog lica", ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri dodavanju fizičkog lica.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return id;
         }
 
-        public static Result<FizickoLiceBasic, ErrorMessage> VratiFizickoLice(int id)
+        public static FizickoLicePregled VratiFizickoLice(int id)
         {
-            ISession? s = null;
-            FizickoLiceBasic dto = default!;
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    var fizickoLice = session.Get<FizickoLice>(id);
+
+                    if (fizickoLice == null)
+                        return null;
+
+                    return new FizickoLicePregled
+                    {
+                        Id = fizickoLice.Id,
+                        Ime = fizickoLice.Ime,
+                        Prezime = fizickoLice.Prezime,
+                        Jmbg = fizickoLice.Jmbg,
+                        BrojLicneKarte = fizickoLice.BrojLicneKarte,
+                        DatumRodjenja = fizickoLice.DatumRodjenja,
+                        Adresa = fizickoLice.Adresa,
+                        Grad = fizickoLice.Grad,
+                        Telefon = fizickoLice.Telefon,
+                        Email = fizickoLice.Email,
+                        Status = fizickoLice.Status,
+                        Komentar = fizickoLice.Komentar
+                    };
                 }
-
-                var fizickoLice = s.Get<FizickoLice>(id);
-
-                if (fizickoLice == null)
+                catch (Exception ex)
                 {
-                    return "Fizičko lice sa zadatim ID-jem ne postoji.".ToError(404);
+                    throw new InvalidOperationException(
+                        "Greška pri učitavanju fizičkog lica.", ex);
                 }
-
-                dto = new FizickoLiceBasic
-                {
-                    Id = fizickoLice.Id,
-                    Ime = fizickoLice.Ime,
-                    Prezime = fizickoLice.Prezime,
-                    Jmbg = fizickoLice.Jmbg,
-                    BrojLicneKarte = fizickoLice.BrojLicneKarte,
-                    DatumRodjenja = fizickoLice.DatumRodjenja,
-                    Adresa = fizickoLice.Adresa,
-                    Grad = fizickoLice.Grad,
-                    Telefon = fizickoLice.Telefon,
-                    Email = fizickoLice.Email,
-                    Status = fizickoLice.Status,
-                    Komentar = fizickoLice.Komentar
-                };
             }
-            catch (Exception)
-            {
-                return "Greška pri učitavanju fizičkog lica.".ToError(400);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return dto;
         }
 
-        public static Result<FizickoLiceBasic, ErrorMessage> IzmeniFizickoLice(FizickoLiceBasic fl)
+        public static FizickoLicePregled IzmeniFizickoLice(FizickoLicePregled fl)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    var fizickoLice = session.Get<FizickoLice>(fl.Id);
+
+                    if (fizickoLice == null)
+                        return null;
+
+                    fizickoLice.Ime = fl.Ime?.Trim();
+                    fizickoLice.Prezime = fl.Prezime?.Trim();
+                    fizickoLice.Jmbg = fl.Jmbg?.Trim();
+                    fizickoLice.BrojLicneKarte = fl.BrojLicneKarte?.Trim();
+                    fizickoLice.DatumRodjenja = fl.DatumRodjenja;
+                    fizickoLice.Adresa = fl.Adresa?.Trim();
+                    fizickoLice.Grad = fl.Grad?.Trim();
+                    fizickoLice.Telefon = fl.Telefon?.Trim();
+                    fizickoLice.Email = fl.Email?.Trim();
+                    fizickoLice.Status = fl.Status;
+                    fizickoLice.Komentar = fl.Komentar?.Trim();
+
+                    session.Update(fizickoLice);
+                    transaction.Commit();
+
+                    return fl;
                 }
-
-                t = s.BeginTransaction();
-
-                var fizickoLice = s.Get<FizickoLice>(fl.Id);
-
-                if (fizickoLice == null)
+                catch (Exception ex)
                 {
-                    return "Fizičko lice sa zadatim ID-jem ne postoji.".ToError(404);
+                    transaction.Rollback();
+
+                    throw new InvalidOperationException(
+                        "Greška pri izmeni fizičkog lica.", ex);
                 }
-
-                fizickoLice.Ime = fl.Ime?.Trim();
-                fizickoLice.Prezime = fl.Prezime?.Trim();
-                fizickoLice.Jmbg = fl.Jmbg?.Trim();
-                fizickoLice.BrojLicneKarte = fl.BrojLicneKarte?.Trim();
-                fizickoLice.DatumRodjenja = fl.DatumRodjenja;
-                fizickoLice.Adresa = fl.Adresa?.Trim();
-                fizickoLice.Grad = fl.Grad?.Trim();
-                fizickoLice.Telefon = fl.Telefon?.Trim();
-                fizickoLice.Email = fl.Email?.Trim();
-                fizickoLice.Status = fl.Status;
-                fizickoLice.Komentar = fl.Komentar?.Trim();
-
-                s.Update(fizickoLice);
-                t.Commit();
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri izmeni fizičkog lica.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return fl;
         }
 
-        public static Result<bool, ErrorMessage> ObrisiFizickoLice(int id)
+        public static void ObrisiFizickoLice(int id)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    var fizickoLice = session.Get<FizickoLice>(id);
+
+                    if (fizickoLice == null)
+                        return;
+
+                    if (!fizickoLice.Racuni.IsEmpty())
+                        throw new InvalidOperationException(
+                            "Ne možete obrisati fizičko lice koje poseduje račune.");
+
+                    session.Delete(fizickoLice);
+
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                var fizickoLice = s.Get<FizickoLice>(id);
-
-                if (fizickoLice == null)
+                catch (Exception ex)
                 {
-                    return "Fizičko lice sa zadatim ID-jem ne postoji.".ToError(404);
+                    transaction.Rollback();
+
+                    throw new InvalidOperationException(
+                        "Greška pri brisanju fizičkog lica: " + ex.Message, ex);
                 }
-
-                if (!fizickoLice.Racuni.IsEmpty())
-                {
-                    return "Ne možete obrisati fizičko lice koje poseduje račune.".ToError(409);
-                }
-
-                s.Delete(fizickoLice);
-                t.Commit();
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri brisanju fizičkog lica.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
         }
 
-        public static Result<List<FizickoLiceBasic>, ErrorMessage> VratiFizickaLica(int brojPoStrani, int strana = 1)
+        public static List<FizickoLicePregled> VratiFizickaLica(int brojPoStrani, int strana = 1)
         {
-            ISession? s = null;
-            List<FizickoLiceBasic> lista = new();
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                List<FizickoLice> entiteti = s.Query<FizickoLice>()
+                List<FizickoLice> entiteti = session.Query<FizickoLice>()
                     .Skip((strana - 1) * brojPoStrani)
                     .Take(brojPoStrani)
                     .ToList();
 
-                lista = entiteti.Select(x => new FizickoLiceBasic
+                return entiteti.Select(x => new FizickoLicePregled
                 {
                     Id = x.Id,
                     Ime = x.Ime,
@@ -250,231 +180,150 @@ namespace DatabaseAccess
                     Komentar = x.Komentar
                 }).ToList();
             }
-            catch (Exception)
-            {
-                return "Greška pri učitavanju fizičkih lica.".ToError(400);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return lista;
         }
 
         #endregion
 
         #region PravnaLica
 
-        public static Result<int, ErrorMessage> DodajPravnoLice(PravnoLiceBasic pl)
+        public static void DodajPravnoLice(PravnoLicePregled pl)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-            int id = default;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    var pravnoLice = new PravnoLice
+                    {
+                        NazivFirme = pl.NazivFirme?.Trim(),
+                        Pib = pl.Pib?.Trim(),
+                        Adresa = pl.Adresa?.Trim(),
+                        Grad = pl.Grad?.Trim(),
+                        Telefon = pl.Telefon?.Trim(),
+                        Email = pl.Email?.Trim(),
+                        Status = pl.Status?.Trim(),
+                        Komentar = pl.Komentar?.Trim()
+                    };
+
+                    session.Save(pravnoLice);
+                    transaction.Commit();
+
+                    pl.Id = pravnoLice.Id;
                 }
-
-                t = s.BeginTransaction();
-
-                var pravnoLice = new PravnoLice
+                catch (Exception ex)
                 {
-                    NazivFirme = pl.NazivFirme?.Trim(),
-                    Pib = pl.Pib?.Trim(),
-                    Adresa = pl.Adresa?.Trim(),
-                    Grad = pl.Grad?.Trim(),
-                    Telefon = pl.Telefon?.Trim(),
-                    Email = pl.Email?.Trim(),
-                    Status = pl.Status?.Trim(),
-                    Komentar = pl.Komentar?.Trim()
-                };
-
-                s.Save(pravnoLice);
-                t.Commit();
-
-                pl.Id = pravnoLice.Id;
-                id = pravnoLice.Id;
+                    transaction.Rollback();
+                    throw new InvalidOperationException(
+                        "Greška pri dodavanju pravnog lica", ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri dodavanju pravnog lica.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return id;
         }
 
-        public static Result<PravnoLiceBasic, ErrorMessage> VratiPravnoLice(int id)
+        public static PravnoLicePregled VratiPravnoLice(int id)
         {
-            ISession? s = null;
-            PravnoLiceBasic dto = default!;
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    var pravnoLice = session.Load<PravnoLice>(id);
+
+                    if (pravnoLice == null)
+                        return null;
+
+                    return new PravnoLicePregled
+                    {
+                        Id = pravnoLice.Id,
+                        NazivFirme = pravnoLice.NazivFirme,
+                        Pib = pravnoLice.Pib,
+                        Adresa = pravnoLice.Adresa,
+                        Grad = pravnoLice.Grad,
+                        Telefon = pravnoLice.Telefon,
+                        Email = pravnoLice.Email,
+                        Status = pravnoLice.Status,
+                        Komentar = pravnoLice.Komentar
+                    };
                 }
-
-                var pravnoLice = s.Load<PravnoLice>(id);
-
-                if (pravnoLice == null)
+                catch (Exception ex)
                 {
-                    return "Pravno lice sa zadatim ID-jem ne postoji.".ToError(404);
+                    throw new InvalidOperationException(
+                        "Greška pri učitavanju pravnog lica.", ex);
                 }
-
-                dto = new PravnoLiceBasic
-                {
-                    Id = pravnoLice.Id,
-                    NazivFirme = pravnoLice.NazivFirme,
-                    Pib = pravnoLice.Pib,
-                    Adresa = pravnoLice.Adresa,
-                    Grad = pravnoLice.Grad,
-                    Telefon = pravnoLice.Telefon,
-                    Email = pravnoLice.Email,
-                    Status = pravnoLice.Status,
-                    Komentar = pravnoLice.Komentar
-                };
             }
-            catch (Exception)
-            {
-                return "Greška pri učitavanju pravnog lica.".ToError(400);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return dto;
         }
 
-        public static Result<PravnoLiceBasic, ErrorMessage> IzmeniPravnoLice(PravnoLiceBasic pl)
+        public static PravnoLicePregled IzmeniPravnoLice(PravnoLicePregled pl)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    var pravnoLice = session.Load<PravnoLice>(pl.Id);
+
+                    pravnoLice.NazivFirme = pl.NazivFirme;
+                    pravnoLice.Pib = pl.Pib;
+                    pravnoLice.Adresa = pl.Adresa;
+                    pravnoLice.Grad = pl.Grad;
+                    pravnoLice.Telefon = pl.Telefon;
+                    pravnoLice.Email = pl.Email;
+                    pravnoLice.Status = pl.Status;
+                    pravnoLice.Komentar = pl.Komentar;
+
+                    session.Update(pravnoLice);
+                    transaction.Commit();
+
+                    return pl;
                 }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
 
-                t = s.BeginTransaction();
-
-                var pravnoLice = s.Load<PravnoLice>(pl.Id);
-
-                pravnoLice.NazivFirme = pl.NazivFirme;
-                pravnoLice.Pib = pl.Pib;
-                pravnoLice.Adresa = pl.Adresa;
-                pravnoLice.Grad = pl.Grad;
-                pravnoLice.Telefon = pl.Telefon;
-                pravnoLice.Email = pl.Email;
-                pravnoLice.Status = pl.Status;
-                pravnoLice.Komentar = pl.Komentar;
-
-                s.Update(pravnoLice);
-                t.Commit();
+                    throw new InvalidOperationException(
+                        "Greška pri izmeni pravnog lica.", ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri izmeni pravnog lica.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return pl;
         }
 
-        public static Result<bool, ErrorMessage> ObrisiPravnoLice(int id)
+        public static void ObrisiPravnoLice(int id)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    var pravnoLice = session.Get<PravnoLice>(id);
+
+                    if (pravnoLice == null)
+                        return;
+
+                    if (!pravnoLice.Racuni.IsEmpty())
+                        throw new InvalidOperationException(
+                            "Ne možete obrisati pravno lice koje poseduje račune.");
+
+                    session.Delete(pravnoLice);
+
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                var pravnoLice = s.Get<PravnoLice>(id);
-
-                if (pravnoLice == null)
+                catch (Exception ex)
                 {
-                    return "Pravno lice sa zadatim ID-jem ne postoji.".ToError(404);
+                    transaction.Rollback();
+
+                    throw new InvalidOperationException(
+                        "Greška pri brisanju pravnog lica: " + ex.Message, ex);
                 }
-
-                if (!pravnoLice.Racuni.IsEmpty())
-                {
-                    return "Ne možete obrisati pravno lice koje poseduje račune.".ToError(409);
-                }
-
-                s.Delete(pravnoLice);
-                t.Commit();
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri brisanju pravnog lica.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
         }
 
-        public static Result<List<PravnoLiceBasic>, ErrorMessage> VratiPravnaLica(int brojPoStrani, int strana = 1)
+        public static List<PravnoLicePregled> VratiPravnaLica(int brojPoStrani, int strana = 1)
         {
-            ISession? s = null;
-            List<PravnoLiceBasic> lista = new();
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                List<PravnoLice> entiteti = s.Query<PravnoLice>()
+                List<PravnoLice> entiteti = session.Query<PravnoLice>()
                     .Skip((strana - 1) * brojPoStrani)
                     .Take(brojPoStrani)
                     .ToList();
 
-                lista = entiteti.Select(x => new PravnoLiceBasic
+                return entiteti.Select(x => new PravnoLicePregled
                 {
                     Id = x.Id,
                     NazivFirme = x.NazivFirme,
@@ -487,113 +336,73 @@ namespace DatabaseAccess
                     Komentar = x.Komentar
                 }).ToList();
             }
-            catch (Exception)
-            {
-                return "Greška pri učitavanju pravnih lica.".ToError(400);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return lista;
         }
 
         #endregion
 
         #region Racun
-        // TODO: Proveriti metodu DodajRacun (dodaje tip racuna koji nije podrazumevani)
-        public static Result<int, ErrorMessage> DodajRacun(RacunBasic r, string jmbg, string pib)
+
+        public static void DodajRacun(RacunPregled r, string jmbg, string pib)
         {
             if (r == null)
+                throw new ArgumentNullException(nameof(r));
+
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                return "Račun ne sme biti null.".ToError(400);
-            }
-
-            ISession? s = null;
-            ITransaction? t = null;
-            int id = default;
-
-            try
-            {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    FizickoLice fl = new FizickoLice();
+                    PravnoLice pl = new PravnoLice();
+
+                    fl = session.Query<FizickoLice>()
+                        .Where(x => x.Jmbg == jmbg)
+                        .FirstOrDefault();
+                    pl = session.Query<PravnoLice>()
+                        .Where(x => x.Pib == pib)
+                        .FirstOrDefault();
+
+                    if (fl == null && pl == null)
+                    {
+                        throw new InvalidOperationException("Nema pravnog ili fizickog lica");
+                    }
+
+                    Racun racun = new Racun
+                    {
+                        BrojRacuna = r.BrojRacuna?.Trim(),
+                        Valuta = r.Valuta?.Trim(),
+                        TrenutnoStanje = r.TrenutnoStanje,
+                        DatumOtvaranja = r.DatumOtvaranja,
+                        Status = r.Status,
+                        DozvoljeniMinus = r.DozvoljeniMinus,
+                        Komentar = r.Komentar?.Trim(),
+                        TipRacuna = r.TipRacuna.Trim(),
+                        KamatnaStopa = r.KamatnaStopa,
+
+                        PripadaFizickomLicu = fl,
+                        PripadaPravnomLicu = pl
+                    };
+
+                    session.Save(racun);
+                    transaction.Commit();
+
+                    r.Id = racun.Id;
                 }
-
-                t = s.BeginTransaction();
-
-                FizickoLice fl = s.Query<FizickoLice>()
-                    .Where(x => x.Jmbg == jmbg)
-                    .FirstOrDefault();
-                PravnoLice pl = s.Query<PravnoLice>()
-                    .Where(x => x.Pib == pib)
-                    .FirstOrDefault();
-
-                if (fl == null && pl == null)
+                catch (Exception ex)
                 {
-                    return "Nema pravnog ili fizičkog lica.".ToError(404);
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri dodavanju računa: " + ex.Message, ex);
                 }
-
-                Racun racun = new Racun
-                {
-                    BrojRacuna = r.BrojRacuna?.Trim(),
-                    Valuta = r.Valuta?.Trim(),
-                    TrenutnoStanje = r.TrenutnoStanje,
-                    DatumOtvaranja = r.DatumOtvaranja,
-                    Status = r.Status,
-                    DozvoljeniMinus = r.DozvoljeniMinus,
-                    Komentar = r.Komentar?.Trim(),
-                    TipRacuna = string.IsNullOrWhiteSpace(r.TipRacuna)
-                        ? TipRacuna.Ostali.GetDescription()
-                        : r.TipRacuna.Trim(),
-                    KamatnaStopa = r.KamatnaStopa,
-
-                    PripadaFizickomLicu = fl,
-                    PripadaPravnomLicu = pl
-                };
-
-                s.Save(racun);
-                t.Commit();
-
-                r.Id = racun.Id;
-                id = racun.Id;
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri dodavanju računa.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return id;
         }
 
-        public static Result<RacunBasic, ErrorMessage> VratiRacun(int id)
+        public static RacunPregled VratiRacun(int id)
         {
-            ISession? s = null;
-            RacunBasic dto = default!;
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
+                Racun r = session.Load<Racun>(id);
 
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                Racun r = s.Load<Racun>(id);
-
-                dto = new RacunBasic
+                return new RacunPregled
                 {
                     Id = r.Id,
                     BrojRacuna = r.BrojRacuna,
@@ -607,7 +416,7 @@ namespace DatabaseAccess
                     KamatnaStopa = r.KamatnaStopa,
 
                     FizickoLice = r.PripadaFizickomLicu != null
-                        ? new FizickoLiceBasic
+                        ? new FizickoLicePregled
                         {
                             Id = r.PripadaFizickomLicu.Id,
                             Ime = r.PripadaFizickomLicu.Ime,
@@ -617,7 +426,7 @@ namespace DatabaseAccess
                         : null,
 
                     PravnoLice = r.PripadaPravnomLicu != null
-                        ? new PravnoLiceBasic
+                        ? new PravnoLicePregled
                         {
                             Id = r.PripadaPravnomLicu.Id,
                             NazivFirme = r.PripadaPravnomLicu.NazivFirme,
@@ -626,43 +435,17 @@ namespace DatabaseAccess
                         : null
                 };
             }
-            catch (Exception)
-            {
-                return "Nemoguće pronaći račun sa zadatim ID-jem.".ToError(404);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return dto;
         }
 
-        public static Result<RacunBasic, ErrorMessage> VratiRacun(string brojRacuna)
+        public static RacunPregled VratiRacun(string brojRacuna)
         {
-            ISession? s = null;
-            RacunBasic dto = default!;
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                Racun r = s.Query<Racun>()
+                Racun r = session.Query<Racun>()
                     .Where(x => x.BrojRacuna == brojRacuna)
                     .FirstOrDefault();
 
-                if (r == null)
-                {
-                    return "Nemoguće pronaći račun sa zadatim brojem računa.".ToError(404);
-                }
-
-                dto = new RacunBasic
+                return new RacunPregled
                 {
                     Id = r.Id,
                     BrojRacuna = r.BrojRacuna,
@@ -676,7 +459,7 @@ namespace DatabaseAccess
                     KamatnaStopa = r.KamatnaStopa,
 
                     FizickoLice = r.PripadaFizickomLicu != null
-                        ? new FizickoLiceBasic
+                        ? new FizickoLicePregled
                         {
                             Id = r.PripadaFizickomLicu.Id,
                             Ime = r.PripadaFizickomLicu.Ime,
@@ -686,7 +469,7 @@ namespace DatabaseAccess
                         : null,
 
                     PravnoLice = r.PripadaPravnomLicu != null
-                        ? new PravnoLiceBasic
+                        ? new PravnoLicePregled
                         {
                             Id = r.PripadaPravnomLicu.Id,
                             NazivFirme = r.PripadaPravnomLicu.NazivFirme,
@@ -695,134 +478,79 @@ namespace DatabaseAccess
                         : null
                 };
             }
-            catch (Exception)
-            {
-                return "Greška pri učitavanju računa.".ToError(400);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return dto;
         }
 
-        public static Result<bool, ErrorMessage> IzmeniRacun(RacunBasic r)
+        public static void IzmeniRacun(RacunPregled r)
         {
             if (r == null)
+                throw new ArgumentNullException(nameof(r));
+
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                return "Račun ne sme biti null.".ToError(400);
-            }
-
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
-            {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    var racun = session.Load<Racun>(r.Id);
+
+                    racun.BrojRacuna = r.BrojRacuna?.Trim();
+                    racun.Valuta = r.Valuta?.Trim();
+                    racun.TrenutnoStanje = r.TrenutnoStanje;
+                    racun.DatumOtvaranja = r.DatumOtvaranja;
+                    racun.Status = r.Status;
+                    racun.DozvoljeniMinus = r.DozvoljeniMinus;
+                    racun.Komentar = r.Komentar?.Trim();
+                    racun.KamatnaStopa = r.KamatnaStopa;
+
+                    session.Update(racun);
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                var racun = s.Load<Racun>(r.Id);
-
-                racun.BrojRacuna = r.BrojRacuna?.Trim();
-                racun.Valuta = r.Valuta?.Trim();
-                racun.TrenutnoStanje = r.TrenutnoStanje;
-                racun.DatumOtvaranja = r.DatumOtvaranja;
-                racun.Status = r.Status;
-                racun.DozvoljeniMinus = r.DozvoljeniMinus;
-                racun.Komentar = r.Komentar?.Trim();
-                racun.KamatnaStopa = r.KamatnaStopa;
-
-                s.Update(racun);
-                t.Commit();
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri izmeni računa", ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri izmeni računa.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
         }
 
-        public static Result<bool, ErrorMessage> ObrisiRacun(int id)
+        public static void ObrisiRacun(int id)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    Racun r = session.Load<Racun>(id);
+
+                    if (!r.Transakcije.IsEmpty() ||
+                        !r.Depoziti.IsEmpty() ||
+                        !r.Krediti.IsEmpty() ||
+                        !r.Kamate.IsEmpty() ||
+                        !r.SigurnosneKontrole.IsEmpty())
+                    {
+                        throw new InvalidOperationException("Račun ima poslovne zapise i ne može biti obrisan");
+                    }
+                    session.Delete(r);
+
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                Racun r = s.Load<Racun>(id);
-
-                if (!r.Transakcije.IsEmpty() ||
-                    !r.Depoziti.IsEmpty() ||
-                    !r.Krediti.IsEmpty() ||
-                    !r.Kamate.IsEmpty() ||
-                    !r.SigurnosneKontrole.IsEmpty())
+                catch (Exception ex)
                 {
-                    return "Račun ima poslovne zapise i ne može biti obrisan.".ToError(409);
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri brisanju računa: " + ex.Message, ex);
                 }
-
-                s.Delete(r);
-                t.Commit();
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri brisanju računa.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
         }
 
-        public static Result<List<RacunBasic>, ErrorMessage> VratiRacune(int brojPoStrani, int strana = 1)
+        public static List<RacunPregled> VratiRacune(int brojPoStrani, int strana = 1)
         {
-            ISession? s = null;
-            List<RacunBasic> lista = new();
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                List<Racun> entiteti = s.Query<Racun>()
+                List<Racun> entiteti = session.Query<Racun>()
                     .Skip((strana - 1) * brojPoStrani)
                     .Take(brojPoStrani)
                     .ToList();
 
-                lista = entiteti.Select(x => new RacunBasic
+                return entiteti.Select(x => new RacunPregled
                 {
                     Id = x.Id,
                     BrojRacuna = x.BrojRacuna,
@@ -835,7 +563,7 @@ namespace DatabaseAccess
                     KamatnaStopa = x.KamatnaStopa,
                     TipRacuna = x.TipRacuna,
                     FizickoLice = x.PripadaFizickomLicu != null
-                        ? new FizickoLiceBasic
+                        ? new FizickoLicePregled
                         {
                             Id = x.PripadaFizickomLicu.Id,
                             Ime = x.PripadaFizickomLicu.Ime,
@@ -844,7 +572,7 @@ namespace DatabaseAccess
                         : null,
 
                     PravnoLice = x.PripadaPravnomLicu != null
-                        ? new PravnoLiceBasic
+                        ? new PravnoLicePregled
                         {
                             Id = x.PripadaPravnomLicu.Id,
                             NazivFirme = x.PripadaPravnomLicu.NazivFirme
@@ -852,117 +580,71 @@ namespace DatabaseAccess
                         : null
                 }).ToList();
             }
-            catch (Exception)
-            {
-                return "Greška pri učitavanju računa.".ToError(400);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return lista;
         }
 
         #region Tekuci
 
-        public static Result<int, ErrorMessage> DodajTekuci(TekuciBasic tb, string jmbg, string pib)
+        public static void DodajTekuci(TekuciPregled tb, string jmbg, string pib)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-            int id = default;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
+                    FizickoLice fl = new FizickoLice();
+                    PravnoLice pl = new PravnoLice();
 
-                t = s.BeginTransaction();
+                    fl = session.Query<FizickoLice>()
+                        .Where(x => x.Jmbg == jmbg)
+                        .FirstOrDefault();
+                    pl = session.Query<PravnoLice>()
+                        .Where(x => x.Pib == pib)
+                        .FirstOrDefault();
 
-                FizickoLice fl = s.Query<FizickoLice>()
-                    .Where(x => x.Jmbg == jmbg)
-                    .FirstOrDefault();
-                PravnoLice pl = s.Query<PravnoLice>()
-                    .Where(x => x.Pib == pib)
-                    .FirstOrDefault();
-
-                if (fl == null && pl == null)
-                {
-                    return "Nema pravnog ili fizičkog lica.".ToError(404);
-                }
-
-                Tekuci tk = new Tekuci
-                {
-                    BrojRacuna = tb.BrojRacuna?.Trim(),
-                    Valuta = tb.Valuta?.Trim(),
-                    TrenutnoStanje = tb.TrenutnoStanje,
-                    DatumOtvaranja = tb.DatumOtvaranja,
-                    Status = tb.Status?.Trim(),
-                    DozvoljeniMinus = tb.DozvoljeniMinus,
-                    Komentar = tb.Komentar?.Trim(),
-                    TipRacuna = tb.TipRacuna?.Trim(),
-                    KamatnaStopa = tb.KamatnaStopa,
-
-                    PlatnaKartica = tb.PlatnaKartica,
-                    MesecniLimit = tb.MesecniLimit ?? 0,
-
-                    PripadaFizickomLicu = fl,
-                    PripadaPravnomLicu = pl
-                };
-
-                foreach (TekuciPaketBasic paket in tb.TekuciPaketi)
-                {
-                    TekuciPaket tp = new TekuciPaket
+                    if (fl == null && pl == null)
                     {
-                        Paket = paket.Paket,
-                        PripadaTekucem = tk
+                        throw new InvalidOperationException("Nema pravnog ili fizickog lica");
+                    }
+
+                    Tekuci t = new Tekuci
+                    {
+                        BrojRacuna = tb.BrojRacuna?.Trim(),
+                        Valuta = tb.Valuta?.Trim(),
+                        TrenutnoStanje = tb.TrenutnoStanje,
+                        DatumOtvaranja = tb.DatumOtvaranja,
+                        Status = tb.Status?.Trim(),
+                        DozvoljeniMinus = tb.DozvoljeniMinus,
+                        Komentar = tb.Komentar?.Trim(),
+                        TipRacuna = tb.TipRacuna?.Trim(),
+                        KamatnaStopa = tb.KamatnaStopa,
+
+                        PlatnaKartica = tb.PlatnaKartica,
+                        MesecniLimit = tb.MesecniLimit ?? 0,
+
+                        PripadaFizickomLicu = fl,
+                        PripadaPravnomLicu = pl
                     };
-                    tk.Paketi.Add(tp);
+
+                    session.Save(t);
+                    transaction.Commit();
+
+                    tb.Id = t.Id;
                 }
-
-                s.Save(tk);
-                t.Commit();
-
-                tb.Id = tk.Id;
-                id = tk.Id;
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri dodavanju tekućeg računa: " + ex.Message, ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri dodavanju tekućeg računa.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return id;
         }
 
-        public static Result<TekuciBasic, ErrorMessage> VratiTekuci(int id)
+        public static TekuciPregled VratiTekuci(int id)
         {
-            ISession? s = null;
-            TekuciBasic dto = default!;
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
+                var tekuci = session.Load<Tekuci>(id);
 
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                var tekuci = s.Load<Tekuci>(id);
-
-                dto = new TekuciBasic
+                var dto = new TekuciPregled
                 {
                     Id = tekuci.Id,
                     BrojRacuna = tekuci.BrojRacuna,
@@ -979,128 +661,45 @@ namespace DatabaseAccess
                     MesecniLimit = tekuci.MesecniLimit,
 
                     FizickoLice = tekuci.PripadaFizickomLicu != null
-                        ? new FizickoLiceBasic { Id = tekuci.PripadaFizickomLicu.Id, Ime = tekuci.PripadaFizickomLicu.Ime, Prezime = tekuci.PripadaFizickomLicu.Prezime }
+                        ? new FizickoLicePregled { Id = tekuci.PripadaFizickomLicu.Id, Ime = tekuci.PripadaFizickomLicu.Ime, Prezime = tekuci.PripadaFizickomLicu.Prezime }
                         : null,
                     PravnoLice = tekuci.PripadaPravnomLicu != null
-                        ? new PravnoLiceBasic { Id = tekuci.PripadaPravnomLicu.Id, NazivFirme = tekuci.PripadaPravnomLicu.NazivFirme }
+                        ? new PravnoLicePregled { Id = tekuci.PripadaPravnomLicu.Id, NazivFirme = tekuci.PripadaPravnomLicu.NazivFirme }
                         : null
                 };
 
-                dto.TekuciPaketi = tekuci.Paketi.Select(p => new TekuciPaketBasic
-                {
-                    Id = p.Id,
-                    Paket = p.Paket
-                }).ToList();
+                return dto;
             }
-            catch (Exception)
-            {
-                return "Nemoguće pronaći tekući račun sa zadatim ID-jem.".ToError(404);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return dto;
         }
 
-        // TODO: Testirati metodu IzmeniTekuci
-        public static Result<bool, ErrorMessage> IzmeniTekuci(TekuciBasic tb)
+        public static void IzmeniTekuci(TekuciPregled tb)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    var tekuci = session.Load<Tekuci>(tb.Id);
+
+                    tekuci.BrojRacuna = tb.BrojRacuna?.Trim();
+                    tekuci.Valuta = tb.Valuta?.Trim();
+                    tekuci.TrenutnoStanje = tb.TrenutnoStanje;
+                    tekuci.Status = tb.Status?.Trim();
+                    tekuci.DozvoljeniMinus = tb.DozvoljeniMinus;
+                    tekuci.Komentar = tb.Komentar?.Trim();
+                    tekuci.KamatnaStopa = tb.KamatnaStopa;
+
+                    tekuci.PlatnaKartica = tb.PlatnaKartica;
+                    tekuci.MesecniLimit = tb.MesecniLimit ?? 0;
+
+                    session.Update(tekuci);
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                var tekuci = s.Load<Tekuci>(tb.Id);
-
-                tekuci.BrojRacuna = tb.BrojRacuna?.Trim();
-                tekuci.Valuta = tb.Valuta?.Trim();
-                tekuci.TrenutnoStanje = tb.TrenutnoStanje;
-                tekuci.Status = tb.Status?.Trim();
-                tekuci.DozvoljeniMinus = tb.DozvoljeniMinus;
-                tekuci.Komentar = tb.Komentar?.Trim();
-                tekuci.KamatnaStopa = tb.KamatnaStopa;
-
-                tekuci.PlatnaKartica = tb.PlatnaKartica;
-                tekuci.MesecniLimit = tb.MesecniLimit ?? 0;
-
-                SinhronizujPakete(tekuci, tb.TekuciPaketi);
-
-                s.Update(tekuci);
-                t.Commit();
-            }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri izmeni tekućeg računa.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
-        }
-
-        private static void SinhronizujPakete(Tekuci tekuci, IList<TekuciPaketBasic> noviPaketi)
-        {
-            // Zaštita od null liste
-            if (noviPaketi == null)
-            {
-                noviPaketi = new List<TekuciPaketBasic>();
-            }
-
-            // 1. Postojeći paketi iz baze, indeksirani po Id-u
-            var postojeciPoId = tekuci.Paketi
-                .ToDictionary(p => p.Id);
-
-            // 2. Id-evi koji treba da ostanu (iz DTO-a, samo oni sa Id != 0)
-            var noviIdjevi = new HashSet<int>(
-                noviPaketi.Where(p => p.Id != 0).Select(p => p.Id));
-
-            // 3. Obriši orphan-ove (postojeći u bazi, ali ih nema u DTO listi)
-            //    Pošto je Cascade.AllDeleteOrphan, dovoljno ih je ukloniti iz kolekcije.
-            var zaBrisanje = tekuci.Paketi
-                .Where(p => !noviIdjevi.Contains(p.Id))
-                .ToList();
-
-            foreach (var paket in zaBrisanje)
-            {
-                tekuci.Paketi.Remove(paket);
-            }
-
-            // 4. Ažuriraj postojeće i dodaj nove
-            foreach (var dto in noviPaketi)
-            {
-                if (dto.Id != 0 && postojeciPoId.TryGetValue(dto.Id, out var postojeci))
+                catch (Exception ex)
                 {
-                    // Postojeći — ažuriraj vrednost ako se promenila
-                    if (postojeci.Paket != dto.Paket)
-                    {
-                        postojeci.Paket = dto.Paket;
-                    }
-                }
-                else
-                {
-                    // Novi — dodaj u kolekciju, NHibernate će ga upisati na Commit
-                    tekuci.Paketi.Add(new TekuciPaket
-                    {
-                        Paket = dto.Paket,
-                        PripadaTekucem = tekuci
-                    });
+                    transaction.Rollback();
+                    throw new InvalidOperationException(
+                        "Greška pri izmeni tekućeg računa", ex);
                 }
             }
         }
@@ -1109,112 +708,68 @@ namespace DatabaseAccess
 
         #region Devizni
 
-        public static Result<int, ErrorMessage> DodajDevizni(DevizniBasic db, string jmbg, string pib)
+        public static void DodajDevizni(DevizniPregled db, string jmbg, string pib)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-            int id = default;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
+                    FizickoLice fl = new FizickoLice();
+                    PravnoLice pl = new PravnoLice();
 
-                t = s.BeginTransaction();
+                    fl = session.Query<FizickoLice>()
+                        .Where(x => x.Jmbg == jmbg)
+                        .FirstOrDefault();
+                    pl = session.Query<PravnoLice>()
+                        .Where(x => x.Pib == pib)
+                        .FirstOrDefault();
 
-                FizickoLice fl = s.Query<FizickoLice>()
-                    .Where(x => x.Jmbg == jmbg)
-                    .FirstOrDefault();
-                PravnoLice pl = s.Query<PravnoLice>()
-                    .Where(x => x.Pib == pib)
-                    .FirstOrDefault();
-
-                if (fl == null && pl == null)
-                {
-                    return "Nema pravnog ili fizičkog lica.".ToError(404);
-                }
-
-                Devizni d = new Devizni
-                {
-                    BrojRacuna = db.BrojRacuna?.Trim(),
-                    Valuta = db.Valuta?.Trim(),
-                    TrenutnoStanje = db.TrenutnoStanje,
-                    DatumOtvaranja = db.DatumOtvaranja,
-                    Status = db.Status?.Trim(),
-                    DozvoljeniMinus = db.DozvoljeniMinus,
-                    Komentar = db.Komentar?.Trim(),
-                    TipRacuna = db.TipRacuna?.Trim(),
-                    KamatnaStopa = db.KamatnaStopa,
-
-                    Namena = db.Namena?.Trim(),
-                    KursnaRazlika = db.KursnaRazlika ?? 0,
-
-                    PripadaFizickomLicu = fl,
-                    PripadaPravnomLicu = pl
-                };
-
-                foreach (DevizniOgranicenjeBasic ogranicenje in db.DevizniOgranicenja)
-                {
-                    DevizniOgranicenje o = new DevizniOgranicenje
+                    if (fl == null && pl == null)
                     {
-                        Ogranicenje = ogranicenje.Ogranicenje,
-                        PripadaDeviznom = d
-                    };
-                    d.Ogranicanja.Add(o);
-                }
+                        throw new InvalidOperationException("Nema pravnog ili fizickog lica");
+                    }
 
-                foreach (DevizniValutaBasic valuta in db.DevizniValute)
-                {
-                    Entiteti.DevizniValuta v = new Entiteti.DevizniValuta
+                    Devizni d = new Devizni
                     {
-                        DozvoljenaValuta = valuta.DozvoljenaValuta,
-                        PripadaDeviznom = d
+                        BrojRacuna = db.BrojRacuna?.Trim(),
+                        Valuta = db.Valuta?.Trim(),
+                        TrenutnoStanje = db.TrenutnoStanje,
+                        DatumOtvaranja = db.DatumOtvaranja,
+                        Status = db.Status?.Trim(),
+                        DozvoljeniMinus = db.DozvoljeniMinus,
+                        Komentar = db.Komentar?.Trim(),
+                        TipRacuna = db.TipRacuna?.Trim(),
+                        KamatnaStopa = db.KamatnaStopa,
+
+                        Namena = db.Namena?.Trim(),
+                        KursnaRazlika = db.KursnaRazlika ?? 0,
+
+                        PripadaFizickomLicu = fl,
+                        PripadaPravnomLicu = pl
                     };
-                    d.Valute.Add(v);
+
+                    session.Save(d);
+                    transaction.Commit();
+
+                    db.Id = d.Id;
                 }
-
-                s.Save(d);
-                t.Commit();
-
-                db.Id = d.Id;
-                id = d.Id;
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException(
+                        "Greška pri dodavanju deviznog računa: " + ex.Message, ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri dodavanju deviznog računa.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return id;
         }
 
-        public static Result<DevizniBasic, ErrorMessage> VratiDevizni(int id)
+        public static DevizniPregled VratiDevizni(int id)
         {
-            ISession? s = null;
-            DevizniBasic dto = default!;
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
+                Devizni d = session.Load<Devizni>(id);
 
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                Devizni d = s.Load<Devizni>(id);
-
-                dto = new DevizniBasic
+                DevizniPregled dto = new DevizniPregled
                 {
                     Id = d.Id,
                     BrojRacuna = d.BrojRacuna,
@@ -1231,171 +786,44 @@ namespace DatabaseAccess
                     KursnaRazlika = d.KursnaRazlika,
 
                     FizickoLice = d.PripadaFizickomLicu != null
-                        ? new FizickoLiceBasic { Id = d.PripadaFizickomLicu.Id, Ime = d.PripadaFizickomLicu.Ime, Prezime = d.PripadaFizickomLicu.Prezime }
+                        ? new FizickoLicePregled { Id = d.PripadaFizickomLicu.Id, Ime = d.PripadaFizickomLicu.Ime, Prezime = d.PripadaFizickomLicu.Prezime }
                         : null,
                     PravnoLice = d.PripadaPravnomLicu != null
-                        ? new PravnoLiceBasic { Id = d.PripadaPravnomLicu.Id, NazivFirme = d.PripadaPravnomLicu.NazivFirme }
+                        ? new PravnoLicePregled { Id = d.PripadaPravnomLicu.Id, NazivFirme = d.PripadaPravnomLicu.NazivFirme }
                         : null
                 };
 
-                dto.DevizniOgranicenja = d.Ogranicanja.Select(o => new DevizniOgranicenjeBasic
-                {
-                    Id = o.Id,
-                    Ogranicenje = o.Ogranicenje
-                }).ToList();
-
-                dto.DevizniValute = d.Valute.Select(v => new DevizniValutaBasic
-                {
-                    Id = v.Id,
-                    DozvoljenaValuta = v.DozvoljenaValuta
-                }).ToList();
-            }
-            catch (Exception)
-            {
-                return "Nemoguće pronaći devizni račun sa zadatim ID-jem.".ToError(404);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return dto;
-        }
-
-        // TODO: Testirati metodu IzmeniDevizni
-        public static Result<bool, ErrorMessage> IzmeniDevizni(DevizniBasic db)
-        {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
-            {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                t = s.BeginTransaction();
-
-                Devizni d = s.Load<Devizni>(db.Id);
-
-                d.BrojRacuna = db.BrojRacuna?.Trim();
-                d.Valuta = db.Valuta?.Trim();
-                d.TrenutnoStanje = db.TrenutnoStanje;
-                d.Status = db.Status?.Trim();
-                d.DozvoljeniMinus = db.DozvoljeniMinus;
-                d.Komentar = db.Komentar?.Trim();
-                d.KamatnaStopa = db.KamatnaStopa;
-
-                d.Namena = db.Namena?.Trim();
-                d.KursnaRazlika = db.KursnaRazlika ?? 0;
-
-                SinhronizujOgranicenja(d, db.DevizniOgranicenja);
-                SinhronizujValute(d, db.DevizniValute);
-
-                s.Update(d);
-                t.Commit();
-            }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri izmeni deviznog računa.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
-        }
-
-        private static void SinhronizujOgranicenja(Devizni devizni, IList<DevizniOgranicenjeBasic> novi)
-        {
-            if (novi == null)
-            {
-                novi = new List<DevizniOgranicenjeBasic>();
-            }
-
-            // 1. Postojeći iz baze, indeksirani po Id-u
-            var postojeciPoId = devizni.Ogranicanja.ToDictionary(o => o.Id);
-
-            // 2. Id-evi koji treba da ostanu
-            var noviIdjevi = new HashSet<int>(
-                novi.Where(o => o.Id != 0).Select(o => o.Id));
-
-            // 3. Ukloni orphan-ove (cascade će ih obrisati iz DEVIZNI_OGRANICENJE)
-            var zaBrisanje = devizni.Ogranicanja
-                .Where(o => !noviIdjevi.Contains(o.Id))
-                .ToList();
-
-            foreach (var o in zaBrisanje)
-            {
-                devizni.Ogranicanja.Remove(o);
-            }
-
-            // 4. Ažuriraj postojeće i dodaj nove
-            foreach (var dto in novi)
-            {
-                if (dto.Id != 0 && postojeciPoId.TryGetValue(dto.Id, out var postojeci))
-                {
-                    if (postojeci.Ogranicenje != dto.Ogranicenje)
-                    {
-                        postojeci.Ogranicenje = dto.Ogranicenje;
-                    }
-                }
-                else
-                {
-                    devizni.Ogranicanja.Add(new DevizniOgranicenje
-                    {
-                        Ogranicenje = dto.Ogranicenje,
-                        PripadaDeviznom = devizni
-                    });
-                }
+                return dto;
             }
         }
 
-        private static void SinhronizujValute(Devizni devizni, IList<DevizniValutaBasic> novi)
+        public static void IzmeniDevizni(DevizniPregled db)
         {
-            if (novi == null)
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                novi = new List<DevizniValutaBasic>();
-            }
-
-            var postojeciPoId = devizni.Valute.ToDictionary(v => v.Id);
-
-            var noviIdjevi = new HashSet<int>(
-                novi.Where(v => v.Id != 0).Select(v => v.Id));
-
-            var zaBrisanje = devizni.Valute
-                .Where(v => !noviIdjevi.Contains(v.Id))
-                .ToList();
-
-            foreach (var v in zaBrisanje)
-            {
-                devizni.Valute.Remove(v);
-            }
-
-            foreach (var dto in novi)
-            {
-                if (dto.Id != 0 && postojeciPoId.TryGetValue(dto.Id, out var postojeci))
+                try
                 {
-                    if (postojeci.DozvoljenaValuta != dto.DozvoljenaValuta)
-                    {
-                        postojeci.DozvoljenaValuta = dto.DozvoljenaValuta;
-                    }
+                    Devizni d = session.Load<Devizni>(db.Id);
+
+                    d.BrojRacuna = db.BrojRacuna?.Trim();
+                    d.Valuta = db.Valuta?.Trim();
+                    d.TrenutnoStanje = db.TrenutnoStanje;
+                    d.Status = db.Status?.Trim();
+                    d.DozvoljeniMinus = db.DozvoljeniMinus;
+                    d.Komentar = db.Komentar?.Trim();
+                    d.KamatnaStopa = db.KamatnaStopa;
+
+                    d.Namena = db.Namena?.Trim();
+                    d.KursnaRazlika = db.KursnaRazlika ?? 0;
+
+                    session.Update(d);
+                    transaction.Commit();
                 }
-                else
+                catch (Exception ex)
                 {
-                    devizni.Valute.Add(new Entiteti.DevizniValuta
-                    {
-                        DozvoljenaValuta = dto.DozvoljenaValuta,
-                        PripadaDeviznom = devizni
-                    });
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri izmeni deviznog računa", ex);
                 }
             }
         }
@@ -1404,293 +832,122 @@ namespace DatabaseAccess
 
         #region Stedni
 
-        public static Result<int, ErrorMessage> DodajStedni(StedniBasic sb, string jmbg, string pib)
+        public static void DodajStedni(StedniPregled sb, string jmbg, string pib)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-            int id = default;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
+                    FizickoLice fl = new FizickoLice();
+                    PravnoLice pl = new PravnoLice();
 
-                t = s.BeginTransaction();
+                    fl = session.Query<FizickoLice>()
+                        .Where(x => x.Jmbg == jmbg)
+                        .FirstOrDefault();
+                    pl = session.Query<PravnoLice>()
+                        .Where(x => x.Pib == pib)
+                        .FirstOrDefault();
 
-                FizickoLice fl = s.Query<FizickoLice>()
-                    .Where(x => x.Jmbg == jmbg)
-                    .FirstOrDefault();
-                PravnoLice pl = s.Query<PravnoLice>()
-                    .Where(x => x.Pib == pib)
-                    .FirstOrDefault();
-
-                if (fl == null && pl == null)
-                {
-                    return "Nema pravnog ili fizičkog lica.".ToError(404);
-                }
-
-                Stedni st = new Stedni
-                {
-                    BrojRacuna = sb.BrojRacuna?.Trim(),
-                    Valuta = sb.Valuta?.Trim(),
-                    TrenutnoStanje = sb.TrenutnoStanje,
-                    DatumOtvaranja = sb.DatumOtvaranja,
-                    Status = sb.Status?.Trim(),
-                    DozvoljeniMinus = sb.DozvoljeniMinus,
-                    Komentar = sb.Komentar?.Trim(),
-                    TipRacuna = sb.TipRacuna?.Trim(),
-                    KamatnaStopa = sb.KamatnaStopa,
-
-                    MinimalniIznosOtvaranja = sb.MinimalniIznosOtvaranja ?? 0,
-                    FrekvKapitKamate = sb.FrekvKapitalizKamate,
-
-                    PripadaFizickomLicu = fl,
-                    PripadaPravnomLicu = pl
-                };
-
-                foreach (StedniBonusBasic bonus in sb.StedniBonusi)
-                {
-                    StedniBonus sbonus = new StedniBonus
+                    if (fl == null && pl == null)
                     {
-                        Bonus = bonus.Bonus,
-                        PripadaStednom = st
-                    };
-                    st.Bonusi.Add(sbonus);
-                }
+                        throw new InvalidOperationException("Nema pravnog ili fizickog lica");
+                    }
 
-                foreach (StedniUsloviPodizanjaBasic su in sb.StedniUsloviPodizanja)
-                {
-                    StedniUslovPodizanja uslov = new StedniUslovPodizanja
+                    Stedni s = new Stedni
                     {
-                        UslovPodizanja = su.UslovPodizanja,
-                        PripadaStednom = st
+                        BrojRacuna = sb.BrojRacuna?.Trim(),
+                        Valuta = sb.Valuta?.Trim(),
+                        TrenutnoStanje = sb.TrenutnoStanje,
+                        DatumOtvaranja = sb.DatumOtvaranja,
+                        Status = sb.Status?.Trim(),
+                        DozvoljeniMinus = sb.DozvoljeniMinus,
+                        Komentar = sb.Komentar?.Trim(),
+                        TipRacuna = sb.TipRacuna?.Trim(),
+                        KamatnaStopa = sb.KamatnaStopa,
+
+                        MinimalniIznosOtvaranja = sb.MinimalniIznosOtvaranja ?? 0,
+                        FrekvKapitKamate = sb.FrekvKapitalizKamate,
+
+                        PripadaFizickomLicu = fl,
+                        PripadaPravnomLicu = pl
                     };
-                    st.UsloviPodizanja.Add(uslov);
+
+                    session.Save(s);
+                    transaction.Commit();
+
+                    sb.Id = s.Id;
                 }
-
-                s.Save(st);
-                t.Commit();
-
-                sb.Id = st.Id;
-                id = st.Id;
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException(
+                        "Greška pri dodavanju štednog računa: " + ex.Message, ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri dodavanju štednog računa.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return id;
         }
 
-        public static Result<StedniBasic, ErrorMessage> VratiStedni(int id)
+        public static StedniPregled VratiStedni(int id)
         {
-            ISession? s = null;
-            StedniBasic dto = default!;
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
+                Stedni s = session.Load<Stedni>(id);
 
-                if (!(s?.IsConnected ?? false))
+                StedniPregled dto = new StedniPregled
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
+                    Id = s.Id,
+                    BrojRacuna = s.BrojRacuna,
+                    Valuta = s.Valuta,
+                    TrenutnoStanje = s.TrenutnoStanje,
+                    DatumOtvaranja = s.DatumOtvaranja,
+                    Status = s.Status,
+                    DozvoljeniMinus = s.DozvoljeniMinus,
+                    Komentar = s.Komentar,
+                    TipRacuna = s.TipRacuna,
+                    KamatnaStopa = s.KamatnaStopa,
 
-                Stedni st = s.Load<Stedni>(id);
+                    MinimalniIznosOtvaranja = s.MinimalniIznosOtvaranja,
+                    FrekvKapitalizKamate = s.FrekvKapitKamate,
 
-                dto = new StedniBasic
-                {
-                    Id = st.Id,
-                    BrojRacuna = st.BrojRacuna,
-                    Valuta = st.Valuta,
-                    TrenutnoStanje = st.TrenutnoStanje,
-                    DatumOtvaranja = st.DatumOtvaranja,
-                    Status = st.Status,
-                    DozvoljeniMinus = st.DozvoljeniMinus,
-                    Komentar = st.Komentar,
-                    TipRacuna = st.TipRacuna,
-                    KamatnaStopa = st.KamatnaStopa,
-
-                    MinimalniIznosOtvaranja = st.MinimalniIznosOtvaranja,
-                    FrekvKapitalizKamate = st.FrekvKapitKamate,
-
-                    FizickoLice = st.PripadaFizickomLicu != null
-                        ? new FizickoLiceBasic { Id = st.PripadaFizickomLicu.Id, Ime = st.PripadaFizickomLicu.Ime, Prezime = st.PripadaFizickomLicu.Prezime }
+                    FizickoLice = s.PripadaFizickomLicu != null
+                        ? new FizickoLicePregled { Id = s.PripadaFizickomLicu.Id, Ime = s.PripadaFizickomLicu.Ime, Prezime = s.PripadaFizickomLicu.Prezime }
                         : null,
-                    PravnoLice = st.PripadaPravnomLicu != null
-                        ? new PravnoLiceBasic { Id = st.PripadaPravnomLicu.Id, NazivFirme = st.PripadaPravnomLicu.NazivFirme }
+                    PravnoLice = s.PripadaPravnomLicu != null
+                        ? new PravnoLicePregled { Id = s.PripadaPravnomLicu.Id, NazivFirme = s.PripadaPravnomLicu.NazivFirme }
                         : null
                 };
 
-                dto.StedniBonusi = st.Bonusi.Select(b => new StedniBonusBasic
-                {
-                    Id = b.Id,
-                    Bonus = b.Bonus
-                }).ToList();
-
-                dto.StedniUsloviPodizanja = st.UsloviPodizanja.Select(u => new StedniUsloviPodizanjaBasic
-                {
-                    Id = u.Id,
-                    UslovPodizanja = u.UslovPodizanja
-                }).ToList();
-            }
-            catch (Exception)
-            {
-                return "Nemoguće pronaći štedni račun sa zadatim ID-jem.".ToError(404);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return dto;
-        }
-
-        // TODO: Testirati metodu IzmeniStedni
-        public static Result<bool, ErrorMessage> IzmeniStedni(StedniBasic sb)
-        {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
-            {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                t = s.BeginTransaction();
-
-                Stedni st = s.Load<Stedni>(sb.Id);
-
-                st.BrojRacuna = sb.BrojRacuna?.Trim();
-                st.Valuta = sb.Valuta?.Trim();
-                st.TrenutnoStanje = sb.TrenutnoStanje;
-                st.Status = sb.Status?.Trim();
-                st.DozvoljeniMinus = sb.DozvoljeniMinus;
-                st.Komentar = sb.Komentar?.Trim();
-                st.KamatnaStopa = sb.KamatnaStopa;
-
-                st.MinimalniIznosOtvaranja = sb.MinimalniIznosOtvaranja ?? 0;
-                st.FrekvKapitKamate = sb.FrekvKapitalizKamate;
-
-                SinhronizujBonuse(st, sb.StedniBonusi);
-                SinhronizujUslovePodizanja(st, sb.StedniUsloviPodizanja);
-
-                s.Update(st);
-                t.Commit();
-            }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri izmeni štednog računa.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
-        }
-
-        private static void SinhronizujBonuse(Stedni stedni, IList<StedniBonusBasic> novi)
-        {
-            if (novi == null)
-            {
-                novi = new List<StedniBonusBasic>();
-            }
-
-            // 1. Postojeći iz baze, indeksirani po Id-u
-            var postojeciPoId = stedni.Bonusi.ToDictionary(b => b.Id);
-
-            // 2. Id-evi koji treba da ostanu (samo oni sa Id != 0)
-            var noviIdjevi = new HashSet<int>(
-                novi.Where(b => b.Id != 0).Select(b => b.Id));
-
-            // 3. Ukloni orphan-ove (cascade → DELETE iz STEDNI_BONUS)
-            var zaBrisanje = stedni.Bonusi
-                .Where(b => !noviIdjevi.Contains(b.Id))
-                .ToList();
-
-            foreach (var b in zaBrisanje)
-            {
-                stedni.Bonusi.Remove(b);
-            }
-
-            // 4. Ažuriraj postojeće i dodaj nove
-            foreach (var dto in novi)
-            {
-                if (dto.Id != 0 && postojeciPoId.TryGetValue(dto.Id, out var postojeci))
-                {
-                    if (postojeci.Bonus != dto.Bonus)
-                    {
-                        postojeci.Bonus = dto.Bonus;
-                    }
-                }
-                else
-                {
-                    stedni.Bonusi.Add(new StedniBonus
-                    {
-                        Bonus = dto.Bonus,
-                        PripadaStednom = stedni
-                    });
-                }
+                return dto;
             }
         }
 
-        private static void SinhronizujUslovePodizanja(Stedni stedni, IList<StedniUsloviPodizanjaBasic> novi)
+        public static void IzmeniStedni(StedniPregled sb)
         {
-            if (novi == null)
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                novi = new List<StedniUsloviPodizanjaBasic>();
-            }
-
-            var postojeciPoId = stedni.UsloviPodizanja.ToDictionary(u => u.Id);
-
-            var noviIdjevi = new HashSet<int>(
-                novi.Where(u => u.Id != 0).Select(u => u.Id));
-
-            var zaBrisanje = stedni.UsloviPodizanja
-                .Where(u => !noviIdjevi.Contains(u.Id))
-                .ToList();
-
-            foreach (var u in zaBrisanje)
-            {
-                stedni.UsloviPodizanja.Remove(u);
-            }
-
-            foreach (var dto in novi)
-            {
-                if (dto.Id != 0 && postojeciPoId.TryGetValue(dto.Id, out var postojeci))
+                try
                 {
-                    if (postojeci.UslovPodizanja != dto.UslovPodizanja)
-                    {
-                        postojeci.UslovPodizanja = dto.UslovPodizanja;
-                    }
+                    Stedni s = session.Load<Stedni>(sb.Id);
+
+                    s.BrojRacuna = sb.BrojRacuna?.Trim();
+                    s.Valuta = sb.Valuta?.Trim();
+                    s.TrenutnoStanje = sb.TrenutnoStanje;
+                    s.Status = sb.Status?.Trim();
+                    s.DozvoljeniMinus = sb.DozvoljeniMinus;
+                    s.Komentar = sb.Komentar?.Trim();
+                    s.KamatnaStopa = sb.KamatnaStopa;
+
+                    s.MinimalniIznosOtvaranja = sb.MinimalniIznosOtvaranja ?? 0;
+                    s.FrekvKapitKamate = sb.FrekvKapitalizKamate;
+
+                    session.Update(s);
+                    transaction.Commit();
                 }
-                else
+                catch (Exception ex)
                 {
-                    stedni.UsloviPodizanja.Add(new StedniUslovPodizanja
-                    {
-                        UslovPodizanja = dto.UslovPodizanja,
-                        PripadaStednom = stedni
-                    });
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri izmeni štednog računa", ex);
                 }
             }
         }
@@ -1699,94 +956,70 @@ namespace DatabaseAccess
 
         #region Ziro
 
-        public static Result<int, ErrorMessage> DodajZiro(ZiroBasic zb, string jmbg, string pib)
+        public static void DodajZiro(ZiroPregled zb, string jmbg, string pib)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-            int id = default;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    FizickoLice fl = new FizickoLice();
+                    PravnoLice pl = new PravnoLice();
+
+                    fl = session.Query<FizickoLice>()
+                        .Where(x => x.Jmbg == jmbg)
+                        .FirstOrDefault();
+                    pl = session.Query<PravnoLice>()
+                        .Where(x => x.Pib == pib)
+                        .FirstOrDefault();
+
+                    if (fl == null && pl == null)
+                    {
+                        throw new InvalidOperationException("Nema pravnog ili fizickog lica");
+                    }
+
+                    Ziro z = new Ziro
+                    {
+                        BrojRacuna = zb.BrojRacuna?.Trim(),
+                        Valuta = zb.Valuta?.Trim(),
+                        TrenutnoStanje = zb.TrenutnoStanje,
+                        DatumOtvaranja = zb.DatumOtvaranja,
+                        Status = zb.Status?.Trim(),
+                        DozvoljeniMinus = zb.DozvoljeniMinus,
+                        Komentar = zb.Komentar?.Trim(),
+                        TipRacuna = zb.TipRacuna?.Trim(),
+                        KamatnaStopa = zb.KamatnaStopa,
+
+                        Namena = zb.Namena?.Trim(),
+                        ElektronskoBankarstvo = zb.ElektronskoBankarstvo,
+                        LimitZaMasovnaPlacanja = zb.LimitZaMasovnaPlacanja ?? 0,
+                        IntegracijaSaSistemima = zb.IntegracijaSaSistemima,
+
+                        PripadaFizickomLicu = fl,
+                        PripadaPravnomLicu = pl
+                    };
+
+                    session.Save(z);
+                    transaction.Commit();
+
+                    zb.Id = z.Id;
                 }
-
-                t = s.BeginTransaction();
-
-                FizickoLice fl = s.Query<FizickoLice>()
-                    .Where(x => x.Jmbg == jmbg)
-                    .FirstOrDefault();
-                PravnoLice pl = s.Query<PravnoLice>()
-                    .Where(x => x.Pib == pib)
-                    .FirstOrDefault();
-
-                if (fl == null && pl == null)
+                catch (Exception ex)
                 {
-                    return "Nema pravnog ili fizičkog lica.".ToError(404);
+                    transaction.Rollback();
+                    throw new InvalidOperationException(
+                        "Greška pri dodavanju žiro računa: " + ex.Message, ex);
                 }
-
-                Ziro z = new Ziro
-                {
-                    BrojRacuna = zb.BrojRacuna?.Trim(),
-                    Valuta = zb.Valuta?.Trim(),
-                    TrenutnoStanje = zb.TrenutnoStanje,
-                    DatumOtvaranja = zb.DatumOtvaranja,
-                    Status = zb.Status?.Trim(),
-                    DozvoljeniMinus = zb.DozvoljeniMinus,
-                    Komentar = zb.Komentar?.Trim(),
-                    TipRacuna = zb.TipRacuna?.Trim(),
-                    KamatnaStopa = zb.KamatnaStopa,
-
-                    Namena = zb.Namena?.Trim(),
-                    ElektronskoBankarstvo = zb.ElektronskoBankarstvo,
-                    LimitZaMasovnaPlacanja = zb.LimitZaMasovnaPlacanja ?? 0,
-                    IntegracijaSaSistemima = zb.IntegracijaSaSistemima,
-
-                    PripadaFizickomLicu = fl,
-                    PripadaPravnomLicu = pl
-                };
-
-                s.Save(z);
-                t.Commit();
-
-                zb.Id = z.Id;
-                id = z.Id;
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri dodavanju žiro računa.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return id;
         }
 
-        public static Result<ZiroBasic, ErrorMessage> VratiZiro(int id)
+        public static ZiroPregled VratiZiro(int id)
         {
-            ISession? s = null;
-            ZiroBasic dto = default!;
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
+                Ziro z = session.Load<Ziro>(id);
 
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                Ziro z = s.Load<Ziro>(id);
-
-                dto = new ZiroBasic
+                return new ZiroPregled
                 {
                     Id = z.Id,
                     BrojRacuna = z.BrojRacuna,
@@ -1805,73 +1038,46 @@ namespace DatabaseAccess
                     IntegracijaSaSistemima = z.IntegracijaSaSistemima,
 
                     FizickoLice = z.PripadaFizickomLicu != null
-                        ? new FizickoLiceBasic { Id = z.PripadaFizickomLicu.Id, Ime = z.PripadaFizickomLicu.Ime, Prezime = z.PripadaFizickomLicu.Prezime }
+                        ? new FizickoLicePregled { Id = z.PripadaFizickomLicu.Id, Ime = z.PripadaFizickomLicu.Ime, Prezime = z.PripadaFizickomLicu.Prezime }
                         : null,
                     PravnoLice = z.PripadaPravnomLicu != null
-                        ? new PravnoLiceBasic { Id = z.PripadaPravnomLicu.Id, NazivFirme = z.PripadaPravnomLicu.NazivFirme }
+                        ? new PravnoLicePregled { Id = z.PripadaPravnomLicu.Id, NazivFirme = z.PripadaPravnomLicu.NazivFirme }
                         : null
                 };
             }
-            catch (Exception)
-            {
-                return "Nemoguće pronaći žiro račun sa zadatim ID-jem.".ToError(404);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return dto;
         }
 
-        public static Result<bool, ErrorMessage> IzmeniZiro(ZiroBasic zb)
+        public static void IzmeniZiro(ZiroPregled zb)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    Ziro z = session.Load<Ziro>(zb.Id);
+
+                    z.BrojRacuna = zb.BrojRacuna?.Trim();
+                    z.Valuta = zb.Valuta?.Trim();
+                    z.TrenutnoStanje = zb.TrenutnoStanje;
+                    z.Status = zb.Status?.Trim();
+                    z.DozvoljeniMinus = zb.DozvoljeniMinus;
+                    z.Komentar = zb.Komentar?.Trim();
+                    z.KamatnaStopa = zb.KamatnaStopa;
+
+                    z.Namena = zb.Namena?.Trim();
+                    z.ElektronskoBankarstvo = zb.ElektronskoBankarstvo;
+                    z.LimitZaMasovnaPlacanja = zb.LimitZaMasovnaPlacanja ?? 0;
+                    z.IntegracijaSaSistemima = zb.IntegracijaSaSistemima;
+
+                    session.Update(z);
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                Ziro z = s.Load<Ziro>(zb.Id);
-
-                z.BrojRacuna = zb.BrojRacuna?.Trim();
-                z.Valuta = zb.Valuta?.Trim();
-                z.TrenutnoStanje = zb.TrenutnoStanje;
-                z.Status = zb.Status?.Trim();
-                z.DozvoljeniMinus = zb.DozvoljeniMinus;
-                z.Komentar = zb.Komentar?.Trim();
-                z.KamatnaStopa = zb.KamatnaStopa;
-
-                z.Namena = zb.Namena?.Trim();
-                z.ElektronskoBankarstvo = zb.ElektronskoBankarstvo;
-                z.LimitZaMasovnaPlacanja = zb.LimitZaMasovnaPlacanja ?? 0;
-                z.IntegracijaSaSistemima = zb.IntegracijaSaSistemima;
-
-                s.Update(z);
-                t.Commit();
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri izmeni žiro računa", ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri izmeni žiro računa.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
         }
 
         #endregion
@@ -1880,78 +1086,53 @@ namespace DatabaseAccess
 
         #region Transakcija
 
-        public static Result<int, ErrorMessage> DodajTransakciju(TransakcijaBasic tb, int racunId)
+        public static void DodajTransakciju(TransakcijaPregled tb, int racunId)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-            int id = default;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    Racun r = session.Load<Racun>(racunId);
+
+                    Transakcija t = new Transakcija
+                    {
+                        DatumIVreme = tb.DatumIVreme,
+                        Tip = tb.TipTransakcije?.Trim(),
+                        Status = tb.StatusTransakcije?.Trim(),
+                        PodaciPrimaoca = tb.PodaciPrimaoca?.Trim(),
+                        Referenca = tb.Referenca?.Trim(),
+                        Valuta = tb.Valuta?.Trim(),
+                        Iznos = tb.Iznos,
+                        Opis = tb.Opis?.Trim(),
+                        Komentar = tb.Komentar?.Trim(),
+
+                        OdvijaSeNaRacun = r
+                    };
+
+                    session.Save(t);
+                    transaction.Commit();
+
+                    tb.Id = t.Id;
                 }
-
-                t = s.BeginTransaction();
-
-                Racun r = s.Load<Racun>(racunId);
-
-                Transakcija tr = new Transakcija
+                catch (Exception ex)
                 {
-                    DatumIVreme = tb.DatumIVreme,
-                    Tip = tb.TipTransakcije?.Trim(),
-                    Status = tb.StatusTransakcije?.Trim(),
-                    PodaciPrimaoca = tb.PodaciPrimaoca?.Trim(),
-                    Referenca = tb.Referenca?.Trim(),
-                    Valuta = tb.Valuta?.Trim(),
-                    Iznos = tb.Iznos,
-                    Opis = tb.Opis?.Trim(),
-                    Komentar = tb.Komentar?.Trim(),
-
-                    OdvijaSeNaRacun = r
-                };
-
-                s.Save(tr);
-                t.Commit();
-
-                tb.Id = tr.Id;
-                id = tr.Id;
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri dodavanju transakcije", ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri dodavanju transakcije.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return id;
         }
 
-        public static Result<TransakcijaBasic, ErrorMessage> VratiTransakciju(int id)
+        public static TransakcijaPregled VratiTransakciju(int id)
         {
-            ISession? s = null;
-            TransakcijaBasic dto = default!;
+            TransakcijaPregled dto = null;
+            ISession s = DataLayer.GetSession();
 
             try
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
                 Transakcija t = s.Load<Transakcija>(id);
 
-                dto = new TransakcijaBasic
+                dto = new TransakcijaPregled
                 {
                     Id = t.Id,
                     DatumIVreme = t.DatumIVreme,
@@ -1965,7 +1146,7 @@ namespace DatabaseAccess
                     Komentar = t.Komentar,
 
                     Racun = t.OdvijaSeNaRacun != null
-                        ? new RacunBasic
+                        ? new RacunPregled
                         {
                             Id = t.OdvijaSeNaRacun.Id,
                             BrojRacuna = t.OdvijaSeNaRacun.BrojRacuna
@@ -1973,40 +1154,33 @@ namespace DatabaseAccess
                         : null
                 };
             }
-            catch (Exception)
+            catch (Exception ec)
             {
-                return "Nemoguće pronaći transakciju sa zadatim ID-jem.".ToError(404);
+                throw new InvalidOperationException("Greška pri vraćanju transakcije", ec);
             }
             finally
             {
-                s?.Close();
-                s?.Dispose();
+                if (s.IsOpen)
+                {
+                    s.Flush();
+                    s.Close();
+                }
             }
 
             return dto;
         }
 
-        public static Result<List<TransakcijaBasic>, ErrorMessage> VratiTransakcije(int brojPoStrani, int strana = 1)
+        public static List<TransakcijaPregled> VratiTransakcije(int brojPoStrani, int strana = 1)
         {
-            ISession? s = null;
-            List<TransakcijaBasic> lista = new();
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                List<Transakcija> entiteti = s.Query<Transakcija>()
+                List<Transakcija> entiteti = session.Query<Transakcija>()
                     .OrderByDescending(x => x.DatumIVreme)
                     .Skip((strana - 1) * brojPoStrani)
                     .Take(brojPoStrani)
                     .ToList();
 
-                lista = entiteti.Select(x => new TransakcijaBasic
+                return entiteti.Select(x => new TransakcijaPregled
                 {
                     Id = x.Id,
                     DatumIVreme = x.DatumIVreme,
@@ -2020,7 +1194,7 @@ namespace DatabaseAccess
                     Komentar = x.Komentar,
 
                     Racun = x.OdvijaSeNaRacun != null
-                        ? new RacunBasic
+                        ? new RacunPregled
                         {
                             Id = x.OdvijaSeNaRacun.Id,
                             BrojRacuna = x.OdvijaSeNaRacun.BrojRacuna
@@ -2028,41 +1202,20 @@ namespace DatabaseAccess
                         : null
                 }).ToList();
             }
-            catch (Exception)
-            {
-                return "Greška pri učitavanju transakcija.".ToError(400);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return lista;
         }
 
-        public static Result<List<TransakcijaBasic>, ErrorMessage> VratiTransakcijeZaRacun(int racunId, int brojPoStrani, int strana = 1)
+        public static List<TransakcijaPregled> VratiTransakcijeZaRacun(int racunId, int brojPoStrani, int strana = 1)
         {
-            ISession? s = null;
-            List<TransakcijaBasic> lista = new();
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                List<Transakcija> entiteti = s.Query<Transakcija>()
+                List<Transakcija> entiteti = session.Query<Transakcija>()
                     .Where(x => x.OdvijaSeNaRacun.Id == racunId)
                     .OrderByDescending(x => x.DatumIVreme)
                     .Skip((strana - 1) * brojPoStrani)
                     .Take(brojPoStrani)
                     .ToList();
 
-                lista = entiteti.Select(x => new TransakcijaBasic
+                return entiteti.Select(x => new TransakcijaPregled
                 {
                     Id = x.Id,
                     DatumIVreme = x.DatumIVreme,
@@ -2076,7 +1229,7 @@ namespace DatabaseAccess
                     Komentar = x.Komentar,
 
                     Racun = x.OdvijaSeNaRacun != null
-                        ? new RacunBasic
+                        ? new RacunPregled
                         {
                             Id = x.OdvijaSeNaRacun.Id,
                             BrojRacuna = x.OdvijaSeNaRacun.BrojRacuna
@@ -2084,277 +1237,182 @@ namespace DatabaseAccess
                         : null
                 }).ToList();
             }
-            catch (Exception)
-            {
-                return "Greška pri učitavanju transakcija za račun.".ToError(400);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return lista;
         }
 
-        public static Result<bool, ErrorMessage> IzmeniTransakciju(TransakcijaBasic tb)
+        public static void IzmeniTransakciju(TransakcijaPregled tb)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    Transakcija t = session.Load<Transakcija>(tb.Id);
+
+                    t.DatumIVreme = tb.DatumIVreme;
+                    t.Tip = tb.TipTransakcije?.Trim();
+                    t.Status = tb.StatusTransakcije?.Trim();
+                    t.PodaciPrimaoca = tb.PodaciPrimaoca?.Trim();
+                    t.Referenca = tb.Referenca?.Trim();
+                    t.Valuta = tb.Valuta?.Trim();
+                    t.Iznos = tb.Iznos;
+                    t.Opis = tb.Opis?.Trim();
+                    t.Komentar = tb.Komentar?.Trim();
+
+                    session.Update(t);
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                Transakcija tr = s.Load<Transakcija>(tb.Id);
-
-                tr.DatumIVreme = tb.DatumIVreme;
-                tr.Tip = tb.TipTransakcije?.Trim();
-                tr.Status = tb.StatusTransakcije?.Trim();
-                tr.PodaciPrimaoca = tb.PodaciPrimaoca?.Trim();
-                tr.Referenca = tb.Referenca?.Trim();
-                tr.Valuta = tb.Valuta?.Trim();
-                tr.Iznos = tb.Iznos;
-                tr.Opis = tb.Opis?.Trim();
-                tr.Komentar = tb.Komentar?.Trim();
-
-                // Napomena: račun na koji se transakcija odnosi se namerno ne menja ovde -
-                // ako zaista treba dozvoliti premeštanje transakcije na drugi račun,
-                // dodati parametar racunId i ponovo učitati Racun kao u DodajTransakciju.
-
-                s.Update(tr);
-                t.Commit();
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri izmeni transakcije", ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri izmeni transakcije.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
         }
 
-        public static Result<bool, ErrorMessage> ObrisiTransakciju(int id)
+        public static void ObrisiTransakciju(int id)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    Transakcija t = session.Load<Transakcija>(id);
+                    session.Delete(t);
+
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                Transakcija tr = s.Load<Transakcija>(id);
-                s.Delete(tr);
-
-                t.Commit();
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri brisanju transakcije", ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri brisanju transakcije.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
         }
 
-        public static Result<bool, ErrorMessage> IzvrsiTransferIzmedjuRacuna(
+        public static void IzvrsiTransferIzmedjuRacuna(
             int racunPosiljaocaId, int racunPrimaocaId, decimal iznos, string opis, string komentar)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    Racun posiljalac = session.Load<Racun>(racunPosiljaocaId);
+                    Racun primalac = session.Load<Racun>(racunPrimaocaId);
+
+                    if (posiljalac.TrenutnoStanje - posiljalac.DozvoljeniMinus < iznos)
+                        throw new InvalidOperationException(
+                            "Nedovoljno sredstava na računu pošiljaoca.");
+
+                    string referenca = "TRF-" + Guid.NewGuid().ToString("N").Substring(0, 10).ToUpper();
+                    DateTime datumIVreme = DateTime.Now;
+
+                    Transakcija odliv = new Transakcija
+                    {
+                        DatumIVreme = datumIVreme,
+                        Tip = "TRANSFER",
+                        Status = "Izvršena",
+                        PodaciPrimaoca = $"{primalac.BrojRacuna}",
+                        Referenca = referenca,
+                        Valuta = posiljalac.Valuta,
+                        Iznos = iznos,
+                        Opis = opis,
+                        Komentar = komentar,
+                        OdvijaSeNaRacun = posiljalac
+                    };
+
+                    Transakcija priliv = new Transakcija
+                    {
+                        DatumIVreme = datumIVreme,
+                        Tip = "TRANSFER",
+                        Status = "Izvršena",
+                        PodaciPrimaoca = $"{posiljalac.BrojRacuna}",
+                        Referenca = referenca,
+                        Valuta = primalac.Valuta,
+                        Iznos = iznos,
+                        Opis = opis,
+                        Komentar = komentar,
+                        OdvijaSeNaRacun = primalac
+                    };
+
+                    posiljalac.TrenutnoStanje -= iznos;
+                    primalac.TrenutnoStanje += iznos;
+
+                    session.Save(odliv);
+                    session.Save(priliv);
+                    session.Update(posiljalac);
+                    session.Update(primalac);
+
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                Racun posiljalac = s.Load<Racun>(racunPosiljaocaId);
-                Racun primalac = s.Load<Racun>(racunPrimaocaId);
-
-                if (posiljalac.TrenutnoStanje - posiljalac.DozvoljeniMinus < iznos)
+                catch (Exception ex)
                 {
-                    return "Nedovoljno sredstava na računu pošiljaoca.".ToError(409);
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri izvršavanju transfera", ex);
                 }
-
-                string referenca = "TRF-" + Guid.NewGuid().ToString("N").Substring(0, 10).ToUpper();
-                DateTime datumIVreme = DateTime.Now;
-
-                // Odliv sa računa pošiljaoca
-                Transakcija odliv = new Transakcija
-                {
-                    DatumIVreme = datumIVreme,
-                    Tip = "TRANSFER",
-                    Status = "Izvršena",
-                    PodaciPrimaoca = $"{primalac.BrojRacuna}",
-                    Referenca = referenca,
-                    Valuta = posiljalac.Valuta,
-                    Iznos = iznos,
-                    Opis = opis,
-                    Komentar = komentar,
-                    OdvijaSeNaRacun = posiljalac
-                };
-
-                // Priliv na račun primaoca
-                Transakcija priliv = new Transakcija
-                {
-                    DatumIVreme = datumIVreme,
-                    Tip = "TRANSFER",
-                    Status = "Izvršena",
-                    PodaciPrimaoca = $"{posiljalac.BrojRacuna}",
-                    Referenca = referenca,
-                    Valuta = primalac.Valuta,
-                    Iznos = iznos,
-                    Opis = opis,
-                    Komentar = komentar,
-                    OdvijaSeNaRacun = primalac
-                };
-
-                posiljalac.TrenutnoStanje -= iznos;
-                primalac.TrenutnoStanje += iznos;
-
-                s.Save(odliv);
-                s.Save(priliv);
-                s.Update(posiljalac);
-                s.Update(primalac);
-
-                t.Commit();
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri izvršavanju transfera.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
         }
 
         #endregion
 
         #region Depozit
 
-        public static Result<int, ErrorMessage> DodajDepozit(DepozitBasic db, string jmbg, string pib, int racunId)
+        public static void DodajDepozit(DepozitPregled db, string jmbg, string pib, int racunId)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-            int id = default;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    FizickoLice fl = session.Query<FizickoLice>()
+                        .Where(x => x.Jmbg == jmbg)
+                        .FirstOrDefault();
+                    PravnoLice pl = session.Query<PravnoLice>()
+                        .Where(x => x.Pib == pib)
+                        .FirstOrDefault();
+
+                    if (fl == null && pl == null)
+                        throw new InvalidOperationException(
+                            "Depozit mora biti vezan za fizičko ili pravno lice.");
+
+                    Racun r = session.Load<Racun>(racunId);
+
+                    Depozit d = new Depozit
+                    {
+                        DatumPocetka = db.DatumPocetka,
+                        PeriodOrocenja = db.PeriodOrocenja,
+                        DatumIsteka = db.DatumIsteka,
+                        StatusDepozita = db.StatusDepozita?.Trim(),
+                        Valuta = db.Valuta?.Trim(),
+                        Iznos = db.Iznos,
+                        KamatnaStopa = db.KamatnaStopa,
+                        Komentar = db.Komentar?.Trim(),
+
+                        PripadaFizickomLicu = fl,
+                        PripadaPravnomLicu = pl,
+                        PripadaRacunu = r
+                    };
+
+                    session.Save(d);
+                    transaction.Commit();
+
+                    db.Id = d.Id;
                 }
-
-                t = s.BeginTransaction();
-
-                FizickoLice fl = s.Query<FizickoLice>()
-                    .Where(x => x.Jmbg == jmbg)
-                    .FirstOrDefault();
-                PravnoLice pl = s.Query<PravnoLice>()
-                    .Where(x => x.Pib == pib)
-                    .FirstOrDefault();
-
-                if (fl == null && pl == null)
+                catch (Exception ex)
                 {
-                    return "Depozit mora biti vezan za fizičko ili pravno lice.".ToError(404);
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri dodavanju depozita", ex);
                 }
-
-                Racun r = s.Load<Racun>(racunId);
-
-                Depozit d = new Depozit
-                {
-                    DatumPocetka = db.DatumPocetka,
-                    PeriodOrocenja = db.PeriodOrocenja,
-                    DatumIsteka = db.DatumIsteka,
-                    StatusDepozita = db.StatusDepozita?.Trim(),
-                    Valuta = db.Valuta?.Trim(),
-                    Iznos = db.Iznos,
-                    KamatnaStopa = db.KamatnaStopa,
-                    Komentar = db.Komentar?.Trim(),
-
-                    PripadaFizickomLicu = fl,
-                    PripadaPravnomLicu = pl,
-                    PripadaRacunu = r
-                };
-
-                s.Save(d);
-                t.Commit();
-
-                db.Id = d.Id;
-                id = d.Id;
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri dodavanju depozita.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return id;
         }
 
-        public static Result<DepozitBasic, ErrorMessage> VratiDepozit(int id)
+        public static DepozitPregled VratiDepozit(int id)
         {
-            ISession? s = null;
-            DepozitBasic dto = default!;
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
+                Depozit d = session.Load<Depozit>(id);
 
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                Depozit d = s.Load<Depozit>(id);
-
-                dto = new DepozitBasic
+                return new DepozitPregled
                 {
                     Id = d.Id,
                     DatumPocetka = d.DatumPocetka,
@@ -2367,7 +1425,7 @@ namespace DatabaseAccess
                     Komentar = d.Komentar,
 
                     FizickoLice = d.PripadaFizickomLicu != null
-                        ? new FizickoLiceBasic
+                        ? new FizickoLicePregled
                         {
                             Id = d.PripadaFizickomLicu.Id,
                             Ime = d.PripadaFizickomLicu.Ime,
@@ -2376,14 +1434,14 @@ namespace DatabaseAccess
                         : null,
 
                     PravnoLice = d.PripadaPravnomLicu != null
-                        ? new PravnoLiceBasic
+                        ? new PravnoLicePregled
                         {
                             Id = d.PripadaPravnomLicu.Id,
                             NazivFirme = d.PripadaPravnomLicu.NazivFirme
                         }
                         : null,
                     Racun = d.PripadaRacunu != null
-                        ? new RacunBasic
+                        ? new RacunPregled
                         {
                             Id = d.PripadaRacunu.Id,
                             BrojRacuna = d.PripadaRacunu.BrojRacuna
@@ -2391,40 +1449,19 @@ namespace DatabaseAccess
                         : null
                 };
             }
-            catch (Exception)
-            {
-                return "Nemoguće pronaći depozit sa zadatim ID-jem.".ToError(404);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return dto;
         }
 
-        public static Result<List<DepozitBasic>, ErrorMessage> VratiDepozite(int brojPoStrani, int strana = 1)
+        public static List<DepozitPregled> VratiDepozite(int brojPoStrani, int strana = 1)
         {
-            ISession? s = null;
-            List<DepozitBasic> lista = new();
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                List<Depozit> entiteti = s.Query<Depozit>()
+                List<Depozit> entiteti = session.Query<Depozit>()
                     .OrderByDescending(x => x.DatumPocetka)
                     .Skip((strana - 1) * brojPoStrani)
                     .Take(brojPoStrani)
                     .ToList();
 
-                lista = entiteti.Select(x => new DepozitBasic
+                return entiteti.Select(x => new DepozitPregled
                 {
                     Id = x.Id,
                     DatumPocetka = x.DatumPocetka,
@@ -2438,7 +1475,7 @@ namespace DatabaseAccess
                     OcekivanaKamata = x.OcekivanaKamata,
 
                     FizickoLice = x.PripadaFizickomLicu != null
-                        ? new FizickoLiceBasic
+                        ? new FizickoLicePregled
                         {
                             Id = x.PripadaFizickomLicu.Id,
                             Ime = x.PripadaFizickomLicu.Ime,
@@ -2447,7 +1484,7 @@ namespace DatabaseAccess
                         : null,
 
                     PravnoLice = x.PripadaPravnomLicu != null
-                        ? new PravnoLiceBasic
+                        ? new PravnoLicePregled
                         {
                             Id = x.PripadaPravnomLicu.Id,
                             NazivFirme = x.PripadaPravnomLicu.NazivFirme
@@ -2455,7 +1492,7 @@ namespace DatabaseAccess
                         : null,
 
                     Racun = x.PripadaRacunu != null
-                        ? new RacunBasic
+                        ? new RacunPregled
                         {
                             Id = x.PripadaRacunu.Id,
                             BrojRacuna = x.PripadaRacunu.BrojRacuna
@@ -2463,41 +1500,20 @@ namespace DatabaseAccess
                         : null
                 }).ToList();
             }
-            catch (Exception)
-            {
-                return "Greška pri učitavanju depozita.".ToError(400);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return lista;
         }
 
-        public static Result<List<DepozitBasic>, ErrorMessage> VratiDepoziteZaRacun(int racunId, int brojPoStrani, int strana = 1)
+        public static List<DepozitPregled> VratiDepoziteZaRacun(int racunId, int brojPoStrani, int strana = 1)
         {
-            ISession? s = null;
-            List<DepozitBasic> lista = new();
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                List<Depozit> entiteti = s.Query<Depozit>()
+                List<Depozit> entiteti = session.Query<Depozit>()
                     .Where(x => x.PripadaRacunu.Id == racunId)
                     .OrderByDescending(x => x.DatumPocetka)
                     .Skip((strana - 1) * brojPoStrani)
                     .Take(brojPoStrani)
                     .ToList();
 
-                lista = entiteti.Select(x => new DepozitBasic
+                return entiteti.Select(x => new DepozitPregled
                 {
                     Id = x.Id,
                     DatumPocetka = x.DatumPocetka,
@@ -2511,205 +1527,131 @@ namespace DatabaseAccess
                     OcekivanaKamata = x.OcekivanaKamata,
 
                     Racun = x.PripadaRacunu != null
-                        ? new RacunBasic { Id = x.PripadaRacunu.Id, BrojRacuna = x.PripadaRacunu.BrojRacuna }
+                        ? new RacunPregled { Id = x.PripadaRacunu.Id, BrojRacuna = x.PripadaRacunu.BrojRacuna }
                         : null
                 }).ToList();
             }
-            catch (Exception)
-            {
-                return "Greška pri učitavanju depozita za račun.".ToError(400);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return lista;
         }
 
-        public static Result<bool, ErrorMessage> IzmeniDepozit(DepozitBasic db)
+        public static void IzmeniDepozit(DepozitPregled db)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    Depozit d = session.Load<Depozit>(db.Id);
+
+                    d.DatumPocetka = db.DatumPocetka;
+                    d.PeriodOrocenja = db.PeriodOrocenja;
+                    d.DatumIsteka = db.DatumIsteka;
+                    d.StatusDepozita = db.StatusDepozita?.Trim();
+                    d.Valuta = db.Valuta?.Trim();
+                    d.Iznos = db.Iznos;
+                    d.KamatnaStopa = db.KamatnaStopa;
+                    d.Komentar = db.Komentar?.Trim();
+
+                    session.Update(d);
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                Depozit d = s.Load<Depozit>(db.Id);
-
-                d.DatumPocetka = db.DatumPocetka;
-                d.PeriodOrocenja = db.PeriodOrocenja;
-                d.DatumIsteka = db.DatumIsteka;
-                d.StatusDepozita = db.StatusDepozita?.Trim();
-                d.Valuta = db.Valuta?.Trim();
-                d.Iznos = db.Iznos;
-                d.KamatnaStopa = db.KamatnaStopa;
-                d.Komentar = db.Komentar?.Trim();
-
-                s.Update(d);
-                t.Commit();
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri izmeni depozita", ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri izmeni depozita.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
         }
 
-        public static Result<bool, ErrorMessage> ObrisiDepozit(int id)
+        public static void ObrisiDepozit(int id)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    Depozit d = session.Load<Depozit>(id);
+
+                    if (d == null)
+                        return;
+
+                    if (!d.Kamate.IsEmpty())
+                    {
+                        throw new InvalidOperationException("Depozit poseduje kamate.");
+                    }
+                    session.Delete(d);
+
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                Depozit d = s.Load<Depozit>(id);
-
-                if (d == null)
+                catch (Exception ex)
                 {
-                    return "Depozit sa zadatim ID-jem ne postoji.".ToError(404);
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri brisanju depozita: " + ex.Message, ex);
                 }
-
-                if (!d.Kamate.IsEmpty())
-                {
-                    return "Depozit poseduje kamate.".ToError(409);
-                }
-
-                s.Delete(d);
-                t.Commit();
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri brisanju depozita.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
         }
 
         #endregion
 
         #region Kredit
 
-        public static Result<int, ErrorMessage> DodajKredit(KreditBasic kb, string jmbg, string pib, int racunId)
+        public static void DodajKredit(KreditPregled kb, string jmbg, string pib, int racunId)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-            int id = default;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    FizickoLice fl = session.Query<FizickoLice>()
+                        .Where(x => x.Jmbg == jmbg)
+                        .FirstOrDefault();
+                    PravnoLice pl = session.Query<PravnoLice>()
+                        .Where(x => x.Pib == pib)
+                        .FirstOrDefault();
+
+                    if (fl == null && pl == null)
+                        throw new InvalidOperationException(
+                            "Kredit mora biti vezan za fizičko ili pravno lice.");
+
+                    Racun r = session.Load<Racun>(racunId);
+
+                    Kredit k = new Kredit
+                    {
+                        DatumDospeca = kb.DatumDospeca,
+                        DatumOdobrenja = kb.DatumOdobrenja,
+                        Iznos = kb.Iznos,
+                        Valuta = kb.Valuta?.Trim(),
+                        StatusKredita = kb.StatusKredita?.Trim(),
+                        MesecnaRata = kb.MesecnaRata,
+                        RokOtplate = kb.RokOtplate,
+                        Namena = kb.Namena?.Trim(),
+                        KamatnaStopa = kb.KamatnaStopa,
+                        Komentar = kb.Komentar?.Trim(),
+
+                        PripadaFizickomLicu = fl,
+                        PripadaPravnomLicu = pl,
+                        PripadaRacunu = r
+                    };
+
+                    session.Save(k);
+                    transaction.Commit();
+
+                    kb.Id = k.Id;
                 }
-
-                t = s.BeginTransaction();
-
-                FizickoLice fl = s.Query<FizickoLice>()
-                    .Where(x => x.Jmbg == jmbg)
-                    .FirstOrDefault();
-                PravnoLice pl = s.Query<PravnoLice>()
-                    .Where(x => x.Pib == pib)
-                    .FirstOrDefault();
-
-                if (fl == null && pl == null)
+                catch (Exception ex)
                 {
-                    return "Kredit mora biti vezan za fizičko ili pravno lice.".ToError(404);
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri dodavanju kredita", ex);
                 }
-
-                Racun r = s.Load<Racun>(racunId);
-
-                Kredit k = new Kredit
-                {
-                    DatumDospeca = kb.DatumDospeca,
-                    DatumOdobrenja = kb.DatumOdobrenja,
-                    Iznos = kb.Iznos,
-                    Valuta = kb.Valuta?.Trim(),
-                    StatusKredita = kb.StatusKredita?.Trim(),
-                    MesecnaRata = kb.MesecnaRata,
-                    RokOtplate = kb.RokOtplate,
-                    Namena = kb.Namena?.Trim(),
-                    KamatnaStopa = kb.KamatnaStopa,
-                    Komentar = kb.Komentar?.Trim(),
-
-                    PripadaFizickomLicu = fl,
-                    PripadaPravnomLicu = pl,
-                    PripadaRacunu = r
-                };
-
-                s.Save(k);
-                t.Commit();
-
-                kb.Id = k.Id;
-                id = k.Id;
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri dodavanju kredita.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return id;
         }
 
-        public static Result<KreditBasic, ErrorMessage> VratiKredit(int id)
+        public static KreditPregled VratiKredit(int id)
         {
-            ISession? s = null;
-            KreditBasic dto = default!;
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
+                Kredit k = session.Load<Kredit>(id);
 
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                Kredit k = s.Load<Kredit>(id);
-
-                dto = new KreditBasic
+                return new KreditPregled
                 {
                     Id = k.Id,
                     DatumDospeca = k.DatumDospeca,
@@ -2724,7 +1666,7 @@ namespace DatabaseAccess
                     Komentar = k.Komentar,
 
                     FizickoLice = k.PripadaFizickomLicu != null
-                        ? new FizickoLiceBasic
+                        ? new FizickoLicePregled
                         {
                             Id = k.PripadaFizickomLicu.Id,
                             Ime = k.PripadaFizickomLicu.Ime,
@@ -2733,14 +1675,14 @@ namespace DatabaseAccess
                         : null,
 
                     PravnoLice = k.PripadaPravnomLicu != null
-                        ? new PravnoLiceBasic
+                        ? new PravnoLicePregled
                         {
                             Id = k.PripadaPravnomLicu.Id,
                             NazivFirme = k.PripadaPravnomLicu.NazivFirme
                         }
                         : null,
                     Racun = k.PripadaRacunu != null
-                        ? new RacunBasic
+                        ? new RacunPregled
                         {
                             Id = k.PripadaRacunu.Id,
                             BrojRacuna = k.PripadaRacunu.BrojRacuna
@@ -2748,40 +1690,19 @@ namespace DatabaseAccess
                         : null
                 };
             }
-            catch (Exception)
-            {
-                return "Nemoguće pronaći kredit sa zadatim ID-jem.".ToError(404);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return dto;
         }
 
-        public static Result<List<KreditBasic>, ErrorMessage> VratiKredite(int brojPoStrani, int strana = 1)
+        public static List<KreditPregled> VratiKredite(int brojPoStrani, int strana = 1)
         {
-            ISession? s = null;
-            List<KreditBasic> lista = new();
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                List<Kredit> entiteti = s.Query<Kredit>()
+                List<Kredit> entiteti = session.Query<Kredit>()
                     .OrderByDescending(x => x.DatumOdobrenja)
                     .Skip((strana - 1) * brojPoStrani)
                     .Take(brojPoStrani)
                     .ToList();
 
-                lista = entiteti.Select(x => new KreditBasic
+                return entiteti.Select(x => new KreditPregled
                 {
                     Id = x.Id,
                     DatumDospeca = x.DatumDospeca,
@@ -2796,7 +1717,7 @@ namespace DatabaseAccess
                     Komentar = x.Komentar,
 
                     FizickoLice = x.PripadaFizickomLicu != null
-                        ? new FizickoLiceBasic
+                        ? new FizickoLicePregled
                         {
                             Id = x.PripadaFizickomLicu.Id,
                             Ime = x.PripadaFizickomLicu.Ime,
@@ -2805,7 +1726,7 @@ namespace DatabaseAccess
                         : null,
 
                     PravnoLice = x.PripadaPravnomLicu != null
-                        ? new PravnoLiceBasic
+                        ? new PravnoLicePregled
                         {
                             Id = x.PripadaPravnomLicu.Id,
                             NazivFirme = x.PripadaPravnomLicu.NazivFirme
@@ -2813,7 +1734,7 @@ namespace DatabaseAccess
                         : null,
 
                     Racun = x.PripadaRacunu != null
-                        ? new RacunBasic
+                        ? new RacunPregled
                         {
                             Id = x.PripadaRacunu.Id,
                             BrojRacuna = x.PripadaRacunu.BrojRacuna
@@ -2821,41 +1742,20 @@ namespace DatabaseAccess
                         : null
                 }).ToList();
             }
-            catch (Exception)
-            {
-                return "Greška pri učitavanju kredita.".ToError(400);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return lista;
         }
 
-        public static Result<List<KreditBasic>, ErrorMessage> VratiKrediteZaRacun(int racunId, int brojPoStrani, int strana = 1)
+        public static List<KreditPregled> VratiKrediteZaRacun(int racunId, int brojPoStrani, int strana = 1)
         {
-            ISession? s = null;
-            List<KreditBasic> lista = new();
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                List<Kredit> entiteti = s.Query<Kredit>()
+                List<Kredit> entiteti = session.Query<Kredit>()
                     .Where(x => x.PripadaRacunu.Id == racunId)
                     .OrderByDescending(x => x.DatumOdobrenja)
                     .Skip((strana - 1) * brojPoStrani)
                     .Take(brojPoStrani)
                     .ToList();
 
-                lista = entiteti.Select(x => new KreditBasic
+                return entiteti.Select(x => new KreditPregled
                 {
                     Id = x.Id,
                     DatumDospeca = x.DatumDospeca,
@@ -2870,197 +1770,124 @@ namespace DatabaseAccess
                     Komentar = x.Komentar,
 
                     Racun = x.PripadaRacunu != null
-                        ? new RacunBasic { Id = x.PripadaRacunu.Id, BrojRacuna = x.PripadaRacunu.BrojRacuna }
+                        ? new RacunPregled { Id = x.PripadaRacunu.Id, BrojRacuna = x.PripadaRacunu.BrojRacuna }
                         : null
                 }).ToList();
             }
-            catch (Exception)
-            {
-                return "Greška pri učitavanju kredita za račun.".ToError(400);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return lista;
         }
 
-        public static Result<bool, ErrorMessage> IzmeniKredit(KreditBasic kb)
+        public static void IzmeniKredit(KreditPregled kb)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    Kredit k = session.Load<Kredit>(kb.Id);
+
+                    k.DatumDospeca = kb.DatumDospeca;
+                    k.DatumOdobrenja = kb.DatumOdobrenja;
+                    k.Iznos = kb.Iznos;
+                    k.Valuta = kb.Valuta?.Trim();
+                    k.StatusKredita = kb.StatusKredita?.Trim();
+                    k.MesecnaRata = kb.MesecnaRata;
+                    k.RokOtplate = kb.RokOtplate;
+                    k.Namena = kb.Namena?.Trim();
+                    k.KamatnaStopa = kb.KamatnaStopa;
+                    k.Komentar = kb.Komentar?.Trim();
+
+                    session.Update(k);
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                Kredit k = s.Load<Kredit>(kb.Id);
-
-                k.DatumDospeca = kb.DatumDospeca;
-                k.DatumOdobrenja = kb.DatumOdobrenja;
-                k.Iznos = kb.Iznos;
-                k.Valuta = kb.Valuta?.Trim();
-                k.StatusKredita = kb.StatusKredita?.Trim();
-                k.MesecnaRata = kb.MesecnaRata;
-                k.RokOtplate = kb.RokOtplate;
-                k.Namena = kb.Namena?.Trim();
-                k.KamatnaStopa = kb.KamatnaStopa;
-                k.Komentar = kb.Komentar?.Trim();
-
-                s.Update(k);
-                t.Commit();
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri izmeni kredita", ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri izmeni kredita.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
         }
 
-        public static Result<bool, ErrorMessage> ObrisiKredit(int id)
+        public static void ObrisiKredit(int id)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    Kredit k = session.Load<Kredit>(id);
+
+                    if (k == null)
+                        return;
+
+                    if (!k.Kamate.IsEmpty())
+                    {
+                        throw new InvalidOperationException("Kredit poseduje kamate.");
+                    }
+
+                    session.Delete(k);
+
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                Kredit k = s.Load<Kredit>(id);
-
-                if (k == null)
+                catch (Exception ex)
                 {
-                    return "Kredit sa zadatim ID-jem ne postoji.".ToError(404);
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri brisanju kredita: " + ex.Message, ex);
                 }
-
-                if (!k.Kamate.IsEmpty())
-                {
-                    return "Kredit poseduje kamate.".ToError(409);
-                }
-
-                s.Delete(k);
-                t.Commit();
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri brisanju kredita.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
         }
 
         #endregion
 
         #region Kamata
 
-        public static Result<int, ErrorMessage> DodajKamatu(KamataBasic kmb)
+        public static void DodajKamatu(KamataPregled kmb)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-            int id = default;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    if (kmb.Kredit == null && kmb.Depozit == null && kmb.Racun == null)
+                        throw new InvalidOperationException(
+                            "Kamata mora biti vezana za kredit, depozit ili račun.");
+
+                    Kredit k = kmb.Kredit != null ? session.Load<Kredit>(kmb.Kredit.Id) : null;
+                    Depozit d = kmb.Depozit != null ? session.Load<Depozit>(kmb.Depozit.Id) : null;
+                    Racun r = kmb.Racun != null ? session.Load<Racun>(kmb.Racun.Id) : null;
+
+                    Kamata kam = new Kamata
+                    {
+                        DatumObracuna = kmb.DatumObracuna,
+                        PeriodObracuna = kmb.PeriodObracuna?.Trim(),
+                        TipKamate = kmb.TipKamate?.Trim(),
+                        StatusKamate = kmb.StatusKamate?.Trim(),
+                        Iznos = kmb.Iznos,
+
+                        PripadaKreditu = k,
+                        PripadaDepozitu = d,
+                        PripadaRacunu = r
+                    };
+
+                    session.Save(kam);
+                    transaction.Commit();
+
+                    kmb.Id = kam.Id;
                 }
-
-                t = s.BeginTransaction();
-
-                if (kmb.Kredit == null && kmb.Depozit == null && kmb.Racun == null)
+                catch (Exception ex)
                 {
-                    return "Kamata mora biti vezana za kredit, depozit ili račun.".ToError(400);
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri dodavanju kamate", ex);
                 }
-
-                Kredit k = kmb.Kredit != null ? s.Load<Kredit>(kmb.Kredit.Id) : null;
-                Depozit d = kmb.Depozit != null ? s.Load<Depozit>(kmb.Depozit.Id) : null;
-                Racun r = kmb.Racun != null ? s.Load<Racun>(kmb.Racun.Id) : null;
-
-                Kamata kam = new Kamata
-                {
-                    DatumObracuna = kmb.DatumObracuna,
-                    PeriodObracuna = kmb.PeriodObracuna?.Trim(),
-                    TipKamate = kmb.TipKamate?.Trim(),
-                    StatusKamate = kmb.StatusKamate?.Trim(),
-                    Iznos = kmb.Iznos,
-
-                    PripadaKreditu = k,
-                    PripadaDepozitu = d,
-                    PripadaRacunu = r
-                };
-
-                s.Save(kam);
-                t.Commit();
-
-                kmb.Id = kam.Id;
-                id = kam.Id;
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri dodavanju kamate.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return id;
         }
 
-        public static Result<KamataBasic, ErrorMessage> VratiKamatu(int id)
+        public static KamataPregled VratiKamatu(int id)
         {
-            ISession? s = null;
-            KamataBasic dto = default!;
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
+                var kamata = session.Load<Kamata>(id);
 
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                var kamata = s.Load<Kamata>(id);
-
-                dto = new KamataBasic
+                return new KamataPregled
                 {
                     Id = kamata.Id,
                     DatumObracuna = kamata.DatumObracuna,
@@ -3070,58 +1897,37 @@ namespace DatabaseAccess
                     Iznos = kamata.Iznos,
 
                     Kredit = kamata.PripadaKreditu != null ?
-                    new KreditBasic
+                    new KreditPregled
                     {
                         Id = kamata.PripadaKreditu.Id,
                     } : null,
 
                     Depozit = kamata.PripadaDepozitu != null ?
-                    new DepozitBasic
+                    new DepozitPregled
                     {
                         Id = kamata.PripadaDepozitu.Id
                     } : null,
 
                     Racun = kamata.PripadaRacunu != null ?
-                    new RacunBasic
+                    new RacunPregled
                     {
                         Id = kamata.PripadaRacunu.Id,
                         BrojRacuna = kamata.PripadaRacunu.BrojRacuna
                     } : null
                 };
             }
-            catch (Exception)
-            {
-                return "Nemoguće pronaći kamatu sa zadatim ID-jem.".ToError(404);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return dto;
         }
 
-        public static Result<List<KamataBasic>, ErrorMessage> VratiKamate(int brojPoStrani, int strana = 1)
+        public static List<KamataPregled> VratiKamate(int brojPoStrani, int strana = 1)
         {
-            ISession? s = null;
-            List<KamataBasic> lista = new();
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                List<Kamata> entiteti = s.Query<Kamata>()
+                List<Kamata> entiteti = session.Query<Kamata>()
                     .Skip((strana - 1) * brojPoStrani)
                     .Take(brojPoStrani)
                     .ToList();
 
-                lista = entiteti.Select(x => new KamataBasic
+                return entiteti.Select(x => new KamataPregled
                 {
                     Id = x.Id,
                     DatumObracuna = x.DatumObracuna,
@@ -3131,193 +1937,119 @@ namespace DatabaseAccess
                     Iznos = x.Iznos,
 
                     Kredit = x.PripadaKreditu != null ?
-                    new KreditBasic
+                    new KreditPregled
                     {
                         Id = x.PripadaKreditu.Id,
                     } : null,
 
                     Depozit = x.PripadaDepozitu != null ?
-                    new DepozitBasic
+                    new DepozitPregled
                     {
                         Id = x.PripadaDepozitu.Id
                     } : null,
 
                     Racun = x.PripadaRacunu != null ?
-                    new RacunBasic
+                    new RacunPregled
                     {
                         Id = x.PripadaRacunu.Id,
                         BrojRacuna = x.PripadaRacunu.BrojRacuna
                     } : null
                 }).ToList();
             }
-            catch (Exception)
-            {
-                return "Greška pri učitavanju kamata.".ToError(400);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return lista;
         }
 
-        public static Result<bool, ErrorMessage> IzmeniKamatu(KamataBasic kmb)
+        public static void IzmeniKamatu(KamataPregled kmb)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    Kamata kam = session.Load<Kamata>(kmb.Id);
+
+                    kam.DatumObracuna = kmb.DatumObracuna;
+                    kam.PeriodObracuna = kmb.PeriodObracuna?.Trim();
+                    kam.TipKamate = kmb.TipKamate?.Trim();
+                    kam.StatusKamate = kmb.StatusKamate?.Trim();
+                    kam.Iznos = kmb.Iznos;
+
+                    session.Update(kam);
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                Kamata kam = s.Load<Kamata>(kmb.Id);
-
-                kam.DatumObracuna = kmb.DatumObracuna;
-                kam.PeriodObracuna = kmb.PeriodObracuna?.Trim();
-                kam.TipKamate = kmb.TipKamate?.Trim();
-                kam.StatusKamate = kmb.StatusKamate?.Trim();
-                kam.Iznos = kmb.Iznos;
-
-                // Napomena: izvor kamate (kredit/depozit/račun) se namerno ne menja
-                // ovde - ako treba i to dozvoliti, proslediti nove ID-jeve kao
-                // parametre i ponovo učitati odgovarajuće entitete kao u DodajKamatu.
-
-                s.Update(kam);
-                t.Commit();
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri izmeni kamate", ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri izmeni kamate.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
         }
 
-        public static Result<bool, ErrorMessage> ObrisiKamatu(int id)
+        public static void ObrisiKamatu(int id)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    Kamata kam = session.Load<Kamata>(id);
+                    session.Delete(kam);
+
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                Kamata kam = s.Load<Kamata>(id);
-                s.Delete(kam);
-
-                t.Commit();
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Greška pri brisanju kamate", ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri brisanju kamate.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
         }
 
         #endregion
 
         #region SigurnosnaKontrola
 
-        public static Result<int, ErrorMessage> DodajSigurnosnuKontrolu(SigurnosnaKontrolaBasic skb, int racunId)
+        public static void DodajSigurnosnuKontrolu(SigurnosnaKontrolaPregled skb, int racunId)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-            int id = default;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    Racun r = session.Load<Racun>(racunId);
+
+                    SigurnosnaKontrola sk = new SigurnosnaKontrola
+                    {
+                        IpAdresa = skb.IpAdresa?.Trim(),
+                        DatumIVreme = skb.DatumIVreme,
+                        TipDogadjaja = skb.TipDogadjaja?.Trim(),
+                        StatusDogadjaja = skb.StatusDogadjaja?.Trim(),
+                        PodaciUredjaja = skb.PodaciUredjaja?.Trim(),
+                        Opis = skb.Opis?.Trim(),
+
+                        PripadaRacunu = r
+                    };
+
+                    session.Save(sk);
+                    transaction.Commit();
+
+                    skb.Id = sk.Id;
                 }
-
-                t = s.BeginTransaction();
-
-                Racun r = s.Load<Racun>(racunId);
-
-                SigurnosnaKontrola sk = new SigurnosnaKontrola
+                catch (Exception ex)
                 {
-                    IpAdresa = skb.IpAdresa?.Trim(),
-                    DatumIVreme = skb.DatumIVreme,
-                    TipDogadjaja = skb.TipDogadjaja?.Trim(),
-                    StatusDogadjaja = skb.StatusDogadjaja?.Trim(),
-                    PodaciUredjaja = skb.PodaciUredjaja?.Trim(),
-                    Opis = skb.Opis?.Trim(),
-
-                    PripadaRacunu = r
-                };
-
-                s.Save(sk);
-                t.Commit();
-
-                skb.Id = sk.Id;
-                id = sk.Id;
+                    transaction.Rollback();
+                    throw new InvalidOperationException(
+                        "Greška pri dodavanju sigurnosne kontrole", ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri dodavanju sigurnosne kontrole.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return id;
         }
 
-        public static Result<SigurnosnaKontrolaBasic, ErrorMessage> VratiSigurnosnuKontrolu(int id)
+        public static SigurnosnaKontrolaPregled VratiSigurnosnuKontrolu(int id)
         {
-            ISession? s = null;
-            SigurnosnaKontrolaBasic dto = default!;
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
+                var kontrola = session.Load<SigurnosnaKontrola>(id);
 
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                var kontrola = s.Load<SigurnosnaKontrola>(id);
-
-                dto = new SigurnosnaKontrolaBasic
+                return new SigurnosnaKontrolaPregled
                 {
                     Id = kontrola.Id,
                     IpAdresa = kontrola.IpAdresa,
@@ -3327,46 +2059,25 @@ namespace DatabaseAccess
                     PodaciUredjaja = kontrola.PodaciUredjaja,
                     Opis = kontrola.Opis,
 
-                    Racun = new RacunBasic
+                    Racun = new RacunPregled
                     {
                         Id = kontrola.PripadaRacunu.Id,
                         BrojRacuna = kontrola.PripadaRacunu.BrojRacuna
                     }
                 };
             }
-            catch (Exception)
-            {
-                return "Nemoguće pronaći sigurnosnu kontrolu sa zadatim ID-jem.".ToError(404);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return dto;
         }
 
-        public static Result<List<SigurnosnaKontrolaBasic>, ErrorMessage> VratiSigurnosneKontrole(int brojPoStrani, int strana = 1)
+        public static List<SigurnosnaKontrolaPregled> VratiSigurnosneKontrole(int brojPoStrani, int strana = 1)
         {
-            ISession? s = null;
-            List<SigurnosnaKontrolaBasic> lista = new();
-
-            try
+            using (ISession session = DataLayer.GetSession())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
-                {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
-                }
-
-                List<SigurnosnaKontrola> entiteti = s.Query<SigurnosnaKontrola>()
+                List<SigurnosnaKontrola> entiteti = session.Query<SigurnosnaKontrola>()
                     .Skip((strana - 1) * brojPoStrani)
                     .Take(brojPoStrani)
                     .ToList();
 
-                lista = entiteti.Select(x => new SigurnosnaKontrolaBasic
+                return entiteti.Select(x => new SigurnosnaKontrolaPregled
                 {
                     Id = x.Id,
                     IpAdresa = x.IpAdresa,
@@ -3376,107 +2087,64 @@ namespace DatabaseAccess
                     PodaciUredjaja = x.PodaciUredjaja,
                     Opis = x.Opis,
 
-                    Racun = new RacunBasic
+                    Racun = new RacunPregled
                     {
                         Id = x.PripadaRacunu.Id,
                         BrojRacuna = x.PripadaRacunu.BrojRacuna
                     }
                 }).ToList();
             }
-            catch (Exception)
-            {
-                return "Greška pri učitavanju sigurnosnih kontrola.".ToError(400);
-            }
-            finally
-            {
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return lista;
         }
 
-        public static Result<bool, ErrorMessage> IzmeniSigurnosnuKontrolu(SigurnosnaKontrolaBasic skb)
+        public static void IzmeniSigurnosnuKontrolu(SigurnosnaKontrolaPregled skb)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    SigurnosnaKontrola sk = session.Load<SigurnosnaKontrola>(skb.Id);
+
+                    sk.IpAdresa = skb.IpAdresa?.Trim();
+                    sk.DatumIVreme = skb.DatumIVreme;
+                    sk.TipDogadjaja = skb.TipDogadjaja?.Trim();
+                    sk.StatusDogadjaja = skb.StatusDogadjaja?.Trim();
+                    sk.PodaciUredjaja = skb.PodaciUredjaja?.Trim();
+                    sk.Opis = skb.Opis?.Trim();
+
+                    session.Update(sk);
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                SigurnosnaKontrola sk = s.Load<SigurnosnaKontrola>(skb.Id);
-
-                sk.IpAdresa = skb.IpAdresa?.Trim();
-                sk.DatumIVreme = skb.DatumIVreme;
-                sk.TipDogadjaja = skb.TipDogadjaja?.Trim();
-                sk.StatusDogadjaja = skb.StatusDogadjaja?.Trim();
-                sk.PodaciUredjaja = skb.PodaciUredjaja?.Trim();
-                sk.Opis = skb.Opis?.Trim();
-
-                s.Update(sk);
-                t.Commit();
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException(
+                        "Greška pri izmeni sigurnosne kontrole", ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri izmeni sigurnosne kontrole.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
         }
 
-        public static Result<bool, ErrorMessage> ObrisiSigurnosnuKontrolu(int id)
+        public static void ObrisiSigurnosnuKontrolu(int id)
         {
-            ISession? s = null;
-            ITransaction? t = null;
-
-            try
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
             {
-                s = DataLayer.GetSession();
-
-                if (!(s?.IsConnected ?? false))
+                try
                 {
-                    return "Nemoguće otvoriti sesiju.".ToError(403);
+                    SigurnosnaKontrola sk = session.Load<SigurnosnaKontrola>(id);
+                    session.Delete(sk);
+
+                    transaction.Commit();
                 }
-
-                t = s.BeginTransaction();
-
-                SigurnosnaKontrola sk = s.Load<SigurnosnaKontrola>(id);
-                s.Delete(sk);
-
-                t.Commit();
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException(
+                        "Greška pri brisanju sigurnosne kontrole", ex);
+                }
             }
-            catch (Exception)
-            {
-                t?.Rollback();
-                return "Greška pri brisanju sigurnosne kontrole.".ToError(400);
-            }
-            finally
-            {
-                t?.Dispose();
-                s?.Close();
-                s?.Dispose();
-            }
-
-            return true;
         }
 
         #endregion
     }
-
-}
 }

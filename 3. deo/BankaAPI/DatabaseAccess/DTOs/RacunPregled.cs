@@ -9,17 +9,17 @@ namespace DatabaseAccess.DTOs
     public class RacunPregled
     {
         public int Id;
-        public string? BrojRacuna;
-        public string? Valuta;
-        public decimal? TrenutnoStanje;
-        public DateTime? DatumOtvaranja;
-        public string? Status;
-        public decimal? DozvoljeniMinus;
-        public string? Komentar;
-        public string? TipRacuna;
+        public string BrojRacuna;
+        public string Valuta;
+        public decimal TrenutnoStanje;
+        public DateTime DatumOtvaranja;
+        public string Status;
+        public decimal DozvoljeniMinus;
+        public string Komentar;
+        public string TipRacuna;
         public decimal? KamatnaStopa;
-        public FizickoLicePregled? FizickoLice;
-        public PravnoLicePregled? PravnoLice;
+        public FizickoLicePregled FizickoLice;
+        public PravnoLicePregled PravnoLice;
 
         public RacunPregled() { }
 

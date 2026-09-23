@@ -9,8 +9,8 @@ namespace DatabaseAccess.DTOs
     public class DevizniValutaPregled
     {
         public int Id;
-        public string? DozvoljenaValuta;
-        public DevizniPregled? Devizni;
+        public string DozvoljenaValuta;
+        public DevizniPregled Devizni;
 
         public DevizniValutaPregled() { }
 

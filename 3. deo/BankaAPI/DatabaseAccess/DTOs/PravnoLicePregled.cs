@@ -9,14 +9,14 @@ namespace DatabaseAccess.DTOs
     public class PravnoLicePregled
     {
         public int Id;
-        public string? NazivFirme;
-        public string? Pib;
-        public string? Adresa;
-        public string? Grad;
-        public string? Telefon;
-        public string? Email;
-        public string? Status;
-        public string? Komentar;
+        public string NazivFirme;
+        public string Pib;
+        public string Adresa;
+        public string Grad;
+        public string Telefon;
+        public string Email;
+        public string Status;
+        public string Komentar;
 
         public PravnoLicePregled() { }
 

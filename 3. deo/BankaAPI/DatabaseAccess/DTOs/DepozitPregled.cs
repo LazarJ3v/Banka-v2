@@ -9,18 +9,18 @@ namespace DatabaseAccess.DTOs
     public class DepozitPregled
     {
         public int Id;
-        public DateTime? DatumPocetka;
-        public int? PeriodOrocenja;
-        public DateTime? DatumIsteka;
-        public string? StatusDepozita;
-        public string? Valuta;
-        public decimal? Iznos;
-        public decimal? KamatnaStopa;
-        public string? Komentar;
-        public decimal? OcekivanaKamata;
-        public FizickoLicePregled? FizickoLice;
-        public PravnoLicePregled? PravnoLice;
-        public RacunPregled? Racun;
+        public DateTime DatumPocetka;
+        public int PeriodOrocenja;
+        public DateTime DatumIsteka;
+        public string StatusDepozita;
+        public string Valuta;
+        public decimal Iznos;
+        public decimal KamatnaStopa;
+        public string Komentar;
+        public decimal OcekivanaKamata;
+        public FizickoLicePregled FizickoLice;
+        public PravnoLicePregled PravnoLice;
+        public RacunPregled Racun;
 
         public DepozitPregled() { }
 

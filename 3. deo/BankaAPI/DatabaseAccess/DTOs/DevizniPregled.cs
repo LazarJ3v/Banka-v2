@@ -8,7 +8,7 @@ namespace DatabaseAccess.DTOs
 {
     public class DevizniPregled : RacunPregled
     {
-        public string? Namena;
+        public string Namena;
         public decimal? KursnaRazlika;
 
         public DevizniPregled() { }
