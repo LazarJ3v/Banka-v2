@@ -214,10 +214,10 @@
             this.gbRacun.Controls.Add(this.rbStedni);
             this.gbRacun.Controls.Add(this.rbDevizni);
             this.gbRacun.Controls.Add(this.rbTekuci);
-            this.gbRacun.Controls.Add(this.gbZiro);
-            this.gbRacun.Controls.Add(this.gbDevizni);
             this.gbRacun.Controls.Add(this.gbStedni);
             this.gbRacun.Controls.Add(this.gbTekuci);
+            this.gbRacun.Controls.Add(this.gbZiro);
+            this.gbRacun.Controls.Add(this.gbDevizni);
             this.gbRacun.Location = new System.Drawing.Point(25, 127);
             this.gbRacun.Name = "gbRacun";
             this.gbRacun.Size = new System.Drawing.Size(1008, 481);
@@ -665,6 +665,7 @@
             this.btnObrisiUslovPodizanja.TabIndex = 12;
             this.btnObrisiUslovPodizanja.Text = "Obriši uslov";
             this.btnObrisiUslovPodizanja.UseVisualStyleBackColor = true;
+            this.btnObrisiUslovPodizanja.Click += new System.EventHandler(this.btnObrisiUslovPodizanja_Click);
             // 
             // btnDodajUslovPodizanja
             // 
@@ -674,6 +675,7 @@
             this.btnDodajUslovPodizanja.TabIndex = 11;
             this.btnDodajUslovPodizanja.Text = "Dodaj uslov";
             this.btnDodajUslovPodizanja.UseVisualStyleBackColor = true;
+            this.btnDodajUslovPodizanja.Click += new System.EventHandler(this.btnDodajUslovPodizanja_Click);
             // 
             // lblUslovPodizanja
             // 
@@ -709,6 +711,7 @@
             this.btnObrisiBonus.TabIndex = 7;
             this.btnObrisiBonus.Text = "Obriši bonus";
             this.btnObrisiBonus.UseVisualStyleBackColor = true;
+            this.btnObrisiBonus.Click += new System.EventHandler(this.btnObrisiBonus_Click);
             // 
             // btnDodajBonus
             // 
@@ -718,6 +721,7 @@
             this.btnDodajBonus.TabIndex = 6;
             this.btnDodajBonus.Text = "Dodaj bonus";
             this.btnDodajBonus.UseVisualStyleBackColor = true;
+            this.btnDodajBonus.Click += new System.EventHandler(this.btnDodajBonus_Click);
             // 
             // lblBonus
             // 

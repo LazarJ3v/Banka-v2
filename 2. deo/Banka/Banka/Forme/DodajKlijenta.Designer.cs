@@ -249,6 +249,7 @@
             // tbBrojLicneKarteFL
             // 
             this.tbBrojLicneKarteFL.Location = new System.Drawing.Point(201, 164);
+            this.tbBrojLicneKarteFL.MaxLength = 9;
             this.tbBrojLicneKarteFL.Name = "tbBrojLicneKarteFL";
             this.tbBrojLicneKarteFL.Size = new System.Drawing.Size(198, 31);
             this.tbBrojLicneKarteFL.TabIndex = 3;
@@ -256,6 +257,7 @@
             // tbJmbgFL
             // 
             this.tbJmbgFL.Location = new System.Drawing.Point(201, 120);
+            this.tbJmbgFL.MaxLength = 13;
             this.tbJmbgFL.Name = "tbJmbgFL";
             this.tbJmbgFL.Size = new System.Drawing.Size(198, 31);
             this.tbJmbgFL.TabIndex = 2;

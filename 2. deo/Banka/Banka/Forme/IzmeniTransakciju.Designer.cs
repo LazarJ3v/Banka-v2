@@ -187,6 +187,11 @@
             // nudIznos
             // 
             this.nudIznos.Location = new System.Drawing.Point(299, 272);
+            this.nudIznos.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.nudIznos.Name = "nudIznos";
             this.nudIznos.Size = new System.Drawing.Size(204, 31);
             this.nudIznos.TabIndex = 34;

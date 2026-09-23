@@ -109,9 +109,17 @@ namespace Banka.Forme
         }
 
         private void DodajKamatu_Load(object sender, EventArgs e)
-        {
-            cbPeriodObracuna.DataSource = Enum.GetValues(typeof(FrekvencijaKapitalizacijeKamate));
-            cbTip.DataSource = Enum.GetValues(typeof(TipKamate));
+        { 
+            foreach(FrekvencijaKapitalizacijeKamate period in Enum.GetValues(typeof(FrekvencijaKapitalizacijeKamate)))
+            {
+                cbPeriodObracuna.Items.Add(period.GetDescription());
+            }
+            cbPeriodObracuna.SelectedIndex = 0;
+            foreach(TipKamate tip in Enum.GetValues(typeof(TipKamate)))
+            {
+                cbTip.Items.Add(tip.GetDescription());
+            }
+            cbTip.SelectedIndex = 0;
             var statusi = Enum.GetValues(typeof(StatusKamate));
             foreach(StatusKamate s in statusi)
             {

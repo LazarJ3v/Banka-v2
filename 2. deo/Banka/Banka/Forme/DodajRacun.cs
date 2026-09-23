@@ -605,5 +605,73 @@ namespace Banka.Forme
                 e.Handled = true;
             }
         }
+
+        private void btnDodajUslovPodizanja_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbBonus.Text))
+            {
+                MessageBox.Show("Unesite naziv uslova!");
+                return;
+            }
+
+            StedniUsloviPodizanjaBasic sub = new StedniUsloviPodizanjaBasic
+            {
+                UslovPodizanja = tbUslovPodizanja.Text,
+            };
+            stedniUsloviPodizanja.Add(sub);
+
+            var prikaz = stedniUsloviPodizanja.Select(su => new { Uslov = su.UslovPodizanja }).ToList();
+            dgvUsloviPodizanja.DataSource = prikaz;
+        }
+
+        private void btnObrisiUslovPodizanja_Click(object sender, EventArgs e)
+        {
+            if (dgvUsloviPodizanja.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selektujte zapis!");
+                return;
+            }
+
+            int index = dgvUsloviPodizanja.SelectedRows[0].Index;
+            StedniUsloviPodizanjaBasic dto = stedniUsloviPodizanja[index];
+            stedniUsloviPodizanja.Remove(dto);
+
+            var prikaz = stedniUsloviPodizanja.Select(su => new { Uslov = su.UslovPodizanja }).ToList();
+            dgvUsloviPodizanja.DataSource = prikaz;
+        }
+
+        private void btnDodajBonus_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbBonus.Text))
+            {
+                MessageBox.Show("Unesite naziv bonusa!");
+                return;
+            }
+
+            StedniBonusBasic sbb = new StedniBonusBasic
+            {
+                Bonus = tbBonus.Text,
+            };
+            stedniBonusi.Add(sbb);
+
+            var prikaz = stedniBonusi.Select(sb => new { Bonus = sb.Bonus }).ToList();
+            dgvBonusi.DataSource = prikaz;
+        }
+
+        private void btnObrisiBonus_Click(object sender, EventArgs e)
+        {
+            if (dgvBonusi.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selektujte zapis!");
+                return;
+            }
+
+            int index = dgvBonusi.SelectedRows[0].Index;
+            StedniBonusBasic dto = stedniBonusi[index];
+            stedniBonusi.Remove(dto);
+
+            var prikaz = stedniBonusi.Select(sb => new { Bonus = sb.Bonus }).ToList();
+            dgvBonusi.DataSource = prikaz;
+        }
     }
 }

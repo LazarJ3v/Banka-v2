@@ -24,6 +24,14 @@ namespace Banka.Forme
         private ZiroBasic ziro = null;
         private RacunBasic racun = null;
 
+        private IList<TekuciPaketBasic> tekuciPaketi;
+
+        private IList<DevizniOgranicenjeBasic> devizniOgranicenja;
+        private IList<DevizniValutaBasic> devizniValute;
+
+        private IList<StedniUsloviPodizanjaBasic> stedniUsloviPodizanja;
+        private IList<StedniBonusBasic> stedniBonusi;
+
         private TipRacuna tip;
         public IzmeniRacun() : base()
         {
@@ -162,6 +170,12 @@ namespace Banka.Forme
             PopuniZajednickaPolja(devizni);
             PopuniDevizni(devizni);
             PodesiPrikaz();
+
+            foreach (Enumi.DevizniValuta valuta in Enum.GetValues(typeof(Enumi.DevizniValuta)))
+            {
+                cbDodajValutu.Items.Add(valuta);
+            }
+            cbDodajValutu.SelectedIndex = 0;
         }
 
         public IzmeniRacun(StedniBasic stedni) : this()
@@ -340,7 +354,8 @@ namespace Banka.Forme
                         Komentar = rtbKomentar.Text,
 
                         PlatnaKartica = chbPlatnaKartica.Checked,
-                        MesecniLimit = nudMesecniLimit.Value
+                        MesecniLimit = nudMesecniLimit.Value,
+                        TekuciPaketi = tekuciPaketi
                     };
 
                     DTOManager.IzmeniTekuci(tekuci);
@@ -358,7 +373,9 @@ namespace Banka.Forme
                         Komentar = rtbKomentar.Text,
 
                         Namena = cbNamenaDevizni.Text,
-                        KursnaRazlika = nudKursnaRazlika.Value
+                        KursnaRazlika = nudKursnaRazlika.Value,
+                        DevizniValute = devizniValute,
+                        DevizniOgranicenja = devizniOgranicenja
                     };
 
                     DTOManager.IzmeniDevizni(devizni);
@@ -376,7 +393,9 @@ namespace Banka.Forme
                         Komentar = rtbKomentar.Text,
 
                         MinimalniIznosOtvaranja = nudMinimalniIznosOtvaranja.Value,
-                        FrekvKapitalizKamate = (int)cbFrekvKapitalizacijaKamate.SelectedValue
+                        FrekvKapitalizKamate = (int)cbFrekvKapitalizacijaKamate.SelectedValue,
+                        StedniBonusi = stedniBonusi,
+                        StedniUsloviPodizanja = stedniUsloviPodizanja
                     };
 
                     DTOManager.IzmeniStedni(stedni);
@@ -424,6 +443,203 @@ namespace Banka.Forme
                         MessageBoxIcon.Information);
             DialogResult = DialogResult.OK;
             this.Close();
+        }
+
+        private void btnDodajPaket_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbPaket.Text))
+            {
+                MessageBox.Show("Unesite naziv paketa!");
+                return;
+            }
+
+            TekuciPaketBasic tpb = new TekuciPaketBasic
+            {
+                Paket = tbPaket.Text
+            };
+            tekuciPaketi.Add(tpb);
+
+            var prikaz = tekuciPaketi.Select(tp => new { Paket = tp.Paket }).ToList();
+            dgvPaketi.DataSource = prikaz;
+
+            tbPaket.Clear();
+        }
+
+        private void btnObrisiPaket_Click(object sender, EventArgs e)
+        {
+            if (dgvPaketi.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selektujte zapis!");
+                return;
+            }
+
+            int index = dgvPaketi.SelectedRows[0].Index;
+            TekuciPaketBasic dto = tekuciPaketi[index];
+            tekuciPaketi.Remove(dto);
+
+            var prikaz = tekuciPaketi.Select(tp => new { Paket = tp.Paket }).ToList();
+            dgvPaketi.DataSource = prikaz;
+        }
+
+        private void btnDodajBonus_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbBonus.Text))
+            {
+                MessageBox.Show("Unesite naziv bonusa!");
+                return;
+            }
+
+            StedniBonusBasic sbb = new StedniBonusBasic
+            {
+                Bonus = tbBonus.Text,
+            };
+            stedniBonusi.Add(sbb);
+
+            var prikaz = stedniBonusi.Select(sb => new { Bonus = sb.Bonus }).ToList();
+            dgvBonusi.DataSource = prikaz;
+        }
+
+        private void btnObrisiBonus_Click(object sender, EventArgs e)
+        {
+            if (dgvBonusi.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selektujte zapis!");
+                return;
+            }
+
+            int index = dgvBonusi.SelectedRows[0].Index;
+            StedniBonusBasic dto = stedniBonusi[index];
+            stedniBonusi.Remove(dto);
+
+            var prikaz = stedniBonusi.Select(sb => new { Bonus = sb.Bonus }).ToList();
+            dgvBonusi.DataSource = prikaz;
+        }
+
+        private void btnDodajUslov_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbBonus.Text))
+            {
+                MessageBox.Show("Unesite naziv uslova!");
+                return;
+            }
+
+            StedniUsloviPodizanjaBasic sub = new StedniUsloviPodizanjaBasic
+            {
+                UslovPodizanja = tbUslovPodizanja.Text,
+            };
+            stedniUsloviPodizanja.Add(sub);
+
+            var prikaz = stedniUsloviPodizanja.Select(su => new { Uslov = su.UslovPodizanja }).ToList();
+            dgvUsloviPodizanja.DataSource = prikaz;
+        }
+
+        private void btnObrisiUslov_Click(object sender, EventArgs e)
+        {
+            if (dgvUsloviPodizanja.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selektujte zapis!");
+                return;
+            }
+
+            int index = dgvUsloviPodizanja.SelectedRows[0].Index;
+            StedniUsloviPodizanjaBasic dto = stedniUsloviPodizanja[index];
+            stedniUsloviPodizanja.Remove(dto);
+
+            var prikaz = stedniUsloviPodizanja.Select(su => new { Uslov = su.UslovPodizanja }).ToList();
+            dgvUsloviPodizanja.DataSource = prikaz;
+        }
+
+        private void btnDodajOgranicenje_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbOgranicenje.Text))
+            {
+                MessageBox.Show("Unesite naziv ogranicenja!");
+                return;
+            }
+
+            DevizniOgranicenjeBasic dob = new DevizniOgranicenjeBasic
+            {
+                Ogranicenje = tbOgranicenje.Text
+            };
+            devizniOgranicenja.Add(dob);
+
+            var prikaz = devizniOgranicenja.Select(o => new { Ogranicenje = o.Ogranicenje }).ToList();
+            dgvOgranicenja.DataSource = prikaz;
+
+            tbOgranicenje.Clear();
+        }
+
+        private void btnObrisiOgranicenje_Click(object sender, EventArgs e)
+        {
+            if (dgvOgranicenja.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selektujte zapis!");
+                return;
+            }
+
+            int index = dgvOgranicenja.SelectedRows[0].Index;
+            DevizniOgranicenjeBasic dto = devizniOgranicenja[index];
+            devizniOgranicenja.Remove(dto);
+
+            var prikaz = devizniOgranicenja.Select(o => new { Ogranicenje = o.Ogranicenje }).ToList();
+            dgvOgranicenja.DataSource = prikaz;
+        }
+
+        private void btnDodajValutu_Click(object sender, EventArgs e)
+        {
+            DevizniValutaBasic dvb = new DevizniValutaBasic
+            {
+                DozvoljenaValuta = cbDodajValutu.Text
+            };
+            //TODO: ispitati da selektovana valuta (dvb) vec ne postoji u devizniValuta
+            devizniValute.Add(dvb);
+
+            var prikaz = devizniValute.Select(v => new { Valuta = v.DozvoljenaValuta }).ToList();
+            dgvValute.DataSource = prikaz;
+        }
+
+        private void btnObrisiValutu_Click(object sender, EventArgs e)
+        {
+            if (dgvValute.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selektujte zapis!");
+                return;
+            }
+
+            int index = dgvValute.SelectedRows[0].Index;
+            DevizniValutaBasic dto = devizniValute[index];
+            devizniValute.Remove(dto);
+
+            var prikaz = devizniValute.Select(v => new { Valuta = v.DozvoljenaValuta }).ToList();
+            dgvValute.DataSource = prikaz;
+        }
+
+        private void IzmeniRacun_Load(object sender, EventArgs e)
+        {
+            #region Dinamicki selekt
+
+            dgvPaketi.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvPaketi.MultiSelect = false;
+
+            dgvValute.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvValute.MultiSelect = false;
+
+            dgvOgranicenja.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvOgranicenja.MultiSelect = false;
+
+            dgvBonusi.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvBonusi.MultiSelect = false;
+
+            dgvUsloviPodizanja.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvUsloviPodizanja.MultiSelect = false;
+
+            #endregion
+            tekuciPaketi = new BindingList<TekuciPaketBasic>();
+            devizniOgranicenja = new BindingList<DevizniOgranicenjeBasic>();
+            devizniValute = new BindingList<DevizniValutaBasic>();
+            stedniUsloviPodizanja = new BindingList<StedniUsloviPodizanjaBasic>();
+            stedniBonusi = new BindingList<StedniBonusBasic>();
+
         }
     }
 }

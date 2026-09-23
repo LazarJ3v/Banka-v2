@@ -69,8 +69,8 @@ namespace Banka.Forme
             {
                 cbPeriodObracuna.Items.Add(period.GetDescription());
             }
-            cbPeriodObracuna.SelectedItem = 
-                cbPeriodObracuna.Items[cbPeriodObracuna.Items.IndexOf(kamata.PeriodObracuna)];
+            cbPeriodObracuna.SelectedIndex = 
+               cbPeriodObracuna.Items.IndexOf(kamata.PeriodObracuna);
 
             foreach (TipKamate tip in 
                 Enum.GetValues(typeof(TipKamate)))

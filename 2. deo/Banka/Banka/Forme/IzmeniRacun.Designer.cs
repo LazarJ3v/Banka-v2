@@ -62,7 +62,7 @@
             this.btnDodajValutu = new System.Windows.Forms.Button();
             this.btnObrisiOgranicenje = new System.Windows.Forms.Button();
             this.btnDodajOgranicenje = new System.Windows.Forms.Button();
-            this.cbValutaDodaj = new System.Windows.Forms.ComboBox();
+            this.cbDodajValutu = new System.Windows.Forms.ComboBox();
             this.lblValutaDodaj = new System.Windows.Forms.Label();
             this.tbOgranicenje = new System.Windows.Forms.TextBox();
             this.lblOgranicenje = new System.Windows.Forms.Label();
@@ -171,7 +171,7 @@
             this.cbStatus.FormattingEnabled = true;
             this.cbStatus.Location = new System.Drawing.Point(281, 174);
             this.cbStatus.Name = "cbStatus";
-            this.cbStatus.Size = new System.Drawing.Size(200, 33);
+            this.cbStatus.Size = new System.Drawing.Size(200, 31);
             this.cbStatus.TabIndex = 12;
             // 
             // dtpDatumOtvaranja
@@ -186,7 +186,7 @@
             this.cbValuta.FormattingEnabled = true;
             this.cbValuta.Location = new System.Drawing.Point(281, 61);
             this.cbValuta.Name = "cbValuta";
-            this.cbValuta.Size = new System.Drawing.Size(200, 33);
+            this.cbValuta.Size = new System.Drawing.Size(200, 31);
             this.cbValuta.TabIndex = 9;
             // 
             // lblKomentar
@@ -194,7 +194,7 @@
             this.lblKomentar.AutoSize = true;
             this.lblKomentar.Location = new System.Drawing.Point(6, 290);
             this.lblKomentar.Name = "lblKomentar";
-            this.lblKomentar.Size = new System.Drawing.Size(93, 25);
+            this.lblKomentar.Size = new System.Drawing.Size(109, 23);
             this.lblKomentar.TabIndex = 8;
             this.lblKomentar.Text = "Komentar:";
             // 
@@ -203,7 +203,7 @@
             this.lblKamatnaStopa.AutoSize = true;
             this.lblKamatnaStopa.Location = new System.Drawing.Point(6, 252);
             this.lblKamatnaStopa.Name = "lblKamatnaStopa";
-            this.lblKamatnaStopa.Size = new System.Drawing.Size(135, 25);
+            this.lblKamatnaStopa.Size = new System.Drawing.Size(164, 23);
             this.lblKamatnaStopa.TabIndex = 7;
             this.lblKamatnaStopa.Text = "Kamatna stopa:";
             // 
@@ -212,7 +212,7 @@
             this.lblDozvoljeniMinus.AutoSize = true;
             this.lblDozvoljeniMinus.Location = new System.Drawing.Point(6, 216);
             this.lblDozvoljeniMinus.Name = "lblDozvoljeniMinus";
-            this.lblDozvoljeniMinus.Size = new System.Drawing.Size(152, 25);
+            this.lblDozvoljeniMinus.Size = new System.Drawing.Size(197, 23);
             this.lblDozvoljeniMinus.TabIndex = 6;
             this.lblDozvoljeniMinus.Text = "Dozvoljeni minus:";
             // 
@@ -221,7 +221,7 @@
             this.lblStatus.AutoSize = true;
             this.lblStatus.Location = new System.Drawing.Point(6, 177);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(64, 25);
+            this.lblStatus.Size = new System.Drawing.Size(87, 23);
             this.lblStatus.TabIndex = 5;
             this.lblStatus.Text = "Status:";
             // 
@@ -230,7 +230,7 @@
             this.lblDatumOtvaranja.AutoSize = true;
             this.lblDatumOtvaranja.Location = new System.Drawing.Point(6, 142);
             this.lblDatumOtvaranja.Name = "lblDatumOtvaranja";
-            this.lblDatumOtvaranja.Size = new System.Drawing.Size(148, 25);
+            this.lblDatumOtvaranja.Size = new System.Drawing.Size(186, 23);
             this.lblDatumOtvaranja.TabIndex = 4;
             this.lblDatumOtvaranja.Text = "Datum otvaranja:";
             // 
@@ -239,7 +239,7 @@
             this.lblTrenutnoStanje.AutoSize = true;
             this.lblTrenutnoStanje.Location = new System.Drawing.Point(6, 102);
             this.lblTrenutnoStanje.Name = "lblTrenutnoStanje";
-            this.lblTrenutnoStanje.Size = new System.Drawing.Size(136, 25);
+            this.lblTrenutnoStanje.Size = new System.Drawing.Size(186, 23);
             this.lblTrenutnoStanje.TabIndex = 3;
             this.lblTrenutnoStanje.Text = "Trenutno stanje:";
             // 
@@ -248,7 +248,7 @@
             this.lblValuta.AutoSize = true;
             this.lblValuta.Location = new System.Drawing.Point(6, 64);
             this.lblValuta.Name = "lblValuta";
-            this.lblValuta.Size = new System.Drawing.Size(64, 25);
+            this.lblValuta.Size = new System.Drawing.Size(87, 23);
             this.lblValuta.TabIndex = 2;
             this.lblValuta.Text = "Valuta:";
             // 
@@ -264,7 +264,7 @@
             this.lblBrojRacuna.AutoSize = true;
             this.lblBrojRacuna.Location = new System.Drawing.Point(6, 27);
             this.lblBrojRacuna.Name = "lblBrojRacuna";
-            this.lblBrojRacuna.Size = new System.Drawing.Size(104, 25);
+            this.lblBrojRacuna.Size = new System.Drawing.Size(142, 23);
             this.lblBrojRacuna.TabIndex = 0;
             this.lblBrojRacuna.Text = "Broj računa:";
             // 
@@ -313,6 +313,7 @@
             this.btnObrisiPaket.TabIndex = 7;
             this.btnObrisiPaket.Text = "Obriši";
             this.btnObrisiPaket.UseVisualStyleBackColor = true;
+            this.btnObrisiPaket.Click += new System.EventHandler(this.btnObrisiPaket_Click);
             // 
             // btnDodajPaket
             // 
@@ -322,6 +323,7 @@
             this.btnDodajPaket.TabIndex = 6;
             this.btnDodajPaket.Text = "Dodaj";
             this.btnDodajPaket.UseVisualStyleBackColor = true;
+            this.btnDodajPaket.Click += new System.EventHandler(this.btnDodajPaket_Click);
             // 
             // tbPaket
             // 
@@ -335,7 +337,7 @@
             this.lblPaket.AutoSize = true;
             this.lblPaket.Location = new System.Drawing.Point(6, 105);
             this.lblPaket.Name = "lblPaket";
-            this.lblPaket.Size = new System.Drawing.Size(58, 25);
+            this.lblPaket.Size = new System.Drawing.Size(76, 23);
             this.lblPaket.TabIndex = 4;
             this.lblPaket.Text = "Paket:";
             // 
@@ -351,7 +353,7 @@
             this.lblMesecniLimit.AutoSize = true;
             this.lblMesecniLimit.Location = new System.Drawing.Point(6, 67);
             this.lblMesecniLimit.Name = "lblMesecniLimit";
-            this.lblMesecniLimit.Size = new System.Drawing.Size(119, 25);
+            this.lblMesecniLimit.Size = new System.Drawing.Size(164, 23);
             this.lblMesecniLimit.TabIndex = 2;
             this.lblMesecniLimit.Text = "Mesečni limit:";
             // 
@@ -361,7 +363,7 @@
             this.chbPlatnaKartica.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.chbPlatnaKartica.Location = new System.Drawing.Point(290, 28);
             this.chbPlatnaKartica.Name = "chbPlatnaKartica";
-            this.chbPlatnaKartica.Size = new System.Drawing.Size(142, 29);
+            this.chbPlatnaKartica.Size = new System.Drawing.Size(190, 27);
             this.chbPlatnaKartica.TabIndex = 1;
             this.chbPlatnaKartica.Text = "Platna kartica";
             this.chbPlatnaKartica.UseVisualStyleBackColor = true;
@@ -374,7 +376,7 @@
             this.gbDevizniInformacije.Controls.Add(this.btnDodajValutu);
             this.gbDevizniInformacije.Controls.Add(this.btnObrisiOgranicenje);
             this.gbDevizniInformacije.Controls.Add(this.btnDodajOgranicenje);
-            this.gbDevizniInformacije.Controls.Add(this.cbValutaDodaj);
+            this.gbDevizniInformacije.Controls.Add(this.cbDodajValutu);
             this.gbDevizniInformacije.Controls.Add(this.lblValutaDodaj);
             this.gbDevizniInformacije.Controls.Add(this.tbOgranicenje);
             this.gbDevizniInformacije.Controls.Add(this.lblOgranicenje);
@@ -417,6 +419,7 @@
             this.btnObrisiValutu.TabIndex = 11;
             this.btnObrisiValutu.Text = "Obriši";
             this.btnObrisiValutu.UseVisualStyleBackColor = true;
+            this.btnObrisiValutu.Click += new System.EventHandler(this.btnObrisiValutu_Click);
             // 
             // btnDodajValutu
             // 
@@ -426,6 +429,7 @@
             this.btnDodajValutu.TabIndex = 10;
             this.btnDodajValutu.Text = "Dodaj";
             this.btnDodajValutu.UseVisualStyleBackColor = true;
+            this.btnDodajValutu.Click += new System.EventHandler(this.btnDodajValutu_Click);
             // 
             // btnObrisiOgranicenje
             // 
@@ -435,6 +439,7 @@
             this.btnObrisiOgranicenje.TabIndex = 9;
             this.btnObrisiOgranicenje.Text = "Obriši";
             this.btnObrisiOgranicenje.UseVisualStyleBackColor = true;
+            this.btnObrisiOgranicenje.Click += new System.EventHandler(this.btnObrisiOgranicenje_Click);
             // 
             // btnDodajOgranicenje
             // 
@@ -444,21 +449,22 @@
             this.btnDodajOgranicenje.TabIndex = 8;
             this.btnDodajOgranicenje.Text = "Dodaj";
             this.btnDodajOgranicenje.UseVisualStyleBackColor = true;
+            this.btnDodajOgranicenje.Click += new System.EventHandler(this.btnDodajOgranicenje_Click);
             // 
-            // cbValutaDodaj
+            // cbDodajValutu
             // 
-            this.cbValutaDodaj.FormattingEnabled = true;
-            this.cbValutaDodaj.Location = new System.Drawing.Point(281, 133);
-            this.cbValutaDodaj.Name = "cbValutaDodaj";
-            this.cbValutaDodaj.Size = new System.Drawing.Size(199, 33);
-            this.cbValutaDodaj.TabIndex = 7;
+            this.cbDodajValutu.FormattingEnabled = true;
+            this.cbDodajValutu.Location = new System.Drawing.Point(281, 133);
+            this.cbDodajValutu.Name = "cbDodajValutu";
+            this.cbDodajValutu.Size = new System.Drawing.Size(199, 31);
+            this.cbDodajValutu.TabIndex = 7;
             // 
             // lblValutaDodaj
             // 
             this.lblValutaDodaj.AutoSize = true;
             this.lblValutaDodaj.Location = new System.Drawing.Point(276, 105);
             this.lblValutaDodaj.Name = "lblValutaDodaj";
-            this.lblValutaDodaj.Size = new System.Drawing.Size(64, 25);
+            this.lblValutaDodaj.Size = new System.Drawing.Size(87, 23);
             this.lblValutaDodaj.TabIndex = 6;
             this.lblValutaDodaj.Text = "Valuta:";
             // 
@@ -474,7 +480,7 @@
             this.lblOgranicenje.AutoSize = true;
             this.lblOgranicenje.Location = new System.Drawing.Point(6, 105);
             this.lblOgranicenje.Name = "lblOgranicenje";
-            this.lblOgranicenje.Size = new System.Drawing.Size(110, 25);
+            this.lblOgranicenje.Size = new System.Drawing.Size(142, 23);
             this.lblOgranicenje.TabIndex = 4;
             this.lblOgranicenje.Text = "Ograničenje:";
             // 
@@ -490,7 +496,7 @@
             this.lblKursnaRazlika.AutoSize = true;
             this.lblKursnaRazlika.Location = new System.Drawing.Point(6, 65);
             this.lblKursnaRazlika.Name = "lblKursnaRazlika";
-            this.lblKursnaRazlika.Size = new System.Drawing.Size(123, 25);
+            this.lblKursnaRazlika.Size = new System.Drawing.Size(175, 23);
             this.lblKursnaRazlika.TabIndex = 2;
             this.lblKursnaRazlika.Text = "Kursna razlika:";
             // 
@@ -499,7 +505,7 @@
             this.cbNamenaDevizni.FormattingEnabled = true;
             this.cbNamenaDevizni.Location = new System.Drawing.Point(281, 24);
             this.cbNamenaDevizni.Name = "cbNamenaDevizni";
-            this.cbNamenaDevizni.Size = new System.Drawing.Size(199, 33);
+            this.cbNamenaDevizni.Size = new System.Drawing.Size(199, 31);
             this.cbNamenaDevizni.TabIndex = 1;
             // 
             // lblNamenaDevizni
@@ -507,7 +513,7 @@
             this.lblNamenaDevizni.AutoSize = true;
             this.lblNamenaDevizni.Location = new System.Drawing.Point(6, 27);
             this.lblNamenaDevizni.Name = "lblNamenaDevizni";
-            this.lblNamenaDevizni.Size = new System.Drawing.Size(82, 25);
+            this.lblNamenaDevizni.Size = new System.Drawing.Size(87, 23);
             this.lblNamenaDevizni.TabIndex = 0;
             this.lblNamenaDevizni.Text = "Namena:";
             // 
@@ -552,6 +558,7 @@
             this.btnObrisiUslov.TabIndex = 12;
             this.btnObrisiUslov.Text = "Obriši";
             this.btnObrisiUslov.UseVisualStyleBackColor = true;
+            this.btnObrisiUslov.Click += new System.EventHandler(this.btnObrisiUslov_Click);
             // 
             // btnDodajUslov
             // 
@@ -561,13 +568,14 @@
             this.btnDodajUslov.TabIndex = 11;
             this.btnDodajUslov.Text = "Dodaj";
             this.btnDodajUslov.UseVisualStyleBackColor = true;
+            this.btnDodajUslov.Click += new System.EventHandler(this.btnDodajUslov_Click);
             // 
             // lblUslovPodizanja
             // 
             this.lblUslovPodizanja.AutoSize = true;
             this.lblUslovPodizanja.Location = new System.Drawing.Point(276, 105);
             this.lblUslovPodizanja.Name = "lblUslovPodizanja";
-            this.lblUslovPodizanja.Size = new System.Drawing.Size(142, 25);
+            this.lblUslovPodizanja.Size = new System.Drawing.Size(186, 23);
             this.lblUslovPodizanja.TabIndex = 10;
             this.lblUslovPodizanja.Text = "Uslov podizanja:";
             // 
@@ -596,6 +604,7 @@
             this.btnObrisiBonus.TabIndex = 7;
             this.btnObrisiBonus.Text = "Obriši";
             this.btnObrisiBonus.UseVisualStyleBackColor = true;
+            this.btnObrisiBonus.Click += new System.EventHandler(this.btnObrisiBonus_Click);
             // 
             // tbBonus
             // 
@@ -612,13 +621,14 @@
             this.btnDodajBonus.TabIndex = 5;
             this.btnDodajBonus.Text = "Dodaj";
             this.btnDodajBonus.UseVisualStyleBackColor = true;
+            this.btnDodajBonus.Click += new System.EventHandler(this.btnDodajBonus_Click);
             // 
             // lblBonus
             // 
             this.lblBonus.AutoSize = true;
             this.lblBonus.Location = new System.Drawing.Point(6, 105);
             this.lblBonus.Name = "lblBonus";
-            this.lblBonus.Size = new System.Drawing.Size(65, 25);
+            this.lblBonus.Size = new System.Drawing.Size(76, 23);
             this.lblBonus.TabIndex = 4;
             this.lblBonus.Text = "Bonus:";
             // 
@@ -627,7 +637,7 @@
             this.cbFrekvKapitalizacijaKamate.FormattingEnabled = true;
             this.cbFrekvKapitalizacijaKamate.Location = new System.Drawing.Point(280, 65);
             this.cbFrekvKapitalizacijaKamate.Name = "cbFrekvKapitalizacijaKamate";
-            this.cbFrekvKapitalizacijaKamate.Size = new System.Drawing.Size(201, 33);
+            this.cbFrekvKapitalizacijaKamate.Size = new System.Drawing.Size(201, 31);
             this.cbFrekvKapitalizacijaKamate.TabIndex = 3;
             // 
             // lblFrekvKapitalizacijeKamate
@@ -635,7 +645,7 @@
             this.lblFrekvKapitalizacijeKamate.AutoSize = true;
             this.lblFrekvKapitalizacijeKamate.Location = new System.Drawing.Point(6, 68);
             this.lblFrekvKapitalizacijeKamate.Name = "lblFrekvKapitalizacijeKamate";
-            this.lblFrekvKapitalizacijeKamate.Size = new System.Drawing.Size(228, 25);
+            this.lblFrekvKapitalizacijeKamate.Size = new System.Drawing.Size(329, 23);
             this.lblFrekvKapitalizacijeKamate.TabIndex = 2;
             this.lblFrekvKapitalizacijeKamate.Text = "Frekv. kapitalizacije kamate:";
             // 
@@ -651,7 +661,7 @@
             this.lblMinimalniIznosOtvaranja.AutoSize = true;
             this.lblMinimalniIznosOtvaranja.Location = new System.Drawing.Point(6, 32);
             this.lblMinimalniIznosOtvaranja.Name = "lblMinimalniIznosOtvaranja";
-            this.lblMinimalniIznosOtvaranja.Size = new System.Drawing.Size(217, 25);
+            this.lblMinimalniIznosOtvaranja.Size = new System.Drawing.Size(296, 23);
             this.lblMinimalniIznosOtvaranja.TabIndex = 0;
             this.lblMinimalniIznosOtvaranja.Text = "Minimalni iznos otvaranja:";
             // 
@@ -684,7 +694,7 @@
             this.lblIntegracijaSaSistemima.AutoSize = true;
             this.lblIntegracijaSaSistemima.Location = new System.Drawing.Point(6, 136);
             this.lblIntegracijaSaSistemima.Name = "lblIntegracijaSaSistemima";
-            this.lblIntegracijaSaSistemima.Size = new System.Drawing.Size(204, 25);
+            this.lblIntegracijaSaSistemima.Size = new System.Drawing.Size(285, 23);
             this.lblIntegracijaSaSistemima.TabIndex = 5;
             this.lblIntegracijaSaSistemima.Text = "Integracija sa sistemima:";
             // 
@@ -700,7 +710,7 @@
             this.lblLimitZaMasovnaPlacanja.AutoSize = true;
             this.lblLimitZaMasovnaPlacanja.Location = new System.Drawing.Point(6, 98);
             this.lblLimitZaMasovnaPlacanja.Name = "lblLimitZaMasovnaPlacanja";
-            this.lblLimitZaMasovnaPlacanja.Size = new System.Drawing.Size(222, 25);
+            this.lblLimitZaMasovnaPlacanja.Size = new System.Drawing.Size(296, 23);
             this.lblLimitZaMasovnaPlacanja.TabIndex = 3;
             this.lblLimitZaMasovnaPlacanja.Text = "Limit za masovna plaćanja:";
             // 
@@ -710,7 +720,7 @@
             this.chbElektronskoBankarstvo.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.chbElektronskoBankarstvo.Location = new System.Drawing.Point(192, 61);
             this.chbElektronskoBankarstvo.Name = "chbElektronskoBankarstvo";
-            this.chbElektronskoBankarstvo.Size = new System.Drawing.Size(227, 29);
+            this.chbElektronskoBankarstvo.Size = new System.Drawing.Size(289, 27);
             this.chbElektronskoBankarstvo.TabIndex = 2;
             this.chbElektronskoBankarstvo.Text = "Elektronsko bankarstvo:";
             this.chbElektronskoBankarstvo.UseVisualStyleBackColor = true;
@@ -727,23 +737,24 @@
             this.lblNamenaZiro.AutoSize = true;
             this.lblNamenaZiro.Location = new System.Drawing.Point(6, 27);
             this.lblNamenaZiro.Name = "lblNamenaZiro";
-            this.lblNamenaZiro.Size = new System.Drawing.Size(82, 25);
+            this.lblNamenaZiro.Size = new System.Drawing.Size(87, 23);
             this.lblNamenaZiro.TabIndex = 0;
             this.lblNamenaZiro.Text = "Namena:";
             // 
             // IzmeniRacun
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(511, 855);
             this.Controls.Add(this.btnIzmeni);
             this.Controls.Add(this.gbOsnovneInformacije);
-            this.Controls.Add(this.gbTekuciInformacije);
-            this.Controls.Add(this.gbZiroInformacije);
             this.Controls.Add(this.gbStedniInformacije);
             this.Controls.Add(this.gbDevizniInformacije);
+            this.Controls.Add(this.gbTekuciInformacije);
+            this.Controls.Add(this.gbZiroInformacije);
             this.Name = "IzmeniRacun";
             this.Text = "IzmeniRacun";
+            this.Load += new System.EventHandler(this.IzmeniRacun_Load);
             this.gbOsnovneInformacije.ResumeLayout(false);
             this.gbOsnovneInformacije.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudKamatnaStopa)).EndInit();
@@ -813,7 +824,7 @@
         private System.Windows.Forms.Button btnDodajValutu;
         private System.Windows.Forms.Button btnObrisiOgranicenje;
         private System.Windows.Forms.Button btnDodajOgranicenje;
-        private System.Windows.Forms.ComboBox cbValutaDodaj;
+        private System.Windows.Forms.ComboBox cbDodajValutu;
         private System.Windows.Forms.GroupBox gbStedniInformacije;
         private System.Windows.Forms.NumericUpDown nudMinimalniIznosOtvaranja;
         private System.Windows.Forms.Label lblMinimalniIznosOtvaranja;
