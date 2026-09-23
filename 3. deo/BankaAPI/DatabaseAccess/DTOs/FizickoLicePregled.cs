@@ -8,23 +8,23 @@ namespace DatabaseAccess.DTOs
 {
     public class FizickoLicePregled
     {
-        public int Id;
-        public string Ime;
-        public string Prezime;
-        public string Jmbg;
-        public string BrojLicneKarte;
-        public DateTime? DatumRodjenja;
-        public string Adresa;
-        public string Grad;
-        public string Telefon;
-        public string Email;
-        public string Status;
-        public string Komentar;
+        public int Id { get; set; }
+        public string Ime { get; set; }
+        public string Prezime { get; set; }
+        public string Jmbg { get; set; }
+        public string BrojLicneKarte { get; set; }
+        public DateTime DatumRodjenja { get; set; }
+        public string Adresa { get; set; }
+        public string Grad { get; set; }
+        public string Telefon { get; set; }
+        public string Email { get; set; }
+        public string Status { get; set; }
+        public string Komentar { get; set; }
 
         public FizickoLicePregled() { }
 
         public FizickoLicePregled(int id, string ime, string prezime, string jmbg, string brojLicneKarte,
-            DateTime? datumRodjenja, string adresa, string grad, string telefon, string email,
+            DateTime datumRodjenja, string adresa, string grad, string telefon, string email,
             string status, string komentar)
         {
             this.Id = id;

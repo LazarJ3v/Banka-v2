@@ -8,20 +8,20 @@ namespace DatabaseAccess.DTOs
 {
     public class KreditPregled
     {
-        public int Id;
-        public DateTime DatumDospeca;
-        public DateTime DatumOdobrenja;
-        public decimal Iznos;
-        public string Valuta;
-        public string StatusKredita;
-        public decimal MesecnaRata;
-        public int RokOtplate;
-        public string Namena;
-        public decimal KamatnaStopa;
-        public string Komentar;
-        public FizickoLicePregled FizickoLice;
-        public PravnoLicePregled PravnoLice;
-        public RacunPregled Racun;
+        public int Id { get; set; }
+        public DateTime DatumDospeca { get; set; }
+        public DateTime DatumOdobrenja { get; set; }
+        public decimal Iznos { get; set; }
+        public string Valuta { get; set; }
+        public string StatusKredita { get; set; }
+        public decimal MesecnaRata { get; set; }
+        public int RokOtplate { get; set; }
+        public string Namena { get; set; }
+        public decimal KamatnaStopa { get; set; }
+        public string Komentar { get; set; }
+        public FizickoLicePregled FizickoLice { get; set; }
+        public PravnoLicePregled PravnoLice { get; set; }
+        public RacunPregled Racun { get; set; }
 
         public KreditPregled() { }
 

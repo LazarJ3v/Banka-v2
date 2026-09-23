@@ -8,15 +8,15 @@ namespace DatabaseAccess.DTOs
 {
     public class KamataPregled
     {
-        public int Id;
-        public DateTime DatumObracuna;
-        public string PeriodObracuna;
-        public string TipKamate;
-        public string StatusKamate;
-        public decimal Iznos;
-        public KreditPregled Kredit;
-        public DepozitPregled Depozit;
-        public RacunPregled Racun;
+        public int Id { get; set; }
+        public DateTime DatumObracuna { get; set; }
+        public string PeriodObracuna { get; set; }
+        public string TipKamate { get; set; }
+        public string StatusKamate { get; set; }
+        public decimal Iznos { get; set; }
+        public KreditPregled Kredit { get; set; }
+        public DepozitPregled Depozit { get; set; }
+        public RacunPregled Racun { get; set; }
 
         public KamataPregled() { }
 

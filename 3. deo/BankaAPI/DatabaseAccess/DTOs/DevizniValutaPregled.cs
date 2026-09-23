@@ -8,9 +8,9 @@ namespace DatabaseAccess.DTOs
 {
     public class DevizniValutaPregled
     {
-        public int Id;
-        public string DozvoljenaValuta;
-        public DevizniPregled Devizni;
+        public int Id { get; set; }
+        public string DozvoljenaValuta { get; set; }
+        public DevizniPregled Devizni { get; set; }
 
         public DevizniValutaPregled() { }
 

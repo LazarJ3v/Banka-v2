@@ -8,10 +8,10 @@ namespace DatabaseAccess.DTOs
 {
     public class ZiroPregled : RacunPregled
     {
-        public string Namena;
-        public bool ElektronskoBankarstvo;
-        public decimal? LimitZaMasovnaPlacanja;
-        public string IntegracijaSaSistemima;
+        public string Namena { get; set; }
+        public bool ElektronskoBankarstvo { get; set; }
+        public decimal? LimitZaMasovnaPlacanja { get; set; }
+        public string IntegracijaSaSistemima { get; set; }
 
         public ZiroPregled() { }
 

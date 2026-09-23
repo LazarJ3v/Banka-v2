@@ -11,7 +11,7 @@ using System.Transactions;
 
 namespace DatabaseAccess
 {
-    internal class DataProvider
+    public class DataProvider
     {
         #region FizickaLica
 

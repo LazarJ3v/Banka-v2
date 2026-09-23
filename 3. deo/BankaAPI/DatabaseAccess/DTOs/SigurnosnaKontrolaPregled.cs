@@ -8,14 +8,14 @@ namespace DatabaseAccess.DTOs
 {
     public class SigurnosnaKontrolaPregled
     {
-        public int Id;
-        public string IpAdresa;
-        public DateTime DatumIVreme;
-        public string TipDogadjaja;
-        public string StatusDogadjaja;
-        public string PodaciUredjaja;
-        public string Opis;
-        public RacunPregled Racun;
+        public int Id { get; set; }
+        public string IpAdresa { get; set; }
+        public DateTime DatumIVreme { get; set; }
+        public string TipDogadjaja { get; set; }
+        public string StatusDogadjaja { get; set; }
+        public string PodaciUredjaja { get; set; }
+        public string Opis { get; set; }
+        public RacunPregled Racun { get; set; }
 
         public SigurnosnaKontrolaPregled() { }
 

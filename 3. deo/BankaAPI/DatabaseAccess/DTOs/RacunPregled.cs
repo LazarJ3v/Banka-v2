@@ -8,18 +8,18 @@ namespace DatabaseAccess.DTOs
 {
     public class RacunPregled
     {
-        public int Id;
-        public string BrojRacuna;
-        public string Valuta;
-        public decimal TrenutnoStanje;
-        public DateTime DatumOtvaranja;
-        public string Status;
-        public decimal DozvoljeniMinus;
-        public string Komentar;
-        public string TipRacuna;
-        public decimal? KamatnaStopa;
-        public FizickoLicePregled FizickoLice;
-        public PravnoLicePregled PravnoLice;
+        public int Id { get; set; }
+        public string BrojRacuna { get; set; }
+        public string Valuta { get; set; }
+        public decimal TrenutnoStanje { get; set; }
+        public DateTime DatumOtvaranja { get; set; }
+        public string Status { get; set; }
+        public decimal DozvoljeniMinus { get; set; }
+        public string Komentar { get; set; }
+        public string TipRacuna { get; set; }
+        public decimal? KamatnaStopa { get; set; }
+        public FizickoLicePregled FizickoLice { get; set; }
+        public PravnoLicePregled PravnoLice { get; set; }
 
         public RacunPregled() { }
 
