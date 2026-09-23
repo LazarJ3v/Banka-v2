@@ -49,7 +49,7 @@ namespace Banka
             }
             catch (Exception ec)
             {
-                System.Windows.Forms.MessageBox.Show(ec.ToString());
+                //System.Windows.Forms.MessageBox.Show(ec.ToString());
                 return null;
             }
 
