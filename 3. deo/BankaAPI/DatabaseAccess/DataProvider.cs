@@ -17,11 +17,32 @@ namespace DatabaseAccess
 
         public static void DodajFizickoLice(FizickoLicePregled fl)
         {
+            Validacija.ValidirajIme(fl.Ime, "Ime");
+            Validacija.ValidirajIme(fl.Prezime, "Prezime");
+            Validacija.ValidirajJmbg(fl.Jmbg);
+            Validacija.ValidirajBrojLicneKarte(fl.BrojLicneKarte);
+            Validacija.ValidirajDatumRodjenja(fl.DatumRodjenja);
+            Validacija.ValidirajAdresu(fl.Adresa);
+            Validacija.ValidirajGrad(fl.Grad);
+            Validacija.ValidirajTelefon(fl.Telefon);
+            Validacija.ValidirajEmail(fl.Email);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
                 try
                 {
+                    var f = session.Query<FizickoLice>()
+                        .Where(x => x.Jmbg == fl.Jmbg || x.BrojLicneKarte == fl.BrojLicneKarte)
+                        .FirstOrDefault();
+
+                    if (f != null)
+                    {
+                        if (f.Jmbg == fl.Jmbg)
+                            throw new InvalidOperationException("Postoji fizičko lice sa istim JMBG.");
+                        throw new InvalidOperationException("Postoji fizičko lice sa istim brojem lične karte.");
+                    }
+
                     var fizickoLice = new FizickoLice
                     {
                         Ime = fl.Ime?.Trim(),
@@ -46,7 +67,7 @@ namespace DatabaseAccess
                 {
                     transaction.Rollback();
                     throw new InvalidOperationException(
-                        "Greška pri dodavanju fizičkog lica", ex);
+                        "Greška pri dodavanju fizičkog lica: " + ex.Message, ex);
                 }
             }
         }
@@ -88,6 +109,16 @@ namespace DatabaseAccess
 
         public static FizickoLicePregled IzmeniFizickoLice(FizickoLicePregled fl)
         {
+            Validacija.ValidirajIme(fl.Ime, "Ime");
+            Validacija.ValidirajIme(fl.Prezime, "Prezime");
+            Validacija.ValidirajJmbg(fl.Jmbg);
+            Validacija.ValidirajBrojLicneKarte(fl.BrojLicneKarte);
+            Validacija.ValidirajDatumRodjenja(fl.DatumRodjenja);
+            Validacija.ValidirajAdresu(fl.Adresa);
+            Validacija.ValidirajGrad(fl.Grad);
+            Validacija.ValidirajTelefon(fl.Telefon);
+            Validacija.ValidirajEmail(fl.Email);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -97,6 +128,17 @@ namespace DatabaseAccess
 
                     if (fizickoLice == null)
                         return null;
+
+                    var f = session.Query<FizickoLice>()
+                        .Where(x => x.Jmbg == fl.Jmbg || x.BrojLicneKarte == fl.BrojLicneKarte)
+                        .FirstOrDefault();
+
+                    if (f != null)
+                    {
+                        if (f.Jmbg == fl.Jmbg)
+                            throw new InvalidOperationException("Postoji fizičko lice sa istim JMBG.");
+                        throw new InvalidOperationException("Postoji fizičko lice sa istim brojem lične karte.");
+                    }
 
                     fizickoLice.Ime = fl.Ime?.Trim();
                     fizickoLice.Prezime = fl.Prezime?.Trim();
