@@ -1,5 +1,6 @@
 ﻿using Banka.Entiteti;
 using DatabaseAccess.DTOs;
+using DatabaseAccess.Enumi;
 using FluentNHibernate.Conventions;
 using NHibernate;
 using NHibernate.Util;
@@ -10,6 +11,7 @@ using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
+
 
 namespace DatabaseAccess
 {
@@ -415,6 +417,8 @@ namespace DatabaseAccess
         {
             Validacija.ValidirajBrojRacuna(r.BrojRacuna);
             Validacija.ValidirajValutu(r.Valuta);
+            r.Status = Validacija.ValidirajEnum<StatusRacuna>(r.Status, nameof(r.Status));
+            r.TipRacuna = Validacija.ValidirajEnum<TipRacuna>(r.TipRacuna, nameof(r.TipRacuna));
             Validacija.ValidirajIznos(r.TrenutnoStanje, "Trenutno stanje");
             Validacija.ValidirajIznos(r.DozvoljeniMinus, "Dozvoljeni minus");
             Validacija.ValidirajKamatnuStopu(r.KamatnaStopa);
@@ -567,6 +571,7 @@ namespace DatabaseAccess
         {
             Validacija.ValidirajBrojRacuna(r.BrojRacuna);
             Validacija.ValidirajValutu(r.Valuta);
+            r.Status = Validacija.ValidirajEnum<StatusRacuna>(r.Status, nameof(r.Status));
             Validacija.ValidirajIznos(r.TrenutnoStanje, "Trenutno stanje");
             Validacija.ValidirajIznos(r.DozvoljeniMinus, "Dozvoljeni minus");
             Validacija.ValidirajKamatnuStopu(r.KamatnaStopa);
@@ -677,6 +682,7 @@ namespace DatabaseAccess
         {
             Validacija.ValidirajBrojRacuna(tb.BrojRacuna);
             Validacija.ValidirajValutu(tb.Valuta);
+            tb.Status = Validacija.ValidirajEnum<StatusRacuna>(tb.Status, nameof(tb.Status));
             Validacija.ValidirajIznos(tb.TrenutnoStanje, "Trenutno stanje");
             Validacija.ValidirajIznos(tb.DozvoljeniMinus, "Dozvoljeni minus");
             Validacija.ValidirajKamatnuStopu(tb.KamatnaStopa);
@@ -780,6 +786,7 @@ namespace DatabaseAccess
         {
             Validacija.ValidirajBrojRacuna(tb.BrojRacuna);
             Validacija.ValidirajValutu(tb.Valuta);
+            tb.Status = Validacija.ValidirajEnum<StatusRacuna>(tb.Status, nameof(tb.Status));
             Validacija.ValidirajIznos(tb.TrenutnoStanje, "Trenutno stanje");
             Validacija.ValidirajIznos(tb.DozvoljeniMinus, "Dozvoljeni minus");
             Validacija.ValidirajKamatnuStopu(tb.KamatnaStopa);
@@ -815,6 +822,41 @@ namespace DatabaseAccess
             }
         }
 
+        public static IList<TekuciPregled> VratiTekuce(int brojPoStrani, int strana = 1)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                List<Tekuci> entiteti = session.Query<Tekuci>()
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                return entiteti.Select(t => new TekuciPregled
+                {
+                    Id = t.Id,
+                    BrojRacuna = t.BrojRacuna,
+                    Valuta = t.Valuta,
+                    TrenutnoStanje = t.TrenutnoStanje,
+                    DatumOtvaranja = t.DatumOtvaranja,
+                    Status = t.Status,
+                    DozvoljeniMinus = t.DozvoljeniMinus,
+                    Komentar = t.Komentar,
+                    TipRacuna = t.TipRacuna,
+                    KamatnaStopa = t.KamatnaStopa,
+
+                    PlatnaKartica = t.PlatnaKartica,
+                    MesecniLimit = t.MesecniLimit,
+
+                    FizickoLice = t.PripadaFizickomLicu != null
+                        ? new FizickoLicePregled { Id = t.PripadaFizickomLicu.Id, Ime = t.PripadaFizickomLicu.Ime, Prezime = t.PripadaFizickomLicu.Prezime }
+                        : null,
+                    PravnoLice = t.PripadaPravnomLicu != null
+                        ? new PravnoLicePregled { Id = t.PripadaPravnomLicu.Id, NazivFirme = t.PripadaPravnomLicu.NazivFirme }
+                        : null
+                }).ToList();
+            }
+        }
+
         #endregion
 
         #region Devizni
@@ -823,6 +865,8 @@ namespace DatabaseAccess
         {
             Validacija.ValidirajBrojRacuna(db.BrojRacuna);
             Validacija.ValidirajValutu(db.Valuta);
+            db.Status = Validacija.ValidirajEnum<StatusRacuna>(db.Status, nameof(db.Status));
+            db.Namena = Validacija.ValidirajEnum<DevizniNamena>(db.Namena, nameof(db.Namena));
             Validacija.ValidirajIznos(db.TrenutnoStanje, "Trenutno stanje");
             Validacija.ValidirajIznos(db.DozvoljeniMinus, "Dozvoljeni minus");
             Validacija.ValidirajKamatnuStopu(db.KamatnaStopa);
@@ -927,6 +971,8 @@ namespace DatabaseAccess
         {
             Validacija.ValidirajBrojRacuna(db.BrojRacuna);
             Validacija.ValidirajValutu(db.Valuta);
+            db.Status = Validacija.ValidirajEnum<StatusRacuna>(db.Status, nameof(db.Status));
+            db.Namena = Validacija.ValidirajEnum<DevizniNamena>(db.Namena, nameof(db.Namena));
             Validacija.ValidirajIznos(db.TrenutnoStanje, "Trenutno stanje");
             Validacija.ValidirajIznos(db.DozvoljeniMinus, "Dozvoljeni minus");
             Validacija.ValidirajKamatnuStopu(db.KamatnaStopa);
@@ -961,6 +1007,41 @@ namespace DatabaseAccess
             }
         }
 
+        public static IList<DevizniPregled> VratiDevizne(int brojPoStrani, int strana = 1)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                List<Devizni> entiteti = session.Query<Devizni>()
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                return entiteti.Select(d => new DevizniPregled
+                {
+                    Id = d.Id,
+                    BrojRacuna = d.BrojRacuna,
+                    Valuta = d.Valuta,
+                    TrenutnoStanje = d.TrenutnoStanje,
+                    DatumOtvaranja = d.DatumOtvaranja,
+                    Status = d.Status,
+                    DozvoljeniMinus = d.DozvoljeniMinus,
+                    Komentar = d.Komentar,
+                    TipRacuna = d.TipRacuna,
+                    KamatnaStopa = d.KamatnaStopa,
+
+                    Namena = d.Namena,
+                    KursnaRazlika = d.KursnaRazlika,
+
+                    FizickoLice = d.PripadaFizickomLicu != null
+                        ? new FizickoLicePregled { Id = d.PripadaFizickomLicu.Id, Ime = d.PripadaFizickomLicu.Ime, Prezime = d.PripadaFizickomLicu.Prezime }
+                        : null,
+                    PravnoLice = d.PripadaPravnomLicu != null
+                        ? new PravnoLicePregled { Id = d.PripadaPravnomLicu.Id, NazivFirme = d.PripadaPravnomLicu.NazivFirme }
+                        : null
+                }).ToList();
+            }
+        }
+
         #endregion
 
         #region Stedni
@@ -969,6 +1050,7 @@ namespace DatabaseAccess
         {
             Validacija.ValidirajBrojRacuna(sb.BrojRacuna);
             Validacija.ValidirajValutu(sb.Valuta);
+            sb.Status = Validacija.ValidirajEnum<StatusRacuna>(sb.Status, nameof(sb.Status));
             Validacija.ValidirajIznos(sb.TrenutnoStanje, "Trenutno stanje");
             Validacija.ValidirajIznos(sb.DozvoljeniMinus, "Dozvoljeni minus");
             Validacija.ValidirajKamatnuStopu(sb.KamatnaStopa);
@@ -1073,6 +1155,7 @@ namespace DatabaseAccess
         {
             Validacija.ValidirajBrojRacuna(sb.BrojRacuna);
             Validacija.ValidirajValutu(sb.Valuta);
+            sb.Status = Validacija.ValidirajEnum<StatusRacuna>(sb.Status, nameof(sb.Status));
             Validacija.ValidirajIznos(sb.TrenutnoStanje, "Trenutno stanje");
             Validacija.ValidirajIznos(sb.DozvoljeniMinus, "Dozvoljeni minus");
             Validacija.ValidirajKamatnuStopu(sb.KamatnaStopa);
@@ -1107,6 +1190,41 @@ namespace DatabaseAccess
             }
         }
 
+        public static IList<StedniPregled> VratiStedne(int brojPoStrani, int strana = 1)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                List<Stedni> entiteti = session.Query<Stedni>()
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                return entiteti.Select(s => new StedniPregled
+                {
+                    Id = s.Id,
+                    BrojRacuna = s.BrojRacuna,
+                    Valuta = s.Valuta,
+                    TrenutnoStanje = s.TrenutnoStanje,
+                    DatumOtvaranja = s.DatumOtvaranja,
+                    Status = s.Status,
+                    DozvoljeniMinus = s.DozvoljeniMinus,
+                    Komentar = s.Komentar,
+                    TipRacuna = s.TipRacuna,
+                    KamatnaStopa = s.KamatnaStopa,
+
+                    MinimalniIznosOtvaranja = s.MinimalniIznosOtvaranja,
+                    FrekvKapitalizKamate = s.FrekvKapitKamate,
+
+                    FizickoLice = s.PripadaFizickomLicu != null
+                        ? new FizickoLicePregled { Id = s.PripadaFizickomLicu.Id, Ime = s.PripadaFizickomLicu.Ime, Prezime = s.PripadaFizickomLicu.Prezime }
+                        : null,
+                    PravnoLice = s.PripadaPravnomLicu != null
+                        ? new PravnoLicePregled { Id = s.PripadaPravnomLicu.Id, NazivFirme = s.PripadaPravnomLicu.NazivFirme }
+                        : null
+                }).ToList();
+            }
+        }
+
         #endregion
 
         #region Ziro
@@ -1115,6 +1233,7 @@ namespace DatabaseAccess
         {
             Validacija.ValidirajBrojRacuna(zb.BrojRacuna);
             Validacija.ValidirajValutu(zb.Valuta);
+            zb.Status = Validacija.ValidirajEnum<StatusRacuna>(zb.Status, nameof(zb.Status));
             Validacija.ValidirajIznos(zb.TrenutnoStanje, "Trenutno stanje");
             Validacija.ValidirajIznos(zb.DozvoljeniMinus, "Dozvoljeni minus");
             Validacija.ValidirajKamatnuStopu(zb.KamatnaStopa);
@@ -1221,6 +1340,7 @@ namespace DatabaseAccess
         {
             Validacija.ValidirajBrojRacuna(zb.BrojRacuna);
             Validacija.ValidirajValutu(zb.Valuta);
+            zb.Status = Validacija.ValidirajEnum<StatusRacuna>(zb.Status, nameof(zb.Status));
             Validacija.ValidirajIznos(zb.TrenutnoStanje, "Trenutno stanje");
             Validacija.ValidirajIznos(zb.DozvoljeniMinus, "Dozvoljeni minus");
             Validacija.ValidirajKamatnuStopu(zb.KamatnaStopa);
@@ -1257,6 +1377,43 @@ namespace DatabaseAccess
             }
         }
 
+        public static IList<ZiroPregled> VratiZiroe(int brojPoStrani, int strana = 1)
+        {
+            using (ISession session = DataLayer.GetSession())
+            {
+                List<Ziro> entiteti = session.Query<Ziro>()
+                    .Skip((strana - 1) * brojPoStrani)
+                    .Take(brojPoStrani)
+                    .ToList();
+
+                return entiteti.Select(z => new ZiroPregled
+                {
+                    Id = z.Id,
+                    BrojRacuna = z.BrojRacuna,
+                    Valuta = z.Valuta,
+                    TrenutnoStanje = z.TrenutnoStanje,
+                    DatumOtvaranja = z.DatumOtvaranja,
+                    Status = z.Status,
+                    DozvoljeniMinus = z.DozvoljeniMinus,
+                    Komentar = z.Komentar,
+                    TipRacuna = z.TipRacuna,
+                    KamatnaStopa = z.KamatnaStopa,
+
+                    Namena = z.Namena,
+                    ElektronskoBankarstvo = z.ElektronskoBankarstvo,
+                    LimitZaMasovnaPlacanja = z.LimitZaMasovnaPlacanja,
+                    IntegracijaSaSistemima = z.IntegracijaSaSistemima,
+
+                    FizickoLice = z.PripadaFizickomLicu != null
+                        ? new FizickoLicePregled { Id = z.PripadaFizickomLicu.Id, Ime = z.PripadaFizickomLicu.Ime, Prezime = z.PripadaFizickomLicu.Prezime }
+                        : null,
+                    PravnoLice = z.PripadaPravnomLicu != null
+                        ? new PravnoLicePregled { Id = z.PripadaPravnomLicu.Id, NazivFirme = z.PripadaPravnomLicu.NazivFirme }
+                        : null
+                }).ToList();
+            }
+        }
+
         #endregion
 
         #endregion
@@ -1267,6 +1424,8 @@ namespace DatabaseAccess
         {
             Validacija.ValidirajBrojRacuna(brojRacuna);
             Validacija.ValidirajValutu(tb.Valuta);
+            tb.TipTransakcije = Validacija.ValidirajEnum<TipTransakcije>(tb.TipTransakcije, nameof(tb.TipTransakcije));
+            tb.StatusTransakcije = Validacija.ValidirajEnum<StatusTransakcije>(tb.StatusTransakcije, nameof(tb.StatusTransakcije));
             Validacija.ValidirajIznos(tb.Iznos, "Iznos", dozvoliNulu: false);
 
             using (ISession session = DataLayer.GetSession())
@@ -1419,6 +1578,8 @@ namespace DatabaseAccess
         public static void IzmeniTransakciju(TransakcijaPregled tb)
         {
             Validacija.ValidirajValutu(tb.Valuta);
+            tb.TipTransakcije = Validacija.ValidirajEnum<TipTransakcije>(tb.TipTransakcije, nameof(tb.TipTransakcije));
+            tb.StatusTransakcije = Validacija.ValidirajEnum<StatusTransakcije>(tb.StatusTransakcije, nameof(tb.StatusTransakcije));
             Validacija.ValidirajIznos(tb.Iznos, "Iznos", dozvoliNulu: false);
 
             using (ISession session = DataLayer.GetSession())
@@ -1472,6 +1633,8 @@ namespace DatabaseAccess
         public static void IzvrsiTransferIzmedjuRacuna(
             int racunPosiljaocaId, int racunPrimaocaId, decimal iznos, string opis, string komentar)
         {
+            Validacija.ValidirajIznos(iznos, "Iznos", dozvoliNulu: false);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -1541,6 +1704,7 @@ namespace DatabaseAccess
         {
             Validacija.ValidirajBrojRacuna(brojRacuna);
             Validacija.ValidirajValutu(db.Valuta);
+            db.StatusDepozita = Validacija.ValidirajEnum<StatusDepozita>(db.StatusDepozita, nameof(db.StatusDepozita));
             Validacija.ValidirajIznos(db.Iznos, "Iznos", dozvoliNulu: false);
             Validacija.ValidirajKamatnuStopu(db.KamatnaStopa);
             Validacija.ValidirajPeriodOrocenja(db.PeriodOrocenja);
@@ -1730,6 +1894,7 @@ namespace DatabaseAccess
         public static void IzmeniDepozit(DepozitPregled db)
         {
             Validacija.ValidirajValutu(db.Valuta);
+            db.StatusDepozita = Validacija.ValidirajEnum<StatusDepozita>(db.StatusDepozita, nameof(db.StatusDepozita));
             Validacija.ValidirajIznos(db.Iznos, "Iznos", dozvoliNulu: false);
             Validacija.ValidirajKamatnuStopu(db.KamatnaStopa);
             Validacija.ValidirajPeriodOrocenja(db.PeriodOrocenja);
@@ -1794,6 +1959,7 @@ namespace DatabaseAccess
         {
             Validacija.ValidirajBrojRacuna(brojRacuna);
             Validacija.ValidirajValutu(kb.Valuta);
+            kb.StatusKredita = Validacija.ValidirajEnum<StatusKredita>(kb.StatusKredita, nameof(kb.StatusKredita));
             Validacija.ValidirajIznos(kb.Iznos, "Iznos", dozvoliNulu: false);
             Validacija.ValidirajKamatnuStopu(kb.KamatnaStopa);
             Validacija.ValidirajRokOtplate(kb.RokOtplate);
@@ -1990,6 +2156,7 @@ namespace DatabaseAccess
         public static void IzmeniKredit(KreditPregled kb)
         {
             Validacija.ValidirajValutu(kb.Valuta);
+            kb.StatusKredita = Validacija.ValidirajEnum<StatusKredita>(kb.StatusKredita, nameof(kb.StatusKredita));
             Validacija.ValidirajIznos(kb.Iznos, "Iznos", dozvoliNulu: false);
             Validacija.ValidirajKamatnuStopu(kb.KamatnaStopa);
             Validacija.ValidirajRokOtplate(kb.RokOtplate);
@@ -2057,6 +2224,8 @@ namespace DatabaseAccess
         public static void DodajKamatuNaRacun(KamataPregled kmb, string brojRacuna)
         {
             Validacija.ValidirajBrojRacuna(brojRacuna);
+            kmb.TipKamate = Validacija.ValidirajEnum<TipKamate>(kmb.TipKamate, nameof(kmb.TipKamate));
+            kmb.StatusKamate = Validacija.ValidirajEnum<StatusKamate>(kmb.StatusKamate, nameof(kmb.StatusKamate));
             Validacija.ValidirajIznos(kmb.Iznos);
 
             using (ISession session = DataLayer.GetSession())
@@ -2101,6 +2270,8 @@ namespace DatabaseAccess
 
         public static void DodajKamatuNaKredit(KamataPregled kmb, int kreditId)
         {
+            kmb.TipKamate = Validacija.ValidirajEnum<TipKamate>(kmb.TipKamate, nameof(kmb.TipKamate));
+            kmb.StatusKamate = Validacija.ValidirajEnum<StatusKamate>(kmb.StatusKamate, nameof(kmb.StatusKamate));
             Validacija.ValidirajIznos(kmb.Iznos, "Iznos", dozvoliNulu: false);
             if (kreditId <= 0)
                 throw new InvalidOperationException("Id kredita mora biti veći od 0.");
@@ -2145,6 +2316,8 @@ namespace DatabaseAccess
 
         public static void DodajKamatuNaDepozit(KamataPregled kmb, int depozitId)
         {
+            kmb.TipKamate = Validacija.ValidirajEnum<TipKamate>(kmb.TipKamate, nameof(kmb.TipKamate));
+            kmb.StatusKamate = Validacija.ValidirajEnum<StatusKamate>(kmb.StatusKamate, nameof(kmb.StatusKamate));
             Validacija.ValidirajIznos(kmb.Iznos, "Iznos", dozvoliNulu: false);
             if (depozitId <= 0)
                 throw new InvalidOperationException("Id depozita mora biti veći od 0.");
@@ -2266,6 +2439,8 @@ namespace DatabaseAccess
 
         public static void IzmeniKamatu(KamataPregled kmb)
         {
+            kmb.TipKamate = Validacija.ValidirajEnum<TipKamate>(kmb.TipKamate, nameof(kmb.TipKamate));
+            kmb.StatusKamate = Validacija.ValidirajEnum<StatusKamate>(kmb.StatusKamate, nameof(kmb.StatusKamate));
             Validacija.ValidirajIznos(kmb.Iznos, "Iznos", dozvoliNulu: false);
 
             using (ISession session = DataLayer.GetSession())
@@ -2320,6 +2495,8 @@ namespace DatabaseAccess
         {
             Validacija.ValidirajBrojRacuna(brojRacuna);
             Validacija.ValidirajIPAdresu(skb.IpAdresa);
+            skb.TipDogadjaja = Validacija.ValidirajEnum<TipDogadjaja>(skb.TipDogadjaja, nameof(skb.TipDogadjaja));
+            skb.StatusDogadjaja = Validacija.ValidirajEnum<StatusDogadjaja>(skb.StatusDogadjaja, nameof(skb.StatusDogadjaja));
 
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
@@ -2415,6 +2592,8 @@ namespace DatabaseAccess
         public static void IzmeniSigurnosnuKontrolu(SigurnosnaKontrolaPregled skb)
         {
             Validacija.ValidirajIPAdresu(skb.IpAdresa);
+            skb.TipDogadjaja = Validacija.ValidirajEnum<TipDogadjaja>(skb.TipDogadjaja, nameof(skb.TipDogadjaja));
+            skb.StatusDogadjaja = Validacija.ValidirajEnum<StatusDogadjaja>(skb.StatusDogadjaja, nameof(skb.StatusDogadjaja));
 
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())

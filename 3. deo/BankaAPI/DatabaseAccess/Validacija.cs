@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DatabaseAccess.Enumi;
 
 namespace DatabaseAccess
 {
@@ -193,6 +194,54 @@ namespace DatabaseAccess
 
             if (!Regex.IsMatch(ipAdresa.Trim(), pattern))
                 throw new ArgumentException($"{nazivPolja} nije u ispravnom formatu (XXX.XXX.XXX.XXX).");
+        }
+
+        public static string ValidirajEnum<TEnum>(string vrednost, string nazivPolja)
+            where TEnum : struct, Enum
+        {
+            if (string.IsNullOrWhiteSpace(vrednost))
+                throw new ArgumentException($"{nazivPolja} je obavezno polje.");
+
+            foreach (TEnum e in Enum.GetValues(typeof(TEnum)))
+            {
+                if (string.Equals(e.GetDescription(), vrednost.Trim(), StringComparison.OrdinalIgnoreCase))
+                    return e.GetDescription();
+            }
+
+            var dozvoljene = string.Join(", ",
+                ((TEnum[])Enum.GetValues(typeof(TEnum))).Select(e => e.GetDescription()));
+            throw new ArgumentException($"{nazivPolja}: nepoznata vrednost '{vrednost}'. Dozvoljeno: {dozvoljene}.");
+        }
+
+        public static void ValidirajFrekvKapitalizKamate(int vrednost)
+        {
+            if (!Enum.IsDefined(typeof(FrekvencijaKapitalizacijeKamate), vrednost))
+                throw new ArgumentException("Frekvencija kapitalizacije kamate mora biti jedna od: 365, 12, 4, 2, 1.");
+        }
+
+        // ==========================================
+        // KLIJENT (cross-field)
+        // ==========================================
+
+        public static void ValidirajKlijentaTacnoJedan(object fizickoLice, object pravnoLice)
+        {
+            bool imaFl = fizickoLice != null;
+            bool imaPl = pravnoLice != null;
+
+            if (imaFl == imaPl) // oba null ili oba popunjena
+                throw new ArgumentException("Račun mora pripadati tačno jednom klijentu (fizičkom ili pravnom licu, ne oba i ne nijednom).");
+        }
+
+        public static void ValidirajKlijentaBarJedan(object fizickoLice, object pravnoLice)
+        {
+            if (fizickoLice == null && pravnoLice == null)
+                throw new ArgumentException("Mora biti vezano za fizičko ili pravno lice.");
+        }
+
+        public static void ValidirajIzvorKamate(object kredit, object depozit, object racun)
+        {
+            if (kredit == null && depozit == null && racun == null)
+                throw new ArgumentException("Kamata mora biti vezana za kredit, depozit ili račun.");
         }
 
     }

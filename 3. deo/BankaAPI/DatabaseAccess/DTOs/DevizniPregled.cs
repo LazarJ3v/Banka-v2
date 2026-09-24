@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DatabaseAccess.DTOs
@@ -10,6 +11,8 @@ namespace DatabaseAccess.DTOs
     {
         public string Namena { get; set; }
         public decimal? KursnaRazlika { get; set; }
+        public IList<DevizniOgranicenjePregled> Ogranicenja { get; set; } = new List<DevizniOgranicenjePregled>();
+        public IList<DevizniValutaPregled> Valute { get; set; } = new List<DevizniValutaPregled>();
 
         public DevizniPregled() { }
 

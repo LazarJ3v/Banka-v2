@@ -46,7 +46,7 @@ namespace BankaAPI.Controllers
         [HttpPost]
         [Route("racun/{brojRacuna}")]
         public IActionResult PostOnRacun([FromBody] KamataPregled k,
-            [FromBody] string brojRacuna)
+            string brojRacuna)
         {
             if (k == null)
                 return BadRequest("Podaci nisu prosleđeni.");
@@ -65,7 +65,7 @@ namespace BankaAPI.Controllers
         [HttpPost]
         [Route("kredit/{kreditId}")]
         public IActionResult PostOnKredit([FromBody] KamataPregled k,
-            [FromQuery] int kreditId)
+            int kreditId)
         {
             if (k == null)
                 return BadRequest("Podaci nisu prosleđeni.");
@@ -84,7 +84,7 @@ namespace BankaAPI.Controllers
         [HttpPost]
         [Route("depozit/{depozitId}")]
         public IActionResult PostOnDepozit([FromBody] KamataPregled k,
-            [FromQuery] int depozitId)
+            int depozitId)
         {
             if (k == null)
                 return BadRequest("Podaci nisu prosleđeni.");

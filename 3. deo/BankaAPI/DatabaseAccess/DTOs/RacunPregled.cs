@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DatabaseAccess.DTOs
@@ -20,6 +21,16 @@ namespace DatabaseAccess.DTOs
         public decimal? KamatnaStopa { get; set; }
         public FizickoLicePregled FizickoLice { get; set; }
         public PravnoLicePregled PravnoLice { get; set; }
+        [JsonIgnore]
+        public IList<TransakcijaPregled> Transakcije { get; set; } = new List<TransakcijaPregled>();
+        [JsonIgnore]
+        public IList<DepozitPregled> Depoziti { get; set; } = new List<DepozitPregled>();
+        [JsonIgnore]
+        public IList<KreditPregled> Krediti { get; set; } = new List<KreditPregled>();
+        [JsonIgnore]
+        public IList<KamataPregled> Kamate { get; set; } = new List<KamataPregled>();
+        [JsonIgnore]
+        public IList<SigurnosnaKontrolaPregled> SigurnosneKontrole { get; set; } = new List<SigurnosnaKontrolaPregled>();
 
         public RacunPregled() { }
 

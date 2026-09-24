@@ -10,6 +10,7 @@ namespace DatabaseAccess.DTOs
     {
         public bool PlatnaKartica { get; set; }
         public decimal? MesecniLimit { get; set; }
+        public IList<TekuciPaketPregled> Paketi { get; set; } = new List<TekuciPaketPregled>();
 
         public TekuciPregled() { }
 

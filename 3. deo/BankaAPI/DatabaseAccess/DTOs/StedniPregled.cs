@@ -10,7 +10,8 @@ namespace DatabaseAccess.DTOs
     {
         public decimal? MinimalniIznosOtvaranja { get; set; }
         public int FrekvKapitalizKamate { get; set; }
-
+        public IList<StedniBonusPregled> Bonusi { get; set; } = new List<StedniBonusPregled>();
+        public IList<StedniUslovPodizanjaPregled> UsloviPodizanja { get; set; } = new List<StedniUslovPodizanjaPregled>();
         public StedniPregled() { }
 
         public StedniPregled(int id, string brojRacuna, string valuta, decimal trenutnoStanje,

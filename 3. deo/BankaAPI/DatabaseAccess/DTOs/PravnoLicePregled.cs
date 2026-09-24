@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DatabaseAccess.DTOs
@@ -17,6 +18,12 @@ namespace DatabaseAccess.DTOs
         public string Email { get; set; }
         public string Status { get; set; }
         public string Komentar { get; set; }
+        [JsonIgnore]
+        public IList<RacunPregled> Racuni { get; set; } = new List<RacunPregled>();
+        [JsonIgnore]
+        public IList<KreditPregled> Krediti { get; set; } = new List<KreditPregled>();
+        [JsonIgnore]
+        public IList<DepozitPregled> Depoziti { get; set; } = new List<DepozitPregled>();
 
         public PravnoLicePregled() { }
 

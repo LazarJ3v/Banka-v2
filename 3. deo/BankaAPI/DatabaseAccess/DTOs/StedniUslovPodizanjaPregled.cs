@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DatabaseAccess.DTOs
@@ -10,6 +11,7 @@ namespace DatabaseAccess.DTOs
     {
         public int Id { get; set; }
         public string UslovPodizanja { get; set; }
+        [JsonIgnore]
         public StedniPregled Stedni { get; set; }
 
         public StedniUslovPodizanjaPregled() { }

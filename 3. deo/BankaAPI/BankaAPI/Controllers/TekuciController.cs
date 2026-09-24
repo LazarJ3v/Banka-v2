@@ -7,6 +7,21 @@ namespace BankaAPI.Controllers
     [Route("api/tekuci")]
     public class TekuciController : ControllerBase
     {
+        [HttpGet]
+        [Route("")]
+        public IActionResult GetAll(int brojPoStrani = 10, int strana = 1)
+        {
+            try
+            {
+                var result = DataProvider.VratiTekuce(brojPoStrani, strana);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         // GET api/tekuci/5
         [HttpGet]
         [Route("{id:int}")]
@@ -61,6 +76,22 @@ namespace BankaAPI.Controllers
             {
                 DataProvider.IzmeniTekuci(t);
                 return Ok(t);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // DELETE api/tekuci/5
+        [HttpDelete]
+        [Route("{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                DataProvider.ObrisiRacun(id);
+                return Ok();
             }
             catch (Exception ex)
             {
