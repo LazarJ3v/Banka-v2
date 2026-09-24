@@ -17,11 +17,32 @@ namespace Banka
 
         public static void DodajFizickoLice(FizickoLiceBasic fl)
         {
+            Validacija.ValidirajIme(fl.Ime, "Ime");
+            Validacija.ValidirajIme(fl.Prezime, "Prezime");
+            Validacija.ValidirajJmbg(fl.Jmbg);
+            Validacija.ValidirajBrojLicneKarte(fl.BrojLicneKarte);
+            Validacija.ValidirajDatumRodjenja(fl.DatumRodjenja);
+            Validacija.ValidirajAdresu(fl.Adresa);
+            Validacija.ValidirajGrad(fl.Grad);
+            Validacija.ValidirajTelefon(fl.Telefon);
+            Validacija.ValidirajEmail(fl.Email);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
                 try
                 {
+                    var f = session.Query<FizickoLice>()
+                        .Where(x => x.Jmbg == fl.Jmbg || x.BrojLicneKarte == fl.BrojLicneKarte)
+                        .FirstOrDefault();
+
+                    if (f != null)
+                    {
+                        if (f.Jmbg == fl.Jmbg)
+                            throw new InvalidOperationException("Postoji fizičko lice sa istim JMBG.");
+                        throw new InvalidOperationException("Postoji fizičko lice sa istim brojem lične karte.");
+                    }
+
                     var fizickoLice = new FizickoLice
                     {
                         Ime = fl.Ime?.Trim(),
@@ -46,7 +67,7 @@ namespace Banka
                 {
                     transaction.Rollback();
                     throw new InvalidOperationException(
-                        "Greška pri dodavanju fizičkog lica", ex);
+                        "Greška pri dodavanju fizičkog lica: " + ex.Message, ex);
                 }
             }
         }
@@ -88,6 +109,16 @@ namespace Banka
 
         public static FizickoLiceBasic IzmeniFizickoLice(FizickoLiceBasic fl)
         {
+            Validacija.ValidirajIme(fl.Ime, "Ime");
+            Validacija.ValidirajIme(fl.Prezime, "Prezime");
+            Validacija.ValidirajJmbg(fl.Jmbg);
+            Validacija.ValidirajBrojLicneKarte(fl.BrojLicneKarte);
+            Validacija.ValidirajDatumRodjenja(fl.DatumRodjenja);
+            Validacija.ValidirajAdresu(fl.Adresa);
+            Validacija.ValidirajGrad(fl.Grad);
+            Validacija.ValidirajTelefon(fl.Telefon);
+            Validacija.ValidirajEmail(fl.Email);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -97,6 +128,17 @@ namespace Banka
 
                     if (fizickoLice == null)
                         return null;
+
+                    var f = session.Query<FizickoLice>()
+                        .Where(x => x.Jmbg == fl.Jmbg || x.BrojLicneKarte == fl.BrojLicneKarte)
+                        .FirstOrDefault();
+
+                    if (f != null)
+                    {
+                        if (f.Jmbg == fl.Jmbg)
+                            throw new InvalidOperationException("Postoji fizičko lice sa istim JMBG.");
+                        throw new InvalidOperationException("Postoji fizičko lice sa istim brojem lične karte.");
+                    }
 
                     fizickoLice.Ime = fl.Ime?.Trim();
                     fizickoLice.Prezime = fl.Prezime?.Trim();
@@ -120,7 +162,7 @@ namespace Banka
                     transaction.Rollback();
 
                     throw new InvalidOperationException(
-                        "Greška pri izmeni fizičkog lica.", ex);
+                        "Greška pri izmeni fizičkog lica: " + ex.Message, ex);
                 }
             }
         }
@@ -188,11 +230,25 @@ namespace Banka
 
         public static void DodajPravnoLice(PravnoLiceBasic pl)
         {
+            Validacija.ValidirajNazivFirme(pl.NazivFirme);
+            Validacija.ValidirajPib(pl.Pib);
+            Validacija.ValidirajAdresu(pl.Adresa);
+            Validacija.ValidirajGrad(pl.Grad);
+            Validacija.ValidirajTelefon(pl.Telefon);
+            Validacija.ValidirajEmail(pl.Email);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
                 try
                 {
+                    var p = session.Query<PravnoLice>()
+                        .Where(x => x.Pib == pl.Pib)
+                        .FirstOrDefault();
+
+                    if (p != null)
+                        throw new InvalidOperationException("Postoji pravno lice sa istim PIB.");
+
                     var pravnoLice = new PravnoLice
                     {
                         NazivFirme = pl.NazivFirme?.Trim(),
@@ -215,7 +271,7 @@ namespace Banka
                 {
                     transaction.Rollback();
                     throw new InvalidOperationException(
-                        "Greška pri dodavanju fizičkog lica", ex);
+                        "Greška pri dodavanju pravnog lica: " + ex.Message, ex);
                 }
             }
         }
@@ -254,12 +310,29 @@ namespace Banka
 
         public static PravnoLiceBasic IzmeniPravnoLice(PravnoLiceBasic pl)
         {
+            Validacija.ValidirajNazivFirme(pl.NazivFirme);
+            Validacija.ValidirajPib(pl.Pib);
+            Validacija.ValidirajAdresu(pl.Adresa);
+            Validacija.ValidirajGrad(pl.Grad);
+            Validacija.ValidirajTelefon(pl.Telefon);
+            Validacija.ValidirajEmail(pl.Email);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
                 try
                 {
                     var pravnoLice = session.Load<PravnoLice>(pl.Id);
+
+                    if (pravnoLice == null)
+                        return null;
+
+                    var p = session.Query<PravnoLice>()
+                        .Where(x => x.Pib == pl.Pib)
+                        .FirstOrDefault();
+
+                    if (p != null)
+                        throw new InvalidOperationException("Postoji pravno lice sa istim PIB.");
 
                     pravnoLice.NazivFirme = pl.NazivFirme;
                     pravnoLice.Pib = pl.Pib;
@@ -280,7 +353,7 @@ namespace Banka
                     transaction.Rollback();
 
                     throw new InvalidOperationException(
-                        "Greška pri izmeni pravnog lica.", ex);
+                        "Greška pri izmeni pravnog lica: " + ex.Message, ex);
                 }
             }
         }
@@ -342,9 +415,15 @@ namespace Banka
         #endregion
 
         #region Racun
-        // TODO: Proveriti metodu DodajRacun (dodaje tip racuna koji nije podrazumevani)
+
         public static void DodajRacun(RacunBasic r, string jmbg, string pib)
         {
+            Validacija.ValidirajBrojRacuna(r.BrojRacuna);
+            Validacija.ValidirajValutu(r.Valuta);
+            Validacija.ValidirajIznos(r.TrenutnoStanje, "Trenutno stanje");
+            Validacija.ValidirajIznos(r.DozvoljeniMinus, "Dozvoljeni minus");
+            Validacija.ValidirajKamatnuStopu(r.KamatnaStopa);
+
             if (r == null)
                 throw new ArgumentNullException(nameof(r));
 
@@ -365,8 +444,17 @@ namespace Banka
 
                     if (fl == null && pl == null)
                     {
-                        throw new InvalidOperationException("Nema pravnog ili fizickog lica");
+                        throw new InvalidOperationException(
+                            "Nema pravnog ili fizickog lica");
                     }
+
+                    var rac = session.Query<Racun>()
+                        .Where(x => x.BrojRacuna == r.BrojRacuna)
+                        .FirstOrDefault();
+
+                    if (rac != null)
+                        throw new InvalidOperationException(
+                            "Ovaj broj računa već postoji.");
 
                     Racun racun = new Racun
                     {
@@ -394,7 +482,8 @@ namespace Banka
                 catch(Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri dodavanju računa: " + ex.Message, ex);
+                    throw new InvalidOperationException(
+                        "Greška pri dodavanju računa: " + ex.Message, ex);
                 }
             }
         }
@@ -485,6 +574,12 @@ namespace Banka
 
         public static void IzmeniRacun(RacunBasic r)
         {
+            Validacija.ValidirajBrojRacuna(r.BrojRacuna);
+            Validacija.ValidirajValutu(r.Valuta);
+            Validacija.ValidirajIznos(r.TrenutnoStanje, "Trenutno stanje");
+            Validacija.ValidirajIznos(r.DozvoljeniMinus, "Dozvoljeni minus");
+            Validacija.ValidirajKamatnuStopu(r.KamatnaStopa);
+
             if (r == null)
                 throw new ArgumentNullException(nameof(r));
 
@@ -494,6 +589,9 @@ namespace Banka
                 try
                 {
                     var racun = session.Load<Racun>(r.Id);
+
+                    if (racun == null)
+                        return;
 
                     racun.BrojRacuna = r.BrojRacuna?.Trim();
                     racun.Valuta = r.Valuta?.Trim();
@@ -510,7 +608,7 @@ namespace Banka
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri izmeni računa", ex);
+                    throw new InvalidOperationException("Greška pri izmeni računa: " + ex.Message, ex);
                 }
             }
         }
@@ -589,6 +687,13 @@ namespace Banka
 
         public static void DodajTekuci(TekuciBasic tb, string jmbg, string pib)
         {
+            Validacija.ValidirajBrojRacuna(tb.BrojRacuna);
+            Validacija.ValidirajValutu(tb.Valuta);
+            Validacija.ValidirajIznos(tb.TrenutnoStanje, "Trenutno stanje");
+            Validacija.ValidirajIznos(tb.DozvoljeniMinus, "Dozvoljeni minus");
+            Validacija.ValidirajKamatnuStopu(tb.KamatnaStopa);
+            Validacija.ValidirajIznos(tb.MesecniLimit ?? 0, "Mesečni limit");
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -608,6 +713,14 @@ namespace Banka
                     {
                         throw new InvalidOperationException("Nema pravnog ili fizickog lica");
                     }
+
+                    var rac = session.Query<Racun>()
+                        .Where(x => x.BrojRacuna == tb.BrojRacuna)
+                        .FirstOrDefault();
+
+                    if (rac != null)
+                        throw new InvalidOperationException(
+                            "Ovaj broj računa već postoji.");
 
                     Tekuci t = new Tekuci
                     {
@@ -691,9 +804,16 @@ namespace Banka
                 return dto;
             }
         }
-        // TODO: Testirati metodu IzmeniTekuci
+
         public static void IzmeniTekuci(TekuciBasic tb)
         {
+            Validacija.ValidirajBrojRacuna(tb.BrojRacuna);
+            Validacija.ValidirajValutu(tb.Valuta);
+            Validacija.ValidirajIznos(tb.TrenutnoStanje, "Trenutno stanje");
+            Validacija.ValidirajIznos(tb.DozvoljeniMinus, "Dozvoljeni minus");
+            Validacija.ValidirajKamatnuStopu(tb.KamatnaStopa);
+            Validacija.ValidirajIznos(tb.MesecniLimit ?? 0, "Mesečni limit");
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -783,6 +903,13 @@ namespace Banka
 
         public static void DodajDevizni(DevizniBasic db, string jmbg, string pib)
         {
+            Validacija.ValidirajBrojRacuna(db.BrojRacuna);
+            Validacija.ValidirajValutu(db.Valuta);
+            Validacija.ValidirajIznos(db.TrenutnoStanje, "Trenutno stanje");
+            Validacija.ValidirajIznos(db.DozvoljeniMinus, "Dozvoljeni minus");
+            Validacija.ValidirajKamatnuStopu(db.KamatnaStopa);
+            Validacija.ValidirajIznos(db.KursnaRazlika ?? 0, "Kursna razlika");
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -802,6 +929,14 @@ namespace Banka
                     {
                         throw new InvalidOperationException("Nema pravnog ili fizickog lica");
                     }
+
+                    var rac = session.Query<Racun>()
+                        .Where(x => x.BrojRacuna == db.BrojRacuna)
+                        .FirstOrDefault();
+
+                    if (rac != null)
+                        throw new InvalidOperationException(
+                            "Ovaj broj računa već postoji.");
 
                     Devizni d = new Devizni
                     {
@@ -902,9 +1037,16 @@ namespace Banka
                 return dto;
             }
         }
-        // TODO: Testirati metodu IzmeniDevizni
+
         public static void IzmeniDevizni(DevizniBasic db)
         {
+            Validacija.ValidirajBrojRacuna(db.BrojRacuna);
+            Validacija.ValidirajValutu(db.Valuta);
+            Validacija.ValidirajIznos(db.TrenutnoStanje, "Trenutno stanje");
+            Validacija.ValidirajIznos(db.DozvoljeniMinus, "Dozvoljeni minus");
+            Validacija.ValidirajKamatnuStopu(db.KamatnaStopa);
+            Validacija.ValidirajIznos(db.KursnaRazlika ?? 0, "Kursna razlika");
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -1029,6 +1171,13 @@ namespace Banka
 
         public static void DodajStedni(StedniBasic sb, string jmbg, string pib)
         {
+            Validacija.ValidirajBrojRacuna(sb.BrojRacuna);
+            Validacija.ValidirajValutu(sb.Valuta);
+            Validacija.ValidirajIznos(sb.TrenutnoStanje, "Trenutno stanje");
+            Validacija.ValidirajIznos(sb.DozvoljeniMinus, "Dozvoljeni minus");
+            Validacija.ValidirajKamatnuStopu(sb.KamatnaStopa);
+            Validacija.ValidirajIznos(sb.MinimalniIznosOtvaranja ?? 0, "Minimalni iznos otvaranja");
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -1048,6 +1197,14 @@ namespace Banka
                     {
                         throw new InvalidOperationException("Nema pravnog ili fizickog lica");
                     }
+
+                    var rac = session.Query<Racun>()
+                        .Where(x => x.BrojRacuna == sb.BrojRacuna)
+                        .FirstOrDefault();
+
+                    if (rac != null)
+                        throw new InvalidOperationException(
+                            "Ovaj broj računa već postoji.");
 
                     Stedni s = new Stedni
                     {
@@ -1148,10 +1305,17 @@ namespace Banka
                 return dto;
             }
         }
-        // TODO: Testirati metodu IzmeniStedni
+
 
         public static void IzmeniStedni(StedniBasic sb)
         {
+            Validacija.ValidirajBrojRacuna(sb.BrojRacuna);
+            Validacija.ValidirajValutu(sb.Valuta);
+            Validacija.ValidirajIznos(sb.TrenutnoStanje, "Trenutno stanje");
+            Validacija.ValidirajIznos(sb.DozvoljeniMinus, "Dozvoljeni minus");
+            Validacija.ValidirajKamatnuStopu(sb.KamatnaStopa);
+            Validacija.ValidirajIznos(sb.MinimalniIznosOtvaranja ?? 0, "Minimalni iznos otvaranja");
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -1276,6 +1440,13 @@ namespace Banka
 
         public static void DodajZiro(ZiroBasic zb, string jmbg, string pib)
         {
+            Validacija.ValidirajBrojRacuna(zb.BrojRacuna);
+            Validacija.ValidirajValutu(zb.Valuta);
+            Validacija.ValidirajIznos(zb.TrenutnoStanje, "Trenutno stanje");
+            Validacija.ValidirajIznos(zb.DozvoljeniMinus, "Dozvoljeni minus");
+            Validacija.ValidirajKamatnuStopu(zb.KamatnaStopa);
+            Validacija.ValidirajIznos(zb.LimitZaMasovnaPlacanja ?? 0, "Limit za masovna plaćanja");
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -1295,6 +1466,14 @@ namespace Banka
                     {
                         throw new InvalidOperationException("Nema pravnog ili fizickog lica");
                     }
+
+                    var rac = session.Query<Racun>()
+                        .Where(x => x.BrojRacuna == zb.BrojRacuna)
+                        .FirstOrDefault();
+
+                    if (rac != null)
+                        throw new InvalidOperationException(
+                            "Ovaj broj računa već postoji.");
 
                     Ziro z = new Ziro
                     {
@@ -1368,6 +1547,13 @@ namespace Banka
 
         public static void IzmeniZiro(ZiroBasic zb)
         {
+            Validacija.ValidirajBrojRacuna(zb.BrojRacuna);
+            Validacija.ValidirajValutu(zb.Valuta);
+            Validacija.ValidirajIznos(zb.TrenutnoStanje, "Trenutno stanje");
+            Validacija.ValidirajIznos(zb.DozvoljeniMinus, "Dozvoljeni minus");
+            Validacija.ValidirajKamatnuStopu(zb.KamatnaStopa);
+            Validacija.ValidirajIznos(zb.LimitZaMasovnaPlacanja ?? 0, "Limit za masovna plaćanja");
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -1407,6 +1593,13 @@ namespace Banka
 
         public static void DodajTransakciju(TransakcijaBasic tb, int racunId)
         {
+            // TODO: validacija broja racuna.
+            // Ne moze se validirati broj racuna jer se prosledjuje ID,
+            // a u event handleru se vraca racun preko broja racuna.
+            // TODO: izmeniti handler.
+            Validacija.ValidirajValutu(tb.Valuta);
+            Validacija.ValidirajIznos(tb.Iznos, "Iznos", dozvoliNulu: false);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -1561,6 +1754,9 @@ namespace Banka
 
         public static void IzmeniTransakciju(TransakcijaBasic tb)
         {
+            Validacija.ValidirajValutu(tb.Valuta);
+            Validacija.ValidirajIznos(tb.Iznos, "Iznos", dozvoliNulu: false);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -1616,6 +1812,8 @@ namespace Banka
         public static void IzvrsiTransferIzmedjuRacuna(
             int racunPosiljaocaId, int racunPrimaocaId, decimal iznos, string opis, string komentar)
         {
+            Validacija.ValidirajIznos(iznos, "Iznos", dozvoliNulu: false);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -1685,6 +1883,11 @@ namespace Banka
 
         public static void DodajDepozit(DepozitBasic db, string jmbg, string pib, int racunId)
         {
+            Validacija.ValidirajValutu(db.Valuta);
+            Validacija.ValidirajIznos(db.Iznos, "Iznos", dozvoliNulu: false);
+            Validacija.ValidirajKamatnuStopu(db.KamatnaStopa);
+            Validacija.ValidirajPeriodOrocenja(db.PeriodOrocenja);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -1862,6 +2065,11 @@ namespace Banka
 
         public static void IzmeniDepozit(DepozitBasic db)
         {
+            Validacija.ValidirajValutu(db.Valuta);
+            Validacija.ValidirajIznos(db.Iznos, "Iznos", dozvoliNulu: false);
+            Validacija.ValidirajKamatnuStopu(db.KamatnaStopa);
+            Validacija.ValidirajPeriodOrocenja(db.PeriodOrocenja);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -1923,6 +2131,12 @@ namespace Banka
 
         public static void DodajKredit(KreditBasic kb, string jmbg, string pib, int racunId)
         {
+            Validacija.ValidirajValutu(kb.Valuta);
+            Validacija.ValidirajIznos(kb.Iznos, "Iznos", dozvoliNulu: false);
+            Validacija.ValidirajKamatnuStopu(kb.KamatnaStopa);
+            Validacija.ValidirajRokOtplate(kb.RokOtplate);
+            Validacija.ValidirajIznos(kb.MesecnaRata, "Mesečna rata", dozvoliNulu: false);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -2106,6 +2320,12 @@ namespace Banka
 
         public static void IzmeniKredit(KreditBasic kb)
         {
+            Validacija.ValidirajValutu(kb.Valuta);
+            Validacija.ValidirajIznos(kb.Iznos, "Iznos", dozvoliNulu: false);
+            Validacija.ValidirajKamatnuStopu(kb.KamatnaStopa);
+            Validacija.ValidirajRokOtplate(kb.RokOtplate);
+            Validacija.ValidirajIznos(kb.MesecnaRata, "Mesečna rata", dozvoliNulu: false);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -2170,6 +2390,8 @@ namespace Banka
 
         public static void DodajKamatu(KamataBasic kmb)
         {
+            Validacija.ValidirajIznos(kmb.Iznos, "Iznos", dozvoliNulu: false);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
@@ -2289,6 +2511,8 @@ namespace Banka
 
         public static void IzmeniKamatu(KamataBasic kmb)
         {
+            Validacija.ValidirajIznos(kmb.Iznos, "Iznos", dozvoliNulu: false);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {

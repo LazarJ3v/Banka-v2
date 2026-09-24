@@ -38,12 +38,15 @@ namespace Banka.Forme
 
         private void btnSacuvaj_Click(object sender, EventArgs e)
         {
+            // Ovo je biznis logika i ne treba da stoji ovde.
+            // Promeniti da se prosledjuje string brojRacuna umesto ID racuna.
             var racun = DTOManager.VratiRacun(tbBrRacuna.Text?.Trim());
             if (racun == null)
             {
                 MessageBox.Show("Broj računa nije pravilno unet.");
                 return;
-            }    
+            }
+            /////////
             var dto = new TransakcijaBasic
             {
                 DatumIVreme = DateTime.Now,

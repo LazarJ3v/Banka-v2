@@ -125,8 +125,10 @@ namespace Banka.Forme
                 Ime = x.Ime,
                 Prezime = x.Prezime,
                 JMBG = x.Jmbg,
+                BrLicne = x.BrojLicneKarte,
                 Telefon = x.Telefon,
                 Email = x.Email,
+                Status = x.Status,
             }).ToList();
 
             dgvFizickaLica.DataSource = prikazFl;
@@ -140,6 +142,7 @@ namespace Banka.Forme
                 Adresa = x.Adresa,
                 Grad = x.Grad,
                 Email = x.Email,
+                Status = x.Status,
             }).ToList();
 
             dgvPravnaLica.DataSource = prikazPl;
@@ -151,7 +154,8 @@ namespace Banka.Forme
         private void btnDodaj_Click(object sender, EventArgs e)
         {
             DodajKlijenta dodajKlijenta = new DodajKlijenta();
-            dodajKlijenta.Show();
+            dodajKlijenta.ShowDialog();
+            KlijentiPregled_Load(null, null);
         }
 
         private void btnIzmeni_Click(object sender, EventArgs e)
