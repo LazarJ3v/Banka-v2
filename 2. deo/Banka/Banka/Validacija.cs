@@ -179,5 +179,21 @@ namespace Banka
             if (meseci <= 0 || meseci > 360)
                 throw new ArgumentException("Rok otplate mora biti između 1 i 360 meseci.");
         }
+
+        // ==========================================
+        // SIGURNOSNA KONTROLA
+        // ==========================================
+
+        public static void ValidirajIPAdresu(string ipAdresa, string nazivPolja = "IP adresa")
+        {
+            if (string.IsNullOrWhiteSpace(ipAdresa))
+                throw new ArgumentException($"{nazivPolja} je obavezno polje.");
+
+            string pattern = @"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+
+            if (!Regex.IsMatch(ipAdresa.Trim(), pattern))
+                throw new ArgumentException($"{nazivPolja} nije u ispravnom formatu (XXX.XXX.XXX.XXX).");
+        }
+
     }
 }

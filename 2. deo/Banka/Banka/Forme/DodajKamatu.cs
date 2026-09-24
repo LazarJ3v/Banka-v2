@@ -61,30 +61,33 @@ namespace Banka.Forme
                 Depozit = null
             };
 
-            if (rbKamataNaRacun.Checked)
+            try
             {
-                var racun = DTOManager.VratiRacun(tbBrojRacuna.Text.Trim());
-                kamata.Racun = racun;
-            }
-            else if(rbKamataNaKredit.Checked)
-            {
-                var kredit = DTOManager.VratiKredit((int)nudIdKredita.Value);
-                kamata.Kredit = kredit;
+                if (rbKamataNaRacun.Checked)
+                {
+                    DTOManager.DodajKamatuNaRacun(kamata, tbBrojRacuna.Text?.Trim());
+                }
+                else if (rbKamataNaKredit.Checked)
+                {
+                    DTOManager.DodajKamatuNaKredit(kamata, (int)nudIdKredita.Value);
+                }
+                else if (rbKamataNaDepozit.Checked)
+                {
+                    DTOManager.DodajKamatuNaDepozit(kamata, (int)nudIdDepozita.Value);
+                }
 
+                MessageBox.Show(
+                            "Kamata uspešno dodata!",
+                            "Uspeh",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+                this.Close();
             }
-            else if (rbKamataNaDepozit.Checked)
+            catch (Exception ex)
             {
-                var depozit = DTOManager.VratiDepozit((int)nudIdDepozita.Value);
-                kamata.Depozit = depozit;
+                MessageBox.Show(ex.Message);
             }
-            DTOManager.DodajKamatu(kamata);
-            MessageBox.Show(
-                        "Kamata uspešno dodata!",
-                        "Uspeh",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-            DialogResult = DialogResult.OK;
-            this.Close();
         }
 
         private void rbKamataNaRacun_CheckedChanged(object sender, EventArgs e)

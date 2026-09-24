@@ -43,14 +43,6 @@ namespace Banka.Forme
 
         private void btnSacuvaj_Click(object sender, EventArgs e)
         {
-            var racun = DTOManager.VratiRacun(tbBrojRacuna.Text?.Trim());
-
-            if (racun == null)
-            {
-                MessageBox.Show("Pogrešan broj računa.");
-                return;
-            }
-
             var dto = new SigurnosnaKontrolaBasic
             {
                 IpAdresa = tbIpAdresa.Text,
@@ -61,14 +53,21 @@ namespace Banka.Forme
                 Opis = rtbOpis.Text
             };
 
-            DTOManager.DodajSigurnosnuKontrolu(dto, racun.Id);
-            MessageBox.Show(
-                        "Sigurnosna kontrola uspešno dodata!",
-                        "Uspeh",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-            DialogResult = DialogResult.OK;
-            this.Close();
+            try
+            {
+                DTOManager.DodajSigurnosnuKontrolu(dto, tbBrojRacuna.Text?.Trim());
+                MessageBox.Show(
+                            "Sigurnosna kontrola uspešno dodata!",
+                            "Uspeh",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void DodajSigurnosnuKontrolu_Load(object sender, EventArgs e)

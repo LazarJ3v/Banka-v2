@@ -51,14 +51,21 @@ namespace Banka.Forme
                 Opis = rtbOpis.Text
             };
 
-            DTOManager.IzmeniSigurnosnuKontrolu(dto);
-            MessageBox.Show(
-                        "Sigurnosna kontrola uspešno izmenjena!",
-                        "Uspeh",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-            DialogResult = DialogResult.OK;
-            this.Close();
+            try
+            {
+                DTOManager.IzmeniSigurnosnuKontrolu(dto);
+                MessageBox.Show(
+                            "Sigurnosna kontrola uspešno izmenjena!",
+                            "Uspeh",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void IzmeniSigurnosnuKontrolu_Load(object sender, EventArgs e)

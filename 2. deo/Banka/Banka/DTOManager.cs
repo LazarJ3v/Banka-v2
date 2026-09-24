@@ -8,6 +8,7 @@ using NHibernate;
 using System.Windows.Forms;
 using Banka.Enumi;
 using FluentNHibernate.Conventions;
+using System.Xml.Schema;
 
 namespace Banka
 {
@@ -2414,22 +2415,22 @@ namespace Banka
 
         #region Kamata
 
-        public static void DodajKamatu(KamataBasic kmb)
+        public static void DodajKamatuNaRacun(KamataBasic kmb, string brojRacuna)
         {
-            Validacija.ValidirajIznos(kmb.Iznos, "Iznos", dozvoliNulu: false);
+            Validacija.ValidirajBrojRacuna(brojRacuna);
+            Validacija.ValidirajIznos(kmb.Iznos);
 
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
                 try
                 {
-                    if (kmb.Kredit == null && kmb.Depozit == null && kmb.Racun == null)
-                        throw new InvalidOperationException(
-                            "Kamata mora biti vezana za kredit, depozit ili račun.");
+                    Racun r = session.Query<Racun>()
+                        .Where(x => x.BrojRacuna == brojRacuna)
+                        .FirstOrDefault();
 
-                    Kredit k = kmb.Kredit != null ? session.Load<Kredit>(kmb.Kredit.Id) : null;
-                    Depozit d = kmb.Depozit != null ? session.Load<Depozit>(kmb.Depozit.Id) : null;
-                    Racun r = kmb.Racun != null ? session.Load<Racun>(kmb.Racun.Id) : null;
+                    if (r == null)
+                        throw new InvalidOperationException("Ne postoji račun.");
 
                     Kamata kam = new Kamata
                     {
@@ -2439,8 +2440,8 @@ namespace Banka
                         StatusKamate = kmb.StatusKamate?.Trim(),
                         Iznos = kmb.Iznos,
 
-                        PripadaKreditu = k,
-                        PripadaDepozitu = d,
+                        PripadaKreditu = null,
+                        PripadaDepozitu = null,
                         PripadaRacunu = r
                     };
 
@@ -2453,7 +2454,96 @@ namespace Banka
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri dodavanju kamate", ex);
+                    throw new InvalidOperationException(
+                        "Greška pri dodavanju kamate: " + ex.Message, ex);
+                }
+            }
+        }
+
+        public static void DodajKamatuNaKredit(KamataBasic kmb, int kreditId)
+        {
+            Validacija.ValidirajIznos(kmb.Iznos, "Iznos", dozvoliNulu: false);
+            if (kreditId <= 0)
+                throw new InvalidOperationException("Id kredita mora biti veći od 0.");
+
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
+            {
+                try
+                {
+                    Kredit k = session.Get<Kredit>(kreditId);
+
+                    if (k == null)
+                        throw new InvalidOperationException("Ne postoji kredit.");
+
+                    Kamata kam = new Kamata
+                    {
+                        DatumObracuna = kmb.DatumObracuna,
+                        PeriodObracuna = kmb.PeriodObracuna?.Trim(),
+                        TipKamate = kmb.TipKamate?.Trim(),
+                        StatusKamate = kmb.StatusKamate?.Trim(),
+                        Iznos = kmb.Iznos,
+
+                        PripadaKreditu = k,
+                        PripadaDepozitu = null,
+                        PripadaRacunu = null
+                    };
+
+                    session.Save(kam);
+                    transaction.Commit();
+
+                    // Vrati generisani ID
+                    kmb.Id = kam.Id;
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException(
+                        "Greška pri dodavanju kamate: " + ex.Message, ex);
+                }
+            }
+        }
+
+        public static void DodajKamatuNaDepozit(KamataBasic kmb, int depozitId)
+        {
+            Validacija.ValidirajIznos(kmb.Iznos, "Iznos", dozvoliNulu: false);
+            if (depozitId <= 0)
+                throw new InvalidOperationException("Id depozita mora biti veći od 0.");
+
+            using (ISession session = DataLayer.GetSession())
+            using (ITransaction transaction = session.BeginTransaction())
+            {
+                try
+                {
+                    Depozit d = session.Get<Depozit>(depozitId);
+
+                    if (d == null)
+                        throw new InvalidOperationException("Ne postoji depozit.");
+
+                    Kamata kam = new Kamata
+                    {
+                        DatumObracuna = kmb.DatumObracuna,
+                        PeriodObracuna = kmb.PeriodObracuna?.Trim(),
+                        TipKamate = kmb.TipKamate?.Trim(),
+                        StatusKamate = kmb.StatusKamate?.Trim(),
+                        Iznos = kmb.Iznos,
+
+                        PripadaKreditu = null,
+                        PripadaDepozitu = d,
+                        PripadaRacunu = null
+                    };
+
+                    session.Save(kam);
+                    transaction.Commit();
+
+                    // Vrati generisani ID
+                    kmb.Id = kam.Id;
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException(
+                        "Greška pri dodavanju kamate: " + ex.Message, ex);
                 }
             }
         }
@@ -2591,14 +2681,22 @@ namespace Banka
 
         #region SigurnosnaKontrola
 
-        public static void DodajSigurnosnuKontrolu(SigurnosnaKontrolaBasic skb, int racunId)
+        public static void DodajSigurnosnuKontrolu(SigurnosnaKontrolaBasic skb, string brojRacuna)
         {
+            Validacija.ValidirajBrojRacuna(brojRacuna);
+            Validacija.ValidirajIPAdresu(skb.IpAdresa);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
                 try
                 {
-                    Racun r = session.Load<Racun>(racunId);
+                    Racun r = session.Query<Racun>()
+                        .Where(x => x.BrojRacuna == brojRacuna)
+                        .FirstOrDefault();
+
+                    if (r == null)
+                        throw new InvalidOperationException("Ne postoji račun.");
 
                     SigurnosnaKontrola sk = new SigurnosnaKontrola
                     {
@@ -2622,7 +2720,7 @@ namespace Banka
                 {
                     transaction.Rollback();
                     throw new InvalidOperationException(
-                        "Greška pri dodavanju sigurnosne kontrole", ex);
+                        "Greška pri dodavanju sigurnosne kontrole: " + ex.Message, ex);
                 }
             }
         }
@@ -2682,6 +2780,8 @@ namespace Banka
 
         public static void IzmeniSigurnosnuKontrolu(SigurnosnaKontrolaBasic skb)
         {
+            Validacija.ValidirajIPAdresu(skb.IpAdresa);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {

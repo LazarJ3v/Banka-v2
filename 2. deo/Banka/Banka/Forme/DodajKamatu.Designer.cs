@@ -227,6 +227,11 @@
             // nudIdKredita
             // 
             this.nudIdKredita.Location = new System.Drawing.Point(409, 65);
+            this.nudIdKredita.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
             this.nudIdKredita.Name = "nudIdKredita";
             this.nudIdKredita.Size = new System.Drawing.Size(200, 31);
             this.nudIdKredita.TabIndex = 20;
@@ -234,6 +239,11 @@
             // nudIdDepozita
             // 
             this.nudIdDepozita.Location = new System.Drawing.Point(409, 105);
+            this.nudIdDepozita.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
             this.nudIdDepozita.Name = "nudIdDepozita";
             this.nudIdDepozita.Size = new System.Drawing.Size(200, 31);
             this.nudIdDepozita.TabIndex = 21;

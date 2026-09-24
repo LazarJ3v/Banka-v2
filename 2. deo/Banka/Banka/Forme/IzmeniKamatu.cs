@@ -50,14 +50,21 @@ namespace Banka.Forme
                 Iznos = nudIznos.Value
             };
 
-            DTOManager.IzmeniKamatu(dto);
-            MessageBox.Show(
-                        "Kamata uspešno izmenjena!",
-                        "Uspeh",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-            DialogResult = DialogResult.OK;
-            this.Close();
+            try
+            {
+                DTOManager.IzmeniKamatu(dto);
+                MessageBox.Show(
+                            "Kamata uspešno izmenjena!",
+                            "Uspeh",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void IzmeniKamatu_Load(object sender, EventArgs e)

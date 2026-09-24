@@ -31,6 +31,7 @@ namespace Banka.Forme
         {
             var dodajKamatu = new DodajKamatu();
             dodajKamatu.ShowDialog();
+            KamatePregled_Load(null, null);
         }
 
         private void btnIzmeni_Click(object sender, EventArgs e)

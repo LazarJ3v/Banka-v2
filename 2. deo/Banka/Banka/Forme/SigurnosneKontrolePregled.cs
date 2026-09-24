@@ -66,10 +66,17 @@ namespace Banka.Forme
 
             if (dgvSigurnosneKontrole.SelectedRows.Count > 0)
             {
-                var index = dgvSigurnosneKontrole.SelectedRows[0].Index;
+                try
+                {
+                    var index = dgvSigurnosneKontrole.SelectedRows[0].Index;
 
-                DTOManager.ObrisiSigurnosnuKontrolu(sveSigurnosneKontrole[index].Id);
-                SigurnosneKontrolePregled_Load(null, null);
+                    DTOManager.ObrisiSigurnosnuKontrolu(sveSigurnosneKontrole[index].Id);
+                    SigurnosneKontrolePregled_Load(null, null);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
 
