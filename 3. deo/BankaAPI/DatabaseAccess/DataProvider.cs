@@ -124,11 +124,6 @@ namespace DatabaseAccess
             {
                 try
                 {
-                    var fizickoLice = session.Get<FizickoLice>(fl.Id);
-
-                    if (fizickoLice == null)
-                        return null;
-
                     var f = session.Query<FizickoLice>()
                         .Where(x => x.Jmbg == fl.Jmbg || x.BrojLicneKarte == fl.BrojLicneKarte)
                         .FirstOrDefault();
@@ -139,6 +134,11 @@ namespace DatabaseAccess
                             throw new InvalidOperationException("Postoji fizičko lice sa istim JMBG.");
                         throw new InvalidOperationException("Postoji fizičko lice sa istim brojem lične karte.");
                     }
+
+                    var fizickoLice = session.Get<FizickoLice>(fl.Id);
+
+                    if (fizickoLice == null)
+                        return null;
 
                     fizickoLice.Ime = fl.Ime?.Trim();
                     fizickoLice.Prezime = fl.Prezime?.Trim();
@@ -162,7 +162,7 @@ namespace DatabaseAccess
                     transaction.Rollback();
 
                     throw new InvalidOperationException(
-                        "Greška pri izmeni fizičkog lica.", ex);
+                        "Greška pri izmeni fizičkog lica: " + ex.Message, ex);
                 }
             }
         }
@@ -230,11 +230,25 @@ namespace DatabaseAccess
 
         public static void DodajPravnoLice(PravnoLicePregled pl)
         {
+            Validacija.ValidirajNazivFirme(pl.NazivFirme);
+            Validacija.ValidirajPib(pl.Pib);
+            Validacija.ValidirajAdresu(pl.Adresa);
+            Validacija.ValidirajGrad(pl.Grad);
+            Validacija.ValidirajTelefon(pl.Telefon);
+            Validacija.ValidirajEmail(pl.Email);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
                 try
                 {
+                    var p = session.Query<PravnoLice>()
+                        .Where(x => x.Pib == pl.Pib)
+                        .FirstOrDefault();
+
+                    if (p != null)
+                        throw new InvalidOperationException("Postoji pravno lice sa istim PIB.");
+
                     var pravnoLice = new PravnoLice
                     {
                         NazivFirme = pl.NazivFirme?.Trim(),
@@ -256,7 +270,7 @@ namespace DatabaseAccess
                 {
                     transaction.Rollback();
                     throw new InvalidOperationException(
-                        "Greška pri dodavanju pravnog lica", ex);
+                        "Greška pri dodavanju pravnog lica: " + ex.Message, ex);
                 }
             }
         }
@@ -295,11 +309,25 @@ namespace DatabaseAccess
 
         public static PravnoLicePregled IzmeniPravnoLice(PravnoLicePregled pl)
         {
+            Validacija.ValidirajNazivFirme(pl.NazivFirme);
+            Validacija.ValidirajPib(pl.Pib);
+            Validacija.ValidirajAdresu(pl.Adresa);
+            Validacija.ValidirajGrad(pl.Grad);
+            Validacija.ValidirajTelefon(pl.Telefon);
+            Validacija.ValidirajEmail(pl.Email);
+
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
                 try
                 {
+                    var p = session.Query<PravnoLice>()
+                        .Where(x => x.Pib == pl.Pib)
+                        .FirstOrDefault();
+
+                    if (p != null)
+                        throw new InvalidOperationException("Postoji pravno lice sa istim PIB.");
+
                     var pravnoLice = session.Load<PravnoLice>(pl.Id);
 
                     pravnoLice.NazivFirme = pl.NazivFirme;
@@ -321,7 +349,7 @@ namespace DatabaseAccess
                     transaction.Rollback();
 
                     throw new InvalidOperationException(
-                        "Greška pri izmeni pravnog lica.", ex);
+                        "Greška pri izmeni pravnog lica: " + ex.Message, ex);
                 }
             }
         }
