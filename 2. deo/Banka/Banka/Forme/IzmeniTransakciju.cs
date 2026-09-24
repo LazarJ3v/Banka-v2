@@ -80,14 +80,21 @@ namespace Banka.Forme
                 Komentar = rtbKomentar.Text
             };
 
-            DTOManager.IzmeniTransakciju(dto);
-            MessageBox.Show(
-                        "Transakcija uspešno izmenjena!",
-                        "Uspeh",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-            DialogResult = DialogResult.OK;
-            this.Close();
+            try
+            {
+                DTOManager.IzmeniTransakciju(dto);
+                MessageBox.Show(
+                            "Transakcija uspešno izmenjena!",
+                            "Uspeh",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

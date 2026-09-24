@@ -26,6 +26,7 @@ namespace Banka.Forme
         {
             var dodajKredit = new DodajKredit();
             dodajKredit.ShowDialog();
+            KreditiPregled_Load(null, null);
         }
 
         private void btnIzmeni_Click(object sender, EventArgs e)

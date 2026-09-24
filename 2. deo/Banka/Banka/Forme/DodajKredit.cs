@@ -55,14 +55,6 @@ namespace Banka.Forme
 
         private void btnSacuvaj_Click(object sender, EventArgs e)
         {
-            var racun = DTOManager.VratiRacun(tbBrRacuna.Text?.Trim());
-
-            if (racun == null)
-            {
-                MessageBox.Show("Pogrešan broj računa.");
-                return;
-            }
-
             var dto = new KreditBasic
             {
                 DatumDospeca = dtpDatumDospeca.Value,
@@ -76,18 +68,21 @@ namespace Banka.Forme
                 KamatnaStopa = nudKamatnaStopa.Value,
                 Komentar = rtbKomentar.Text
             };
-
-            string jmbg = racun.FizickoLice == null ? "null" : racun.FizickoLice.Jmbg;
-            string pib = racun.PravnoLice == null ? "null" : racun.PravnoLice.Pib;
-
-            DTOManager.DodajKredit(dto, jmbg, pib, racun.Id);
-            MessageBox.Show(
-                        "Kredit uspešno dodat!",
-                        "Uspeh",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-            DialogResult = DialogResult.OK;
-            this.Close();
+            try
+            {
+                DTOManager.DodajKredit(dto, tbBrRacuna.Text?.Trim());
+                MessageBox.Show(
+                            "Kredit uspešno dodat!",
+                            "Uspeh",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

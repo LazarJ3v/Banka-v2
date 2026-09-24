@@ -39,14 +39,6 @@ namespace Banka.Forme
 
         private void btnSacuvaj_Click(object sender, EventArgs e)
         {
-            var racun = DTOManager.VratiRacun(tbBrRacuna.Text?.Trim());
-
-            if (racun == null)
-            {
-                MessageBox.Show("Pogrešan broj računa.");
-                return;
-            }
-
             var dto = new DepozitBasic
             {
                 DatumPocetka = dtpDatumPocetka.Value,
@@ -59,17 +51,21 @@ namespace Banka.Forme
                 Komentar = rtbKomentar.Text
             };
 
-            string jmbg = racun.FizickoLice == null ? "null" : racun.FizickoLice.Jmbg;
-            string pib = racun.PravnoLice == null ? "null" : racun.PravnoLice.Pib;
-
-            DTOManager.DodajDepozit(dto, jmbg, pib, racun.Id);
-            MessageBox.Show(
-                        "Depozit uspešno dodat!",
-                        "Uspeh",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-            DialogResult = DialogResult.OK;
-            this.Close();
+            try
+            {
+                DTOManager.DodajDepozit(dto, tbBrRacuna.Text?.Trim());
+                MessageBox.Show(
+                            "Depozit uspešno dodat!",
+                            "Uspeh",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void DodajDepozit_Load(object sender, EventArgs e)

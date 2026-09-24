@@ -1591,12 +1591,9 @@ namespace Banka
 
         #region Transakcija
 
-        public static void DodajTransakciju(TransakcijaBasic tb, int racunId)
+        public static void DodajTransakciju(TransakcijaBasic tb, string brojRacuna)
         {
-            // TODO: validacija broja racuna.
-            // Ne moze se validirati broj racuna jer se prosledjuje ID,
-            // a u event handleru se vraca racun preko broja racuna.
-            // TODO: izmeniti handler.
+            Validacija.ValidirajBrojRacuna(brojRacuna);
             Validacija.ValidirajValutu(tb.Valuta);
             Validacija.ValidirajIznos(tb.Iznos, "Iznos", dozvoliNulu: false);
 
@@ -1605,7 +1602,12 @@ namespace Banka
             {
                 try
                 {
-                    Racun r = session.Load<Racun>(racunId);
+                    Racun r = session.Query<Racun>()
+                        .Where(x => x.BrojRacuna == brojRacuna)
+                        .FirstOrDefault();
+
+                    if (r == null)
+                        throw new InvalidOperationException("Ne postoji račun.");
 
                     Transakcija t = new Transakcija
                     {
@@ -1631,7 +1633,8 @@ namespace Banka
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri dodavanju transakcije", ex);
+                    throw new InvalidOperationException(
+                        "Greška pri dodavanju transakcije: " + ex.Message, ex);
                 }
             }
         }
@@ -1881,8 +1884,9 @@ namespace Banka
 
         #region Depozit
 
-        public static void DodajDepozit(DepozitBasic db, string jmbg, string pib, int racunId)
+        public static void DodajDepozit(DepozitBasic db, string brojRacuna)
         {
+            Validacija.ValidirajBrojRacuna(brojRacuna);
             Validacija.ValidirajValutu(db.Valuta);
             Validacija.ValidirajIznos(db.Iznos, "Iznos", dozvoliNulu: false);
             Validacija.ValidirajKamatnuStopu(db.KamatnaStopa);
@@ -1893,18 +1897,26 @@ namespace Banka
             {
                 try
                 {
-                    FizickoLice fl = session.Query<FizickoLice>()
-                        .Where(x => x.Jmbg == jmbg)
-                        .FirstOrDefault();
-                    PravnoLice pl = session.Query<PravnoLice>()
-                        .Where(x => x.Pib == pib)
+                    FizickoLice fl;
+                    PravnoLice pl;
+
+                    Racun r = session.Query<Racun>()
+                        .Where(x => x.BrojRacuna == brojRacuna)
                         .FirstOrDefault();
 
-                    if (fl == null && pl == null)
-                        throw new InvalidOperationException(
-                            "Depozit mora biti vezan za fizičko ili pravno lice.");
+                    if (r == null)
+                        throw new InvalidOperationException("Ne postoji račun.");
 
-                    Racun r = session.Load<Racun>(racunId);
+                    if (r.PripadaFizickomLicu != null)
+                    {
+                        fl = r.PripadaFizickomLicu;
+                        pl = null;
+                    }
+                    else
+                    {
+                        pl = r.PripadaPravnomLicu;
+                        fl = null;
+                    }
 
                     Depozit d = new Depozit
                     {
@@ -1931,7 +1943,8 @@ namespace Banka
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri dodavanju depozita", ex);
+                    throw new InvalidOperationException(
+                        "Greška pri dodavanju depozita: " + ex.Message, ex);
                 }
             }
         }
@@ -2077,6 +2090,9 @@ namespace Banka
                 {
                     Depozit d = session.Load<Depozit>(db.Id);
 
+                    if (d == null)
+                        return;
+
                     d.DatumPocetka = db.DatumPocetka;
                     d.PeriodOrocenja = db.PeriodOrocenja;
                     d.DatumIsteka = db.DatumIsteka;
@@ -2129,8 +2145,9 @@ namespace Banka
 
         #region Kredit
 
-        public static void DodajKredit(KreditBasic kb, string jmbg, string pib, int racunId)
+        public static void DodajKredit(KreditBasic kb, string brojRacuna)
         {
+            Validacija.ValidirajBrojRacuna(brojRacuna);
             Validacija.ValidirajValutu(kb.Valuta);
             Validacija.ValidirajIznos(kb.Iznos, "Iznos", dozvoliNulu: false);
             Validacija.ValidirajKamatnuStopu(kb.KamatnaStopa);
@@ -2142,18 +2159,26 @@ namespace Banka
             {
                 try
                 {
-                    FizickoLice fl = session.Query<FizickoLice>()
-                        .Where(x => x.Jmbg == jmbg)
-                        .FirstOrDefault();
-                    PravnoLice pl = session.Query<PravnoLice>()
-                        .Where(x => x.Pib == pib)
+                    FizickoLice fl;
+                    PravnoLice pl;
+
+                    Racun r = session.Query<Racun>()
+                        .Where(x => x.BrojRacuna == brojRacuna)
                         .FirstOrDefault();
 
-                    if (fl == null && pl == null)
-                        throw new InvalidOperationException(
-                            "Kredit mora biti vezan za fizičko ili pravno lice.");
+                    if (r == null)
+                        throw new InvalidOperationException("Ne postoji račun.");
 
-                    Racun r = session.Load<Racun>(racunId);
+                    if (r.PripadaFizickomLicu != null)
+                    {
+                        fl = r.PripadaFizickomLicu;
+                        pl = null;
+                    }
+                    else
+                    {
+                        pl = r.PripadaPravnomLicu;
+                        fl = null;
+                    }
 
                     Kredit k = new Kredit
                     {
@@ -2182,7 +2207,8 @@ namespace Banka
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri dodavanju kredita", ex);
+                    throw new InvalidOperationException(
+                        "Greška pri dodavanju kredita: " + ex.Message, ex);
                 }
             }
         }
