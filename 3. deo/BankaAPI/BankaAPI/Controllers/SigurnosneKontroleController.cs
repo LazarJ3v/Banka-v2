@@ -46,14 +46,14 @@ namespace BankaAPI.Controllers
         [HttpPost]
         [Route("")]
         public IActionResult Post([FromBody] SigurnosnaKontrolaPregled sk,
-            [FromQuery] int racunId)
+            [FromQuery] string brojRacuna)
         {
             if (sk == null)
                 return BadRequest("Podaci nisu prosleđeni.");
 
             try
             {
-                DataProvider.DodajSigurnosnuKontrolu(sk, racunId);
+                DataProvider.DodajSigurnosnuKontrolu(sk, brojRacuna);
                 return Ok(sk);
             }
             catch (Exception ex)

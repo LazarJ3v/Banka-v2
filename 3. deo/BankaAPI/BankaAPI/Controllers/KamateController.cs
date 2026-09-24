@@ -44,15 +44,54 @@ namespace BankaAPI.Controllers
 
         // POST api/kamate
         [HttpPost]
-        [Route("")]
-        public IActionResult Post([FromBody] KamataPregled k)
+        [Route("racun/{brojRacuna}")]
+        public IActionResult PostOnRacun([FromBody] KamataPregled k,
+            [FromBody] string brojRacuna)
         {
             if (k == null)
                 return BadRequest("Podaci nisu prosleđeni.");
 
             try
             {
-                DataProvider.DodajKamatu(k);
+                DataProvider.DodajKamatuNaRacun(k, brojRacuna);
+                return Ok(k);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("kredit/{kreditId}")]
+        public IActionResult PostOnKredit([FromBody] KamataPregled k,
+            [FromQuery] int kreditId)
+        {
+            if (k == null)
+                return BadRequest("Podaci nisu prosleđeni.");
+
+            try
+            {
+                DataProvider.DodajKamatuNaKredit(k, kreditId);
+                return Ok(k);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("depozit/{depozitId}")]
+        public IActionResult PostOnDepozit([FromBody] KamataPregled k,
+            [FromQuery] int depozitId)
+        {
+            if (k == null)
+                return BadRequest("Podaci nisu prosleđeni.");
+
+            try
+            {
+                DataProvider.DodajKamatuNaDepozit(k,depozitId);
                 return Ok(k);
             }
             catch (Exception ex)

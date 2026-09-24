@@ -62,14 +62,14 @@ namespace BankaAPI.Controllers
         [HttpPost]
         [Route("")]
         public IActionResult Post([FromBody] TransakcijaPregled t,
-            [FromQuery] int racunId)
+            [FromQuery] string brojRacuna)
         {
             if (t == null)
                 return BadRequest("Podaci nisu prosleđeni.");
 
             try
             {
-                DataProvider.DodajTransakciju(t, racunId);
+                DataProvider.DodajTransakciju(t, brojRacuna);
                 return Ok(t);
             }
             catch (Exception ex)
