@@ -108,7 +108,7 @@ namespace BankaAPI.Controllers
             try
             {
                 DataProvider.ObrisiDepozit(id);
-                return Ok();
+                return Ok("Uspešno brisanje.");
             }
             catch (Exception ex)
             {

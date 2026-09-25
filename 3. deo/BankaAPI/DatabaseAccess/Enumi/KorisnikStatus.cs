@@ -9,9 +9,9 @@ namespace DatabaseAccess.Enumi
 {
     enum KorisnikStatus
     {
-        [Description("AKTIVAN")]
+        [Description("Aktivan")]
         Aktivan,
-        [Description("NEAKTIVAN")]
+        [Description("Neaktivan")]
         Neaktivan
     }
 }

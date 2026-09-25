@@ -111,7 +111,7 @@ namespace BankaAPI.Controllers
             try
             {
                 DataProvider.ObrisiRacun(id);
-                return Ok();
+                return Ok("Uspešno brisanje.");
             }
             catch (Exception ex)
             {

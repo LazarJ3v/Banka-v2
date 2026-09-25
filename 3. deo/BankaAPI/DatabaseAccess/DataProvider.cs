@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.Marshalling;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -30,6 +31,7 @@ namespace DatabaseAccess
             Validacija.ValidirajGrad(fl.Grad);
             Validacija.ValidirajTelefon(fl.Telefon);
             Validacija.ValidirajEmail(fl.Email);
+            fl.Status = Validacija.ValidirajEnum<KorisnikStatus>(fl.Status, "Status");
 
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
@@ -49,17 +51,17 @@ namespace DatabaseAccess
 
                     var fizickoLice = new FizickoLice
                     {
-                        Ime = fl.Ime?.Trim(),
-                        Prezime = fl.Prezime?.Trim(),
-                        Jmbg = fl.Jmbg?.Trim(),
-                        BrojLicneKarte = fl.BrojLicneKarte?.Trim(),
+                        Ime = fl.Ime.Trim(),
+                        Prezime = fl.Prezime.Trim(),
+                        Jmbg = fl.Jmbg.Trim(),
+                        BrojLicneKarte = fl.BrojLicneKarte.Trim(),
                         DatumRodjenja = fl.DatumRodjenja,
-                        Adresa = fl.Adresa?.Trim(),
-                        Grad = fl.Grad?.Trim(),
-                        Telefon = fl.Telefon?.Trim(),
-                        Email = fl.Email?.Trim(),
+                        Adresa = fl.Adresa.Trim(),
+                        Grad = fl.Grad.Trim(),
+                        Telefon = fl.Telefon.Trim(),
+                        Email = fl.Email.Trim(),
                         Status = fl.Status,
-                        Komentar = fl.Komentar?.Trim()
+                        Komentar = fl.Komentar.Trim()
                     };
 
                     session.Save(fizickoLice);
@@ -122,6 +124,7 @@ namespace DatabaseAccess
             Validacija.ValidirajGrad(fl.Grad);
             Validacija.ValidirajTelefon(fl.Telefon);
             Validacija.ValidirajEmail(fl.Email);
+            fl.Status = Validacija.ValidirajEnum<KorisnikStatus>(fl.Status, "Status");
 
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
@@ -129,7 +132,8 @@ namespace DatabaseAccess
                 try
                 {
                     var f = session.Query<FizickoLice>()
-                        .Where(x => x.Jmbg == fl.Jmbg || x.BrojLicneKarte == fl.BrojLicneKarte)
+                        .Where(x => x.Id != fl.Id &&
+                            (x.Jmbg == fl.Jmbg || x.BrojLicneKarte == fl.BrojLicneKarte))
                         .FirstOrDefault();
 
                     if (f != null)
@@ -144,17 +148,17 @@ namespace DatabaseAccess
                     if (fizickoLice == null)
                         return null;
 
-                    fizickoLice.Ime = fl.Ime?.Trim();
-                    fizickoLice.Prezime = fl.Prezime?.Trim();
-                    fizickoLice.Jmbg = fl.Jmbg?.Trim();
-                    fizickoLice.BrojLicneKarte = fl.BrojLicneKarte?.Trim();
+                    fizickoLice.Ime = fl.Ime.Trim();
+                    fizickoLice.Prezime = fl.Prezime.Trim();
+                    fizickoLice.Jmbg = fl.Jmbg.Trim();
+                    fizickoLice.BrojLicneKarte = fl.BrojLicneKarte.Trim();
                     fizickoLice.DatumRodjenja = fl.DatumRodjenja;
-                    fizickoLice.Adresa = fl.Adresa?.Trim();
-                    fizickoLice.Grad = fl.Grad?.Trim();
-                    fizickoLice.Telefon = fl.Telefon?.Trim();
-                    fizickoLice.Email = fl.Email?.Trim();
+                    fizickoLice.Adresa = fl.Adresa.Trim();
+                    fizickoLice.Grad = fl.Grad.Trim();
+                    fizickoLice.Telefon = fl.Telefon.Trim();
+                    fizickoLice.Email = fl.Email.Trim();
                     fizickoLice.Status = fl.Status;
-                    fizickoLice.Komentar = fl.Komentar?.Trim();
+                    fizickoLice.Komentar = fl.Komentar.Trim();
 
                     session.Update(fizickoLice);
                     transaction.Commit();
@@ -181,7 +185,8 @@ namespace DatabaseAccess
                     var fizickoLice = session.Get<FizickoLice>(id);
 
                     if (fizickoLice == null)
-                        return;
+                        throw new InvalidOperationException
+                            ("Ne postoji fizičko lice sa tim Id brojem.");
 
                     if (!fizickoLice.Racuni.IsEmpty())
                         throw new InvalidOperationException(
@@ -240,6 +245,7 @@ namespace DatabaseAccess
             Validacija.ValidirajGrad(pl.Grad);
             Validacija.ValidirajTelefon(pl.Telefon);
             Validacija.ValidirajEmail(pl.Email);
+            pl.Status = Validacija.ValidirajEnum<KorisnikStatus>(pl.Status, "Status");
 
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
@@ -255,14 +261,14 @@ namespace DatabaseAccess
 
                     var pravnoLice = new PravnoLice
                     {
-                        NazivFirme = pl.NazivFirme?.Trim(),
-                        Pib = pl.Pib?.Trim(),
-                        Adresa = pl.Adresa?.Trim(),
-                        Grad = pl.Grad?.Trim(),
-                        Telefon = pl.Telefon?.Trim(),
-                        Email = pl.Email?.Trim(),
-                        Status = pl.Status?.Trim(),
-                        Komentar = pl.Komentar?.Trim()
+                        NazivFirme = pl.NazivFirme.Trim(),
+                        Pib = pl.Pib.Trim(),
+                        Adresa = pl.Adresa.Trim(),
+                        Grad = pl.Grad.Trim(),
+                        Telefon = pl.Telefon.Trim(),
+                        Email = pl.Email.Trim(),
+                        Status = pl.Status.Trim(),
+                        Komentar = pl.Komentar.Trim()
                     };
 
                     session.Save(pravnoLice);
@@ -316,6 +322,7 @@ namespace DatabaseAccess
             Validacija.ValidirajGrad(pl.Grad);
             Validacija.ValidirajTelefon(pl.Telefon);
             Validacija.ValidirajEmail(pl.Email);
+            pl.Status = Validacija.ValidirajEnum<KorisnikStatus>(pl.Status, "Status");
 
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
@@ -365,7 +372,8 @@ namespace DatabaseAccess
                     var pravnoLice = session.Get<PravnoLice>(id);
 
                     if (pravnoLice == null)
-                        return;
+                        throw new InvalidOperationException
+                            ("Ne postoji pravno lice sa tim Id brojem.");
 
                     if (!pravnoLice.Racuni.IsEmpty())
                         throw new InvalidOperationException(
@@ -418,7 +426,6 @@ namespace DatabaseAccess
             Validacija.ValidirajBrojRacuna(r.BrojRacuna);
             Validacija.ValidirajValutu(r.Valuta);
             r.Status = Validacija.ValidirajEnum<StatusRacuna>(r.Status, nameof(r.Status));
-            r.TipRacuna = Validacija.ValidirajEnum<TipRacuna>(r.TipRacuna, nameof(r.TipRacuna));
             Validacija.ValidirajIznos(r.TrenutnoStanje, "Trenutno stanje");
             Validacija.ValidirajIznos(r.DozvoljeniMinus, "Dozvoljeni minus");
             Validacija.ValidirajKamatnuStopu(r.KamatnaStopa);
@@ -456,14 +463,14 @@ namespace DatabaseAccess
 
                     Racun racun = new Racun
                     {
-                        BrojRacuna = r.BrojRacuna?.Trim(),
-                        Valuta = r.Valuta?.Trim(),
+                        BrojRacuna = r.BrojRacuna.Trim(),
+                        Valuta = r.Valuta.Trim(),
                         TrenutnoStanje = r.TrenutnoStanje,
                         DatumOtvaranja = r.DatumOtvaranja,
                         Status = r.Status,
                         DozvoljeniMinus = r.DozvoljeniMinus,
-                        Komentar = r.Komentar?.Trim(),
-                        TipRacuna = r.TipRacuna.Trim(),
+                        Komentar = r.Komentar.Trim(),
+                        TipRacuna = TipRacuna.Ostali.GetDescription(),
                         KamatnaStopa = r.KamatnaStopa,
 
                         PripadaFizickomLicu = fl,
@@ -474,6 +481,7 @@ namespace DatabaseAccess
                     transaction.Commit();
 
                     r.Id = racun.Id;
+
                 }
                 catch (Exception ex)
                 {
@@ -526,11 +534,16 @@ namespace DatabaseAccess
 
         public static RacunPregled VratiRacun(string brojRacuna)
         {
+            Validacija.ValidirajBrojRacuna(brojRacuna);
+
             using (ISession session = DataLayer.GetSession())
             {
                 Racun r = session.Query<Racun>()
                     .Where(x => x.BrojRacuna == brojRacuna)
                     .FirstOrDefault();
+
+                if (r == null)
+                    throw new InvalidOperationException("Nema računa sa tim brojem.");
 
                 return new RacunPregled
                 {
@@ -567,35 +580,42 @@ namespace DatabaseAccess
             }
         }
 
-        public static void IzmeniRacun(RacunPregled r)
+        public static void IzmeniRacun(RacunPregled rb)
         {
-            Validacija.ValidirajBrojRacuna(r.BrojRacuna);
-            Validacija.ValidirajValutu(r.Valuta);
-            r.Status = Validacija.ValidirajEnum<StatusRacuna>(r.Status, nameof(r.Status));
-            Validacija.ValidirajIznos(r.TrenutnoStanje, "Trenutno stanje");
-            Validacija.ValidirajIznos(r.DozvoljeniMinus, "Dozvoljeni minus");
-            Validacija.ValidirajKamatnuStopu(r.KamatnaStopa);
+            Validacija.ValidirajBrojRacuna(rb.BrojRacuna);
+            Validacija.ValidirajValutu(rb.Valuta);
+            rb.Status = Validacija.ValidirajEnum<StatusRacuna>(rb.Status, nameof(rb.Status));
+            Validacija.ValidirajIznos(rb.TrenutnoStanje, "Trenutno stanje");
+            Validacija.ValidirajIznos(rb.DozvoljeniMinus, "Dozvoljeni minus");
+            Validacija.ValidirajKamatnuStopu(rb.KamatnaStopa);
 
-            if (r == null)
-                throw new ArgumentNullException(nameof(r));
+            if (rb == null)
+                throw new ArgumentNullException(nameof(rb));
 
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
             {
                 try
                 {
-                    var racun = session.Load<Racun>(r.Id);
+                    var r = session.Load<Racun>(rb.Id);
 
-                    racun.BrojRacuna = r.BrojRacuna?.Trim();
-                    racun.Valuta = r.Valuta?.Trim();
-                    racun.TrenutnoStanje = r.TrenutnoStanje;
-                    racun.DatumOtvaranja = r.DatumOtvaranja;
-                    racun.Status = r.Status;
-                    racun.DozvoljeniMinus = r.DozvoljeniMinus;
-                    racun.Komentar = r.Komentar?.Trim();
-                    racun.KamatnaStopa = r.KamatnaStopa;
+                    var rac = session.Query<Racun>()
+                        .Where(x => x.Id != rb.Id && (x.BrojRacuna == rb.BrojRacuna))
+                        .FirstOrDefault();
 
-                    session.Update(racun);
+                    if (rac != null)
+                        throw new InvalidOperationException("Postoji račun sa istim brojem.");
+
+                    r.BrojRacuna = rb.BrojRacuna.Trim();
+                    r.Valuta = rb.Valuta.Trim();
+                    r.TrenutnoStanje = rb.TrenutnoStanje;
+                    r.DatumOtvaranja = rb.DatumOtvaranja;
+                    r.Status = rb.Status;
+                    r.DozvoljeniMinus = rb.DozvoljeniMinus;
+                    r.Komentar = rb.Komentar.Trim();
+                    r.KamatnaStopa = rb.KamatnaStopa;
+
+                    session.Update(r);
                     transaction.Commit();
                 }
                 catch (Exception ex)
@@ -613,7 +633,10 @@ namespace DatabaseAccess
             {
                 try
                 {
-                    Racun r = session.Load<Racun>(id);
+                    Racun r = session.Get<Racun>(id);
+
+                    if (r == null)
+                        throw new InvalidOperationException("Ne postoji račun sa tim Id brojem.");
 
                     if (!r.Transakcije.IsEmpty() ||
                         !r.Depoziti.IsEmpty() ||
@@ -718,14 +741,14 @@ namespace DatabaseAccess
 
                     Tekuci t = new Tekuci
                     {
-                        BrojRacuna = tb.BrojRacuna?.Trim(),
-                        Valuta = tb.Valuta?.Trim(),
+                        BrojRacuna = tb.BrojRacuna.Trim(),
+                        Valuta = tb.Valuta.Trim(),
                         TrenutnoStanje = tb.TrenutnoStanje,
                         DatumOtvaranja = tb.DatumOtvaranja,
-                        Status = tb.Status?.Trim(),
+                        Status = tb.Status.Trim(),
                         DozvoljeniMinus = tb.DozvoljeniMinus,
-                        Komentar = tb.Komentar?.Trim(),
-                        TipRacuna = tb.TipRacuna?.Trim(),
+                        Komentar = tb.Komentar.Trim(),
+                        TipRacuna = TipRacuna.Tekuci.GetDescription(),
                         KamatnaStopa = tb.KamatnaStopa,
 
                         PlatnaKartica = tb.PlatnaKartica,
@@ -739,6 +762,7 @@ namespace DatabaseAccess
                     transaction.Commit();
 
                     tb.Id = t.Id;
+                    tb.TipRacuna = t.TipRacuna;
                 }
                 catch (Exception ex)
                 {
@@ -797,27 +821,34 @@ namespace DatabaseAccess
             {
                 try
                 {
-                    var tekuci = session.Load<Tekuci>(tb.Id);
+                    var t = session.Load<Tekuci>(tb.Id);
 
-                    tekuci.BrojRacuna = tb.BrojRacuna?.Trim();
-                    tekuci.Valuta = tb.Valuta?.Trim();
-                    tekuci.TrenutnoStanje = tb.TrenutnoStanje;
-                    tekuci.Status = tb.Status?.Trim();
-                    tekuci.DozvoljeniMinus = tb.DozvoljeniMinus;
-                    tekuci.Komentar = tb.Komentar?.Trim();
-                    tekuci.KamatnaStopa = tb.KamatnaStopa;
+                    var rac = session.Query<Racun>()
+                        .Where(x => x.Id != t.Id && (x.BrojRacuna == tb.BrojRacuna))
+                        .FirstOrDefault();
 
-                    tekuci.PlatnaKartica = tb.PlatnaKartica;
-                    tekuci.MesecniLimit = tb.MesecniLimit ?? 0;
+                    if (rac != null)
+                        throw new InvalidOperationException("Postoji račun sa istim brojem.");
 
-                    session.Update(tekuci);
+                    t.BrojRacuna = tb.BrojRacuna.Trim();
+                    t.Valuta = tb.Valuta.Trim();
+                    t.TrenutnoStanje = tb.TrenutnoStanje;
+                    t.Status = tb.Status.Trim();
+                    t.DozvoljeniMinus = tb.DozvoljeniMinus;
+                    t.Komentar = tb.Komentar.Trim();
+                    t.KamatnaStopa = tb.KamatnaStopa;
+
+                    t.PlatnaKartica = tb.PlatnaKartica;
+                    t.MesecniLimit = tb.MesecniLimit ?? 0;
+
+                    session.Update(t);
                     transaction.Commit();
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
                     throw new InvalidOperationException(
-                        "Greška pri izmeni tekućeg računa", ex);
+                        "Greška pri izmeni tekućeg računa: " + ex.Message, ex);
                 }
             }
         }
@@ -902,17 +933,17 @@ namespace DatabaseAccess
 
                     Devizni d = new Devizni
                     {
-                        BrojRacuna = db.BrojRacuna?.Trim(),
-                        Valuta = db.Valuta?.Trim(),
+                        BrojRacuna = db.BrojRacuna.Trim(),
+                        Valuta = db.Valuta.Trim(),
                         TrenutnoStanje = db.TrenutnoStanje,
                         DatumOtvaranja = db.DatumOtvaranja,
-                        Status = db.Status?.Trim(),
+                        Status = db.Status.Trim(),
                         DozvoljeniMinus = db.DozvoljeniMinus,
-                        Komentar = db.Komentar?.Trim(),
-                        TipRacuna = db.TipRacuna?.Trim(),
+                        Komentar = db.Komentar.Trim(),
+                        TipRacuna = TipRacuna.Devizni.GetDescription(),
                         KamatnaStopa = db.KamatnaStopa,
 
-                        Namena = db.Namena?.Trim(),
+                        Namena = db.Namena.Trim(),
                         KursnaRazlika = db.KursnaRazlika ?? 0,
 
                         PripadaFizickomLicu = fl,
@@ -923,6 +954,7 @@ namespace DatabaseAccess
                     transaction.Commit();
 
                     db.Id = d.Id;
+                    db.TipRacuna = d.TipRacuna;
                 }
                 catch (Exception ex)
                 {
@@ -985,15 +1017,22 @@ namespace DatabaseAccess
                 {
                     Devizni d = session.Load<Devizni>(db.Id);
 
-                    d.BrojRacuna = db.BrojRacuna?.Trim();
-                    d.Valuta = db.Valuta?.Trim();
+                    var rac = session.Query<Racun>()
+                        .Where(x => x.Id != d.Id && (x.BrojRacuna == db.BrojRacuna))
+                        .FirstOrDefault();
+
+                    if (rac != null)
+                        throw new InvalidOperationException("Postoji račun sa istim brojem.");
+
+                    d.BrojRacuna = db.BrojRacuna.Trim();
+                    d.Valuta = db.Valuta.Trim();
                     d.TrenutnoStanje = db.TrenutnoStanje;
-                    d.Status = db.Status?.Trim();
+                    d.Status = db.Status.Trim();
                     d.DozvoljeniMinus = db.DozvoljeniMinus;
-                    d.Komentar = db.Komentar?.Trim();
+                    d.Komentar = db.Komentar.Trim();
                     d.KamatnaStopa = db.KamatnaStopa;
 
-                    d.Namena = db.Namena?.Trim();
+                    d.Namena = db.Namena.Trim();
                     d.KursnaRazlika = db.KursnaRazlika ?? 0;
 
                     session.Update(d);
@@ -1002,7 +1041,7 @@ namespace DatabaseAccess
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri izmeni deviznog računa", ex);
+                    throw new InvalidOperationException("Greška pri izmeni deviznog računa: " + ex.Message, ex);
                 }
             }
         }
@@ -1055,6 +1094,7 @@ namespace DatabaseAccess
             Validacija.ValidirajIznos(sb.DozvoljeniMinus, "Dozvoljeni minus");
             Validacija.ValidirajKamatnuStopu(sb.KamatnaStopa);
             Validacija.ValidirajIznos(sb.MinimalniIznosOtvaranja ?? 0, "Minimalni iznos otvaranja");
+            Validacija.ValidirajFrekvKapitalizKamate(sb.FrekvKapitalizKamate);
 
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
@@ -1086,14 +1126,14 @@ namespace DatabaseAccess
 
                     Stedni s = new Stedni
                     {
-                        BrojRacuna = sb.BrojRacuna?.Trim(),
-                        Valuta = sb.Valuta?.Trim(),
+                        BrojRacuna = sb.BrojRacuna.Trim(),
+                        Valuta = sb.Valuta.Trim(),
                         TrenutnoStanje = sb.TrenutnoStanje,
                         DatumOtvaranja = sb.DatumOtvaranja,
-                        Status = sb.Status?.Trim(),
+                        Status = sb.Status.Trim(),
                         DozvoljeniMinus = sb.DozvoljeniMinus,
-                        Komentar = sb.Komentar?.Trim(),
-                        TipRacuna = sb.TipRacuna?.Trim(),
+                        Komentar = sb.Komentar.Trim(),
+                        TipRacuna = TipRacuna.Stedni.GetDescription(),
                         KamatnaStopa = sb.KamatnaStopa,
 
                         MinimalniIznosOtvaranja = sb.MinimalniIznosOtvaranja ?? 0,
@@ -1107,6 +1147,7 @@ namespace DatabaseAccess
                     transaction.Commit();
 
                     sb.Id = s.Id;
+                    sb.TipRacuna = s.TipRacuna;
                 }
                 catch (Exception ex)
                 {
@@ -1160,6 +1201,7 @@ namespace DatabaseAccess
             Validacija.ValidirajIznos(sb.DozvoljeniMinus, "Dozvoljeni minus");
             Validacija.ValidirajKamatnuStopu(sb.KamatnaStopa);
             Validacija.ValidirajIznos(sb.MinimalniIznosOtvaranja ?? 0, "Minimalni iznos otvaranja");
+            Validacija.ValidirajFrekvKapitalizKamate(sb.FrekvKapitalizKamate);
 
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
@@ -1168,12 +1210,19 @@ namespace DatabaseAccess
                 {
                     Stedni s = session.Load<Stedni>(sb.Id);
 
-                    s.BrojRacuna = sb.BrojRacuna?.Trim();
-                    s.Valuta = sb.Valuta?.Trim();
+                    var rac = session.Query<Racun>()
+                        .Where(x => x.Id != s.Id && (x.BrojRacuna == sb.BrojRacuna))
+                        .FirstOrDefault();
+
+                    if (rac != null)
+                        throw new InvalidOperationException("Postoji račun sa istim brojem.");
+
+                    s.BrojRacuna = sb.BrojRacuna.Trim();
+                    s.Valuta = sb.Valuta.Trim();
                     s.TrenutnoStanje = sb.TrenutnoStanje;
-                    s.Status = sb.Status?.Trim();
+                    s.Status = sb.Status.Trim();
                     s.DozvoljeniMinus = sb.DozvoljeniMinus;
-                    s.Komentar = sb.Komentar?.Trim();
+                    s.Komentar = sb.Komentar.Trim();
                     s.KamatnaStopa = sb.KamatnaStopa;
 
                     s.MinimalniIznosOtvaranja = sb.MinimalniIznosOtvaranja ?? 0;
@@ -1185,7 +1234,7 @@ namespace DatabaseAccess
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri izmeni štednog računa", ex);
+                    throw new InvalidOperationException("Greška pri izmeni štednog računa: " + ex.Message, ex);
                 }
             }
         }
@@ -1269,17 +1318,17 @@ namespace DatabaseAccess
 
                     Ziro z = new Ziro
                     {
-                        BrojRacuna = zb.BrojRacuna?.Trim(),
-                        Valuta = zb.Valuta?.Trim(),
+                        BrojRacuna = zb.BrojRacuna.Trim(),
+                        Valuta = zb.Valuta.Trim(),
                         TrenutnoStanje = zb.TrenutnoStanje,
                         DatumOtvaranja = zb.DatumOtvaranja,
-                        Status = zb.Status?.Trim(),
+                        Status = zb.Status.Trim(),
                         DozvoljeniMinus = zb.DozvoljeniMinus,
-                        Komentar = zb.Komentar?.Trim(),
-                        TipRacuna = zb.TipRacuna?.Trim(),
+                        Komentar = zb.Komentar.Trim(),
+                        TipRacuna = TipRacuna.Ziro.GetDescription(),
                         KamatnaStopa = zb.KamatnaStopa,
 
-                        Namena = zb.Namena?.Trim(),
+                        Namena = zb.Namena.Trim(),
                         ElektronskoBankarstvo = zb.ElektronskoBankarstvo,
                         LimitZaMasovnaPlacanja = zb.LimitZaMasovnaPlacanja ?? 0,
                         IntegracijaSaSistemima = zb.IntegracijaSaSistemima,
@@ -1292,6 +1341,7 @@ namespace DatabaseAccess
                     transaction.Commit();
 
                     zb.Id = z.Id;
+                    zb.TipRacuna = z.TipRacuna;
                 }
                 catch (Exception ex)
                 {
@@ -1353,15 +1403,22 @@ namespace DatabaseAccess
                 {
                     Ziro z = session.Load<Ziro>(zb.Id);
 
-                    z.BrojRacuna = zb.BrojRacuna?.Trim();
-                    z.Valuta = zb.Valuta?.Trim();
+                    var rac = session.Query<Racun>()
+                        .Where(x => x.Id != z.Id && (x.BrojRacuna == zb.BrojRacuna))
+                        .FirstOrDefault();
+
+                    if (rac != null)
+                        throw new InvalidOperationException("Postoji račun sa istim brojem.");
+
+                    z.BrojRacuna = zb.BrojRacuna.Trim();
+                    z.Valuta = zb.Valuta.Trim();
                     z.TrenutnoStanje = zb.TrenutnoStanje;
-                    z.Status = zb.Status?.Trim();
+                    z.Status = zb.Status.Trim();
                     z.DozvoljeniMinus = zb.DozvoljeniMinus;
-                    z.Komentar = zb.Komentar?.Trim();
+                    z.Komentar = zb.Komentar.Trim();
                     z.KamatnaStopa = zb.KamatnaStopa;
 
-                    z.Namena = zb.Namena?.Trim();
+                    z.Namena = zb.Namena.Trim();
                     z.ElektronskoBankarstvo = zb.ElektronskoBankarstvo;
                     z.LimitZaMasovnaPlacanja = zb.LimitZaMasovnaPlacanja ?? 0;
                     z.IntegracijaSaSistemima = zb.IntegracijaSaSistemima;
@@ -1372,7 +1429,7 @@ namespace DatabaseAccess
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri izmeni žiro računa", ex);
+                    throw new InvalidOperationException("Greška pri izmeni žiro računa: " + ex.Message, ex);
                 }
             }
         }
@@ -1443,14 +1500,14 @@ namespace DatabaseAccess
                     Transakcija t = new Transakcija
                     {
                         DatumIVreme = tb.DatumIVreme,
-                        Tip = tb.TipTransakcije?.Trim(),
-                        Status = tb.StatusTransakcije?.Trim(),
-                        PodaciPrimaoca = tb.PodaciPrimaoca?.Trim(),
-                        Referenca = tb.Referenca?.Trim(),
-                        Valuta = tb.Valuta?.Trim(),
+                        Tip = tb.TipTransakcije.Trim(),
+                        Status = tb.StatusTransakcije.Trim(),
+                        PodaciPrimaoca = tb.PodaciPrimaoca.Trim(),
+                        Referenca = tb.Referenca.Trim(),
+                        Valuta = tb.Valuta.Trim(),
                         Iznos = tb.Iznos,
-                        Opis = tb.Opis?.Trim(),
-                        Komentar = tb.Komentar?.Trim(),
+                        Opis = tb.Opis.Trim(),
+                        Komentar = tb.Komentar.Trim(),
 
                         OdvijaSeNaRacun = r
                     };
@@ -1475,7 +1532,10 @@ namespace DatabaseAccess
             {
                 try
                 {
-                    Transakcija t = s.Load<Transakcija>(id);
+                    Transakcija t = s.Get<Transakcija>(id);
+
+                    if (t == null)
+                        throw new InvalidOperationException("Ne postoji transakcija sa tim Id brojem.");
 
                     return new TransakcijaPregled
                     {
@@ -1499,9 +1559,9 @@ namespace DatabaseAccess
                             : null
                     };
                 }
-                catch (Exception ec)
+                catch (Exception ex)
                 {
-                    throw new InvalidOperationException("Greška pri vraćanju transakcije", ec);
+                    throw new InvalidOperationException("Greška pri vraćanju transakcije: " + ex.Message, ex);
                 }
             }
         }
@@ -1590,14 +1650,14 @@ namespace DatabaseAccess
                     Transakcija t = session.Load<Transakcija>(tb.Id);
 
                     t.DatumIVreme = tb.DatumIVreme;
-                    t.Tip = tb.TipTransakcije?.Trim();
-                    t.Status = tb.StatusTransakcije?.Trim();
-                    t.PodaciPrimaoca = tb.PodaciPrimaoca?.Trim();
-                    t.Referenca = tb.Referenca?.Trim();
-                    t.Valuta = tb.Valuta?.Trim();
+                    t.Tip = tb.TipTransakcije.Trim();
+                    t.Status = tb.StatusTransakcije.Trim();
+                    t.PodaciPrimaoca = tb.PodaciPrimaoca.Trim();
+                    t.Referenca = tb.Referenca.Trim();
+                    t.Valuta = tb.Valuta.Trim();
                     t.Iznos = tb.Iznos;
-                    t.Opis = tb.Opis?.Trim();
-                    t.Komentar = tb.Komentar?.Trim();
+                    t.Opis = tb.Opis.Trim();
+                    t.Komentar = tb.Komentar.Trim();
 
                     session.Update(t);
                     transaction.Commit();
@@ -1617,7 +1677,11 @@ namespace DatabaseAccess
             {
                 try
                 {
-                    Transakcija t = session.Load<Transakcija>(id);
+                    Transakcija t = session.Get<Transakcija>(id);
+
+                    if (t == null)
+                        throw new InvalidOperationException("Ne postoji transakcija sa tim Id brojem.");
+
                     session.Delete(t);
 
                     transaction.Commit();
@@ -1625,7 +1689,7 @@ namespace DatabaseAccess
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri brisanju transakcije", ex);
+                    throw new InvalidOperationException("Greška pri brisanju transakcije: " + ex.Message, ex);
                 }
             }
         }
@@ -1740,11 +1804,11 @@ namespace DatabaseAccess
                         DatumPocetka = db.DatumPocetka,
                         PeriodOrocenja = db.PeriodOrocenja,
                         DatumIsteka = db.DatumIsteka,
-                        StatusDepozita = db.StatusDepozita?.Trim(),
-                        Valuta = db.Valuta?.Trim(),
+                        StatusDepozita = db.StatusDepozita.Trim(),
+                        Valuta = db.Valuta.Trim(),
                         Iznos = db.Iznos,
                         KamatnaStopa = db.KamatnaStopa,
-                        Komentar = db.Komentar?.Trim(),
+                        Komentar = db.Komentar.Trim(),
 
                         PripadaFizickomLicu = fl,
                         PripadaPravnomLicu = pl,
@@ -1755,6 +1819,7 @@ namespace DatabaseAccess
                     transaction.Commit();
 
                     db.Id = d.Id;
+                    db.OcekivanaKamata = d.OcekivanaKamata;
                 }
                 catch (Exception ex)
                 {
@@ -1909,11 +1974,11 @@ namespace DatabaseAccess
                     d.DatumPocetka = db.DatumPocetka;
                     d.PeriodOrocenja = db.PeriodOrocenja;
                     d.DatumIsteka = db.DatumIsteka;
-                    d.StatusDepozita = db.StatusDepozita?.Trim();
-                    d.Valuta = db.Valuta?.Trim();
+                    d.StatusDepozita = db.StatusDepozita.Trim();
+                    d.Valuta = db.Valuta.Trim();
                     d.Iznos = db.Iznos;
                     d.KamatnaStopa = db.KamatnaStopa;
-                    d.Komentar = db.Komentar?.Trim();
+                    d.Komentar = db.Komentar.Trim();
 
                     session.Update(d);
                     transaction.Commit();
@@ -1933,7 +1998,10 @@ namespace DatabaseAccess
             {
                 try
                 {
-                    Depozit d = session.Load<Depozit>(id);
+                    Depozit d = session.Get<Depozit>(id);
+
+                    if (d == null)
+                        throw new InvalidOperationException("Ne postoji depozit sa tim Id brojem.");
 
                     if (!d.Kamate.IsEmpty())
                     {
@@ -1996,13 +2064,13 @@ namespace DatabaseAccess
                         DatumDospeca = kb.DatumDospeca,
                         DatumOdobrenja = kb.DatumOdobrenja,
                         Iznos = kb.Iznos,
-                        Valuta = kb.Valuta?.Trim(),
-                        StatusKredita = kb.StatusKredita?.Trim(),
+                        Valuta = kb.Valuta.Trim(),
+                        StatusKredita = kb.StatusKredita.Trim(),
                         MesecnaRata = kb.MesecnaRata,
                         RokOtplate = kb.RokOtplate,
-                        Namena = kb.Namena?.Trim(),
+                        Namena = kb.Namena.Trim(),
                         KamatnaStopa = kb.KamatnaStopa,
-                        Komentar = kb.Komentar?.Trim(),
+                        Komentar = kb.Komentar.Trim(),
 
                         PripadaFizickomLicu = fl,
                         PripadaPravnomLicu = pl,
@@ -2172,13 +2240,13 @@ namespace DatabaseAccess
                     k.DatumDospeca = kb.DatumDospeca;
                     k.DatumOdobrenja = kb.DatumOdobrenja;
                     k.Iznos = kb.Iznos;
-                    k.Valuta = kb.Valuta?.Trim();
-                    k.StatusKredita = kb.StatusKredita?.Trim();
+                    k.Valuta = kb.Valuta.Trim();
+                    k.StatusKredita = kb.StatusKredita.Trim();
                     k.MesecnaRata = kb.MesecnaRata;
                     k.RokOtplate = kb.RokOtplate;
-                    k.Namena = kb.Namena?.Trim();
+                    k.Namena = kb.Namena.Trim();
                     k.KamatnaStopa = kb.KamatnaStopa;
-                    k.Komentar = kb.Komentar?.Trim();
+                    k.Komentar = kb.Komentar.Trim();
 
                     session.Update(k);
                     transaction.Commit();
@@ -2198,7 +2266,10 @@ namespace DatabaseAccess
             {
                 try
                 {
-                    Kredit k = session.Load<Kredit>(id);
+                    Kredit k = session.Get<Kredit>(id);
+
+                    if (k == null)
+                        throw new InvalidOperationException("Ne postoji račun sa tim Id brojem.");
 
                     if (!k.Kamate.IsEmpty())
                     {
@@ -2227,6 +2298,7 @@ namespace DatabaseAccess
             kmb.TipKamate = Validacija.ValidirajEnum<TipKamate>(kmb.TipKamate, nameof(kmb.TipKamate));
             kmb.StatusKamate = Validacija.ValidirajEnum<StatusKamate>(kmb.StatusKamate, nameof(kmb.StatusKamate));
             Validacija.ValidirajIznos(kmb.Iznos);
+            kmb.PeriodObracuna = Validacija.ValidirajEnum<FrekvencijaKapitalizacijeKamate>(kmb.PeriodObracuna, nameof(kmb.PeriodObracuna));
 
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
@@ -2243,9 +2315,9 @@ namespace DatabaseAccess
                     Kamata kam = new Kamata
                     {
                         DatumObracuna = kmb.DatumObracuna,
-                        PeriodObracuna = kmb.PeriodObracuna?.Trim(),
-                        TipKamate = kmb.TipKamate?.Trim(),
-                        StatusKamate = kmb.StatusKamate?.Trim(),
+                        PeriodObracuna = kmb.PeriodObracuna.Trim(),
+                        TipKamate = kmb.TipKamate.Trim(),
+                        StatusKamate = kmb.StatusKamate.Trim(),
                         Iznos = kmb.Iznos,
 
                         PripadaKreditu = null,
@@ -2273,6 +2345,7 @@ namespace DatabaseAccess
             kmb.TipKamate = Validacija.ValidirajEnum<TipKamate>(kmb.TipKamate, nameof(kmb.TipKamate));
             kmb.StatusKamate = Validacija.ValidirajEnum<StatusKamate>(kmb.StatusKamate, nameof(kmb.StatusKamate));
             Validacija.ValidirajIznos(kmb.Iznos, "Iznos", dozvoliNulu: false);
+            kmb.PeriodObracuna = Validacija.ValidirajEnum<FrekvencijaKapitalizacijeKamate>(kmb.PeriodObracuna, nameof(kmb.PeriodObracuna));
             if (kreditId <= 0)
                 throw new InvalidOperationException("Id kredita mora biti veći od 0.");
 
@@ -2289,9 +2362,9 @@ namespace DatabaseAccess
                     Kamata kam = new Kamata
                     {
                         DatumObracuna = kmb.DatumObracuna,
-                        PeriodObracuna = kmb.PeriodObracuna?.Trim(),
-                        TipKamate = kmb.TipKamate?.Trim(),
-                        StatusKamate = kmb.StatusKamate?.Trim(),
+                        PeriodObracuna = kmb.PeriodObracuna.Trim(),
+                        TipKamate = kmb.TipKamate.Trim(),
+                        StatusKamate = kmb.StatusKamate.Trim(),
                         Iznos = kmb.Iznos,
 
                         PripadaKreditu = k,
@@ -2319,6 +2392,7 @@ namespace DatabaseAccess
             kmb.TipKamate = Validacija.ValidirajEnum<TipKamate>(kmb.TipKamate, nameof(kmb.TipKamate));
             kmb.StatusKamate = Validacija.ValidirajEnum<StatusKamate>(kmb.StatusKamate, nameof(kmb.StatusKamate));
             Validacija.ValidirajIznos(kmb.Iznos, "Iznos", dozvoliNulu: false);
+            kmb.PeriodObracuna = Validacija.ValidirajEnum<FrekvencijaKapitalizacijeKamate>(kmb.PeriodObracuna, nameof(kmb.PeriodObracuna));
             if (depozitId <= 0)
                 throw new InvalidOperationException("Id depozita mora biti veći od 0.");
 
@@ -2335,9 +2409,9 @@ namespace DatabaseAccess
                     Kamata kam = new Kamata
                     {
                         DatumObracuna = kmb.DatumObracuna,
-                        PeriodObracuna = kmb.PeriodObracuna?.Trim(),
-                        TipKamate = kmb.TipKamate?.Trim(),
-                        StatusKamate = kmb.StatusKamate?.Trim(),
+                        PeriodObracuna = kmb.PeriodObracuna.Trim(),
+                        TipKamate = kmb.TipKamate.Trim(),
+                        StatusKamate = kmb.StatusKamate.Trim(),
                         Iznos = kmb.Iznos,
 
                         PripadaKreditu = null,
@@ -2442,6 +2516,7 @@ namespace DatabaseAccess
             kmb.TipKamate = Validacija.ValidirajEnum<TipKamate>(kmb.TipKamate, nameof(kmb.TipKamate));
             kmb.StatusKamate = Validacija.ValidirajEnum<StatusKamate>(kmb.StatusKamate, nameof(kmb.StatusKamate));
             Validacija.ValidirajIznos(kmb.Iznos, "Iznos", dozvoliNulu: false);
+            kmb.PeriodObracuna = Validacija.ValidirajEnum<FrekvencijaKapitalizacijeKamate>(kmb.PeriodObracuna, nameof(kmb.PeriodObracuna));
 
             using (ISession session = DataLayer.GetSession())
             using (ITransaction transaction = session.BeginTransaction())
@@ -2451,9 +2526,9 @@ namespace DatabaseAccess
                     Kamata kam = session.Load<Kamata>(kmb.Id);
 
                     kam.DatumObracuna = kmb.DatumObracuna;
-                    kam.PeriodObracuna = kmb.PeriodObracuna?.Trim();
-                    kam.TipKamate = kmb.TipKamate?.Trim();
-                    kam.StatusKamate = kmb.StatusKamate?.Trim();
+                    kam.PeriodObracuna = kmb.PeriodObracuna.Trim();
+                    kam.TipKamate = kmb.TipKamate.Trim();
+                    kam.StatusKamate = kmb.StatusKamate.Trim();
                     kam.Iznos = kmb.Iznos;
 
                     session.Update(kam);
@@ -2474,15 +2549,19 @@ namespace DatabaseAccess
             {
                 try
                 {
-                    Kamata kam = session.Load<Kamata>(id);
-                    session.Delete(kam);
+                    Kamata k = session.Get<Kamata>(id);
+
+                    if (k == null)
+                        throw new InvalidOperationException("Ne postoji kamata sa tim Id brojem.");
+
+                    session.Delete(k);
 
                     transaction.Commit();
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("Greška pri brisanju kamate", ex);
+                    throw new InvalidOperationException("Greška pri brisanju kamate: " + ex.Message, ex);
                 }
             }
         }
@@ -2512,12 +2591,12 @@ namespace DatabaseAccess
 
                     SigurnosnaKontrola sk = new SigurnosnaKontrola
                     {
-                        IpAdresa = skb.IpAdresa?.Trim(),
+                        IpAdresa = skb.IpAdresa.Trim(),
                         DatumIVreme = skb.DatumIVreme,
-                        TipDogadjaja = skb.TipDogadjaja?.Trim(),
-                        StatusDogadjaja = skb.StatusDogadjaja?.Trim(),
-                        PodaciUredjaja = skb.PodaciUredjaja?.Trim(),
-                        Opis = skb.Opis?.Trim(),
+                        TipDogadjaja = skb.TipDogadjaja.Trim(),
+                        StatusDogadjaja = skb.StatusDogadjaja.Trim(),
+                        PodaciUredjaja = skb.PodaciUredjaja.Trim(),
+                        Opis = skb.Opis.Trim(),
 
                         PripadaRacunu = r
                     };
@@ -2602,12 +2681,12 @@ namespace DatabaseAccess
                 {
                     SigurnosnaKontrola sk = session.Load<SigurnosnaKontrola>(skb.Id);
 
-                    sk.IpAdresa = skb.IpAdresa?.Trim();
+                    sk.IpAdresa = skb.IpAdresa.Trim();
                     sk.DatumIVreme = skb.DatumIVreme;
-                    sk.TipDogadjaja = skb.TipDogadjaja?.Trim();
-                    sk.StatusDogadjaja = skb.StatusDogadjaja?.Trim();
-                    sk.PodaciUredjaja = skb.PodaciUredjaja?.Trim();
-                    sk.Opis = skb.Opis?.Trim();
+                    sk.TipDogadjaja = skb.TipDogadjaja.Trim();
+                    sk.StatusDogadjaja = skb.StatusDogadjaja.Trim();
+                    sk.PodaciUredjaja = skb.PodaciUredjaja.Trim();
+                    sk.Opis = skb.Opis.Trim();
 
                     session.Update(sk);
                     transaction.Commit();
@@ -2628,7 +2707,11 @@ namespace DatabaseAccess
             {
                 try
                 {
-                    SigurnosnaKontrola sk = session.Load<SigurnosnaKontrola>(id);
+                    SigurnosnaKontrola sk = session.Get<SigurnosnaKontrola>(id);
+
+                    if (sk == null)
+                        throw new InvalidOperationException("Ne postoji sigurnosna kontrola sa tim Id brojem.");
+
                     session.Delete(sk);
 
                     transaction.Commit();
@@ -2637,7 +2720,7 @@ namespace DatabaseAccess
                 {
                     transaction.Rollback();
                     throw new InvalidOperationException(
-                        "Greška pri brisanju sigurnosne kontrole", ex);
+                        "Greška pri brisanju sigurnosne kontrole: " + ex.Message, ex);
                 }
             }
         }

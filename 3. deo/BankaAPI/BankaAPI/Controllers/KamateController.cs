@@ -130,7 +130,7 @@ namespace BankaAPI.Controllers
             try
             {
                 DataProvider.ObrisiKamatu(id);
-                return Ok();
+                return Ok("Uspešno brisanje.");
             }
             catch (Exception ex)
             {

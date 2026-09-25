@@ -92,7 +92,7 @@ namespace BankaAPI.Controllers
             try
             {
                 DataProvider.ObrisiSigurnosnuKontrolu(id);
-                return Ok();
+                return Ok("Uspešno brisanje.");
             }
             catch (Exception ex)
             {
